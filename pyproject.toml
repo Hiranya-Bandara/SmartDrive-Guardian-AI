@@ -21,18 +21,23 @@ classifiers = [
     "Typing :: Typed",
 ]
 # Runtime dependencies are added phase by phase, only when code uses them.
-# Phase 2 adds PySide6/PyQtGraph, Phase 3 the ML stack, Phase 4 python-OBD/ReportLab.
+# Phase 3 adds the ML stack, Phase 4 python-OBD/ReportLab. PySide6-Essentials (not the full
+# PySide6 meta-package) provides QtWidgets/QtSvg without the large add-on modules.
 dependencies = [
     "platformdirs>=4.3,<5",
     "pydantic>=2.10,<3",
     "SQLAlchemy>=2.0.36,<2.2",
     "alembic>=1.14,<2",
+    "PySide6-Essentials>=6.8,<6.13",
+    "pyqtgraph>=0.13.7,<0.15",
+    "numpy>=2.0,<3",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.3",
     "pytest-cov>=6.0",
+    "pytest-qt>=4.4",
     "ruff>=0.9",
     "mypy>=1.14",
     "pip-audit>=2.7",
@@ -40,6 +45,9 @@ dev = [
 
 [project.scripts]
 smartdrive = "smartdrive.cli:main"
+
+[project.gui-scripts]
+smartdrive-gui = "smartdrive.ui.application:main"
 
 [project.urls]
 Repository = "https://github.com/Hiranya-Bandara/SmartDrive-Guardian-AI"
@@ -53,6 +61,7 @@ smartdrive = [
     "database/migrations/env.py",
     "database/migrations/script.py.mako",
     "database/migrations/versions/*.py",
+    "ui/themes/*.qss",
 ]
 
 [tool.ruff]
@@ -62,10 +71,14 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "W", "F", "I", "B", "UP", "SIM", "N", "RUF", "S", "PTH", "LOG", "G"]
-ignore = ["G004"]
+# RUF001/RUF002: typographic characters (×, –, °) are intentional user-facing text.
+ignore = ["G004", "RUF001", "RUF002"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101", "S603", "PLR2004"]
+"tests/**" = ["S101", "S311", "S603", "PLR2004"]
+# Deterministic seeded PRNG is required for reproducible simulation, not for security.
+"src/smartdrive/services/simulator.py" = ["S311"]
+"src/smartdrive/ui/icons.py" = ["E501"]
 "src/smartdrive/database/migrations/versions/*.py" = ["E501"]
 
 [tool.ruff.format]
@@ -80,6 +93,10 @@ plugins = ["pydantic.mypy"]
 warn_unreachable = true
 
 [[tool.mypy.overrides]]
+module = ["pyqtgraph", "pyqtgraph.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
 module = ["smartdrive.database.migrations.*"]
 disallow_untyped_defs = false
 
@@ -90,7 +107,9 @@ addopts = "-ra --strict-markers --strict-config"
 xfail_strict = true
 markers = [
     "integration: tests that touch the filesystem or a real SQLite database",
+    "ui: tests that create Qt widgets (run headless with QT_QPA_PLATFORM=offscreen)",
 ]
+qt_api = "pyside6"
 filterwarnings = ["error"]
 
 [tool.coverage.run]

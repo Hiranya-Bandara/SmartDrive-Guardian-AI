@@ -32,6 +32,8 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     commands = parser.add_subparsers(dest="command")
     commands.add_parser("info", help="Show version, data locations and database status (default).")
+    gui = commands.add_parser("gui", help="Launch the desktop application.")
+    gui.add_argument("--quit-after-ms", type=int, help=argparse.SUPPRESS)
 
     db = commands.add_parser("db", help="Database maintenance.").add_subparsers(
         dest="db_command", required=True
@@ -111,6 +113,10 @@ def _run(args: argparse.Namespace, ctx: ApplicationContext) -> int:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
+    if args.command == "gui":
+        from smartdrive.ui.application import run as run_gui
+
+        return run_gui(home=args.home, quit_after_ms=args.quit_after_ms)
     try:
         ctx = bootstrap(home=args.home)
     except SmartDriveError as exc:

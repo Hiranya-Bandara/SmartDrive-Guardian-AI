@@ -70,20 +70,34 @@ gh pr create --base development --fill
 ## Running
 
 ```powershell
-smartdrive                         # or: python -m smartdrive / python main.py
-smartdrive --home .\.smartdrive-home info   # isolated data folder for experiments (git-ignored)
+smartdrive gui                               # desktop application
+smartdrive-gui                               # same, without a console window
+smartdrive --home .\.smartdrive-home gui     # isolated data folder for experiments (git-ignored)
+smartdrive                                   # CLI info; also db / settings commands
 ```
+
+## GUI development notes
+
+- Pages receive a `UiContext` (services, state, theme, monitoring controller, notifier). They
+  must not import `smartdrive.database` or create threads.
+- Anything custom-painted implements `apply_palette(palette)`. The main window calls it on
+  every widget when the theme changes.
+- Combo boxes return `StrEnum` item data as plain `str`; read them with
+  `widgets.base.combo_enum(combo, EnumType)`.
+- To render real screenshots: `python scripts\capture_screenshots.py` (writes `docs\screenshots`).
 
 ## Tests
 
 ```powershell
 python -m pytest                        # all tests
-python -m pytest -m "not integration"   # unit tests only
+python -m pytest -m "not integration and not ui"   # fast unit tests only
+python -m pytest tests/ui               # GUI tests (pytest-qt, headless by default)
 python -m pytest --cov                  # with coverage
 ```
 
 The autouse fixture in `tests/conftest.py` points `SMARTDRIVE_HOME` at a temporary folder, so
-tests can never touch your real data.
+tests can never touch your real data. `tests/conftest.py` also defaults `QT_QPA_PLATFORM` to
+`offscreen`. To watch the GUI tests on screen, set `$env:QT_QPA_PLATFORM = "windows"` first.
 
 ## Database migrations
 

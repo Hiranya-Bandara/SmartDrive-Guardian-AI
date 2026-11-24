@@ -10,12 +10,17 @@ from smartdrive.models.vehicle import Vehicle, VehicleProfile
 from smartdrive.utils.exceptions import DataValidationError, RecordNotFoundError
 
 
+def _profile_values(profile: VehicleProfile) -> dict[str, object]:
+    """Only user-editable profile fields; never ids, timestamps or the active flag."""
+    return profile.model_dump(include=set(VehicleProfile.model_fields))
+
+
 class VehicleRepository:
     def __init__(self, session: Session) -> None:
         self._session = session
 
     def add(self, profile: VehicleProfile) -> Vehicle:
-        record = VehicleRecord(**profile.model_dump())
+        record = VehicleRecord(**_profile_values(profile))
         self._session.add(record)
         self._flush()
         return Vehicle.model_validate(record)
@@ -42,7 +47,7 @@ class VehicleRepository:
 
     def update(self, vehicle_id: int, profile: VehicleProfile) -> Vehicle:
         record = self._require(vehicle_id)
-        for field, value in profile.model_dump().items():
+        for field, value in _profile_values(profile).items():
             setattr(record, field, value)
         self._flush()
         return Vehicle.model_validate(record)
