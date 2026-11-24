@@ -6,6 +6,37 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+### Added — Phase 2: Professional Desktop Application
+
+- PySide6 desktop application (`smartdrive gui`, `smartdrive-gui`), with a lifecycle manager,
+  high-DPI rounding policy, Segoe UI / Inter typography and orderly shutdown.
+- Main window with a collapsible, persisted sidebar, a top bar (active-vehicle selector,
+  operating mode, connection status, last-update time), keyboard shortcuts and toast
+  notifications. Future modules are shown but disabled.
+- Pages: Dashboard, Live Monitoring, Vehicle Garage, Simulation Laboratory, Settings and About.
+- Reusable components: cards, metric cards, circular and linear gauges, status pills, chart
+  containers, navigation buttons, form fields, confirmation and vehicle dialogs, banners,
+  toasts, and loading/empty/error states.
+- Dark (specification palette), light and follow-system themes generated from a single QSS
+  template; tests confirm WCAG AA text contrast. Original line icons.
+- A time-dependent, reproducible vehicle simulator with 15 scenarios, gradual fault
+  development, measurement noise, dropouts, connection loss, manual overrides and
+  ground-truth labels, behind a common `TelemetrySource` interface.
+- A shared telemetry validation pipeline: implausible values are rejected, never clamped or
+  invented. Bounded telemetry buffers, statistics and staleness tracking.
+- Background `MonitoringWorker` and `PersistenceWorker` QThreads with batched database writes,
+  bounded queues, graceful cancellation and recovery of sessions left open by a crash.
+- Vehicle service (including validated image import), telemetry service (sessions, history,
+  distance estimate) and backup service.
+- 143 new tests (243 total) using pytest-qt, plus real screenshots in `docs/screenshots`.
+
+### Changed
+
+- Runtime dependencies: PySide6-Essentials, PyQtGraph and NumPy. Dev dependency: pytest-qt.
+- CI installs the Qt runtime libraries on Linux, runs the GUI headless and adds a desktop
+  smoke test.
+- The vehicle repository now copies only user-editable profile fields.
+
 ### Added — Phase 1: Foundation & Architecture
 
 - Fresh, independent Python 3.12 project with a `src/` layout. `pyproject.toml` is the single

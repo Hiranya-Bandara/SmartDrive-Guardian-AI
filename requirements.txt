@@ -3,16 +3,28 @@ alembic==1.20.1
     # via smartdrive-guardian-ai (pyproject.toml)
 annotated-types==0.8.0
     # via pydantic
+colorama==0.4.6
+    # via pyqtgraph
 mako==1.4.3
     # via alembic
 markupsafe==3.0.4
     # via mako
+numpy==2.5.5
+    # via
+    #   smartdrive-guardian-ai (pyproject.toml)
+    #   pyqtgraph
 platformdirs==4.14.8
     # via smartdrive-guardian-ai (pyproject.toml)
 pydantic==2.14.4
     # via smartdrive-guardian-ai (pyproject.toml)
 pydantic-core==2.50.5
     # via pydantic
+pyqtgraph==0.14.0
+    # via smartdrive-guardian-ai (pyproject.toml)
+pyside6-essentials==6.12.0
+    # via smartdrive-guardian-ai (pyproject.toml)
+shiboken6==6.12.0
+    # via pyside6-essentials
 sqlalchemy==2.1.9
     # via
     #   smartdrive-guardian-ai (pyproject.toml)

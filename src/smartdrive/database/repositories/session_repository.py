@@ -2,11 +2,15 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from smartdrive.config.constants import DataSource
-from smartdrive.database.models import DrivingSessionRecord, VehicleRecord
+from smartdrive.database.models import (
+    DrivingSessionRecord,
+    TelemetryReadingRecord,
+    VehicleRecord,
+)
 from smartdrive.database.types import utc_now
 from smartdrive.models.session import DrivingSession
 from smartdrive.utils.exceptions import DataValidationError, RecordNotFoundError
@@ -76,6 +80,23 @@ class DrivingSessionRepository:
         if data_source is not None:
             stmt = stmt.where(DrivingSessionRecord.data_source == data_source)
         return [DrivingSession.model_validate(r) for r in self._session.scalars(stmt)]
+
+    def close_orphaned(self) -> int:
+        """End sessions left open by an unclean shutdown at their last recorded reading."""
+        open_records = list(
+            self._session.scalars(
+                select(DrivingSessionRecord).where(DrivingSessionRecord.ended_at.is_(None))
+            )
+        )
+        for record in open_records:
+            last = self._session.scalar(
+                select(func.max(TelemetryReadingRecord.timestamp)).where(
+                    TelemetryReadingRecord.session_id == record.id
+                )
+            )
+            record.ended_at = max(last, record.started_at) if last else record.started_at
+        self._session.flush()
+        return len(open_records)
 
     def _require(self, session_id: int) -> DrivingSessionRecord:
         record = self._session.get(DrivingSessionRecord, session_id)

@@ -4,8 +4,11 @@ This file is the authoritative progress tracker. A task is ticked only after the
 functionality has been verified (tests executed, behaviour observed). The full requirements are in
 [docs/SPECIFICATION.md](docs/SPECIFICATION.md).
 
-**Progress: 4 / 38 tasks complete** · Current phase: **Phase 1 complete in code — awaiting owner
-repository setup** · Next phase: Phase 2
+**Progress: 14 / 38 tasks complete** · Current phase: **Phase 2 complete (verified headless) —
+awaiting owner's Windows run** · Next phase: Phase 3
+
+Verification sources: *sandbox* = executed in the isolated Linux build environment (GUI
+headless via Qt `offscreen`); *owner* = reported by the repository owner from their Windows machine.
 
 Legend: `[x]` verified · `[ ]` not started or not yet verified · ⏳ waiting on the owner
 
@@ -13,14 +16,10 @@ Legend: `[x]` verified · `[ ]` not started or not yet verified · ⏳ waiting o
 
 ## Phase 1 — Foundation & Architecture (target: days 1–5)
 
-- [ ] Create the new GitHub repository and fresh Git history. ⏳
-  Fresh, independent history is created by the commands in
-  [docs/developer-guide.md](docs/developer-guide.md#first-time-repository-setup). Remote creation
-  and pushing require the owner's GitHub authentication and approval; repository-name availability
-  could not be checked from the build sandbox.
-- [ ] Establish development and feature branch workflow. ⏳
-  Workflow documented in [CONTRIBUTING.md](CONTRIBUTING.md); `main`, `development` and
-  `feature/project-foundation` are created by the setup commands. Tick after the first push.
+- [x] Create the new GitHub repository and fresh Git history. *(owner)*
+  `Hiranya-Bandara/SmartDrive-Guardian-AI` created with an independent history.
+- [x] Establish development and feature branch workflow. *(owner)*
+  Workflow in [CONTRIBUTING.md](CONTRIBUTING.md); Phase 2 targets `feature/desktop-ui`.
 - [x] Create professional project architecture.
   `src/` layout, layered packages (`config`, `utils`, `models`, `database`), strict typing,
   documented in [docs/architecture.md](docs/architecture.md).
@@ -35,21 +34,33 @@ Legend: `[x]` verified · `[ ]` not started or not yet verified · ⏳ waiting o
   Rotating JSON-lines log, VIN/registration redaction, typed exception hierarchy with
   user-safe messages.
 - [ ] Configure initial testing and continuous integration. ⏳
-  Testing is done and verified: 100 pytest tests pass with 94% branch-aware coverage, and ruff
-  and mypy (strict) are clean. `.github/workflows/ci.yml` (Windows + Ubuntu, ruff, mypy, pytest,
+  Testing is done and verified: 100 Phase 1 tests passed in the sandbox and on the owner's
+  Windows machine (94% coverage), with ruff and mypy (strict) clean. `.github/workflows/ci.yml` (Windows + Ubuntu, ruff, mypy, pytest,
   smoke test, pip-audit) is written and each of its steps passes locally. This gets ticked after
   the first green run on GitHub.
 
 ## Phase 2 — Professional Desktop Application (target: days 6–11)
 
-- [ ] Implement PySide6 application shell.
-- [ ] Build dashboard and sidebar navigation.
-- [ ] Create reusable UI components.
-- [ ] Implement dark and light themes.
-- [ ] Build interactive gauges and live charts.
-- [ ] Implement digital vehicle garage.
-- [ ] Implement advanced simulation laboratory.
-- [ ] Implement background monitoring workers.
+All eight tasks were verified in the *sandbox* (243 tests in total, 93% coverage; GUI exercised
+headless with pytest-qt; screenshots in `docs/screenshots`). A Windows run by the owner is still
+pending.
+
+- [x] Implement PySide6 application shell. `smartdrive gui` / `smartdrive-gui`, lifecycle
+  manager, high-DPI policy, clean startup and shutdown, CLI preserved.
+- [x] Build dashboard and sidebar navigation. Collapsible sidebar (persisted), top bar with
+  vehicle selector, mode, connection and freshness; future modules shown disabled.
+- [x] Create reusable UI components. Cards, metric cards, gauges, status pills, chart
+  containers, nav buttons, form fields, dialogs, toasts and banners, loading/empty/error states.
+- [x] Implement dark and light themes. Specification palette, light palette, system theme,
+  persistence, WCAG AA text contrast tested, keyboard shortcuts.
+- [x] Build interactive gauges and live charts. Animated gauges, PyQtGraph charts with NaN gaps,
+  sensor selection, time ranges, min/max/avg, stale and missing indicators.
+- [x] Implement digital vehicle garage. CRUD with validation and confirmation, search and
+  filter, active vehicle, images, identifier masking and removal, per-vehicle session history.
+- [x] Implement advanced simulation laboratory. 15 reproducible scenarios, gradual faults,
+  noise, seeds, speed, manual driver and sensor overrides, ground-truth labels.
+- [x] Implement background monitoring workers. QThread polling and batch persistence workers,
+  signal-only UI updates, bounded buffers and queues, cancellation, orphaned-session recovery.
 
 ## Phase 3 — Advanced AI Engine (target: days 12–18)
 

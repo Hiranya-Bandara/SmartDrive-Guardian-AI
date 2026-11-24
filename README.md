@@ -7,10 +7,12 @@ hybrid rule-based and machine-learning diagnostics, anomaly detection and mainte
 It works fully offline, works without vehicle hardware through a built-in simulator, and can
 optionally read live data from compatible ELM327 OBD-II adapters in a strictly read-only mode.
 
-> **Project status: version 2.0.0 is in development. Phase 1 (Foundation & Architecture) is
-> finished in code.** The desktop interface, simulator, AI engine and OBD-II integration are not
-> built yet. See [ROADMAP.md](ROADMAP.md) for verified progress. Screenshots, model evaluation
-> results and downloads will be added only once they exist.
+> **Project status: version 2.0.0 is in development. Phases 1 (Foundation) and 2 (Desktop
+> Application) are implemented.** The AI diagnostic engine (Phase 3) and OBD-II, trips,
+> maintenance and reports (Phase 4) are not built yet. In the app, their navigation entries are
+> visible but disabled. See [ROADMAP.md](ROADMAP.md) for verified progress.
+
+![Dashboard (dark theme) during a simulated overheating scenario](docs/screenshots/dashboard.png)
 
 ## Safety disclaimer
 
@@ -18,151 +20,183 @@ SmartDrive Guardian AI is an experimental diagnostic and maintenance assistant. 
 certified vehicle safety system, autonomous driving system or replacement for a qualified
 mechanic. If no abnormality is detected, that does not prove a vehicle is safe to drive.
 
-## What works today (Phase 1)
+## Features available today
 
-- **Per-user data storage.** Data goes in the operating-system data folders (`%LOCALAPPDATA%` on
-  Windows), never in the install or source folder. A portable mode is available with `--home`.
-- **Validated preferences.** Theme, units, monitoring, alerts, OBD-II, retention, privacy and
-  logging settings are type-checked and saved atomically. A corrupt preferences file is set
-  aside and safe defaults are used.
-- **Database foundation.** A SQLite schema covering vehicles, driving sessions, telemetry,
-  diagnostic results, trouble codes, alerts, maintenance schedules and records, settings, model
-  metadata and export history. It has foreign keys, check constraints and indexes, and Alembic
-  migrations run automatically at startup.
-- **Backup and restore.** Backups are consistent online copies that are checked after they are
-  written. Before a restore, the current database is saved as a safety backup. Files that are not
-  SmartDrive databases, or that come from a newer version, are refused.
-- **Data separation.** Every driving session has exactly one data source (simulation, live or
-  replay), so the different kinds of telemetry can't be mixed. Missing sensors are stored as
-  "missing", never as zero.
-- **Privacy-conscious logging.** Logs are rotating JSON lines, and VINs and registration numbers
-  are masked.
-- **Quality gates.** 100 automated tests, Ruff linting and formatting, and strict Mypy type
-  checking. GitHub Actions runs CI on Windows and Ubuntu.
+### Desktop application (Phase 2)
 
-## Planned features
+- **Dashboard.** Active vehicle, monitoring controls, source and connection status, last-update
+  time, coolant and RPM gauges, a digital speedometer, fuel, load and voltage indicators, live
+  speed and coolant trends, and recent alerts.
+- **Live monitoring.** Charts for 11 telemetry parameters with sensor selection, start, stop,
+  pause and resume, configurable refresh interval (100 ms – 5 s) and time range, plus a
+  minimum/maximum/average table. History is held in a bounded buffer.
+  - Status is shown per sensor: OK, Missing, Not supported, Rejected (implausible),
+    No response, Stale or Stopped.
+  - Missing readings appear as gaps and "—", never as zero.
+- **Vehicle garage.**
+  - Add, edit and delete vehicles; deleting asks for confirmation.
+  - Search and fuel filter, active-vehicle selection and optional vehicle images.
+  - Validated forms with inline errors.
+  - VIN and registration number are masked on screen and can be erased.
+  - Per-vehicle history of recorded sessions, with a chart for any sensor.
+- **Simulation laboratory.**
+  - 15 reproducible, time-dependent scenarios: normal, idle, highway, urban, heavy traffic,
+    rapid acceleration, overheating, cooling, lubrication, electrical and fuel-system
+    abnormalities, sensor failure, missing sensors, intermittent connection loss, and multiple
+    simultaneous faults.
+  - Controls for seed, simulation speed (0.5–10×), noise level, ambient temperature and
+    abnormality development time.
+  - A manual driver mode, plus sliders that override individual sensor values.
+  - Live ground-truth labels showing which faults are active and how severe they are.
+- **Settings.** Dark, light or follow-system theme, metric or imperial units, monitoring
+  intervals, data retention, log privacy and log level. Includes backup, restore and reset.
+  Every change is saved immediately.
+- **About.** Version, safety disclaimer, environment details, feature availability and licences.
+- **Background workers.**
+  - Telemetry polling and database writes run on their own threads.
+  - Widgets are only updated through Qt signals.
+  - Stopping or quitting shuts the workers down cleanly.
+- **Interface.**
+  - Collapsible sidebar, keyboard shortcuts and original line icons.
+  - WCAG AA text contrast in both themes (checked by tests).
+  - High-DPI support, and layouts that fit 1366×768 and up.
 
-Each phase is detailed in [docs/SPECIFICATION.md](docs/SPECIFICATION.md):
+### Foundation (Phase 1)
 
-- A PySide6 interface with a dashboard, live monitoring, gauges and charts, and dark and light themes.
-- A digital vehicle garage, a simulation laboratory, trip recording and replay, and a maintenance centre.
-- Hybrid diagnostics: transparent rules, a Random Forest classifier, Isolation Forest anomaly
-  detection, SHAP explanations, and an experimental health score.
-- Read-only OBD-II telemetry and trouble-code reading through Python-OBD.
-- PDF and CSV reports, desktop and voice notifications, and a Windows installer.
+- **Storage location.** Data lives in per-user OS folders, with a portable `--home` mode.
+- **Preferences.** Validated preferences are saved atomically.
+- **Database.** SQLite with Alembic migrations, verified backups, and validated restore with a
+  safety copy taken first.
+- **Logging.** Rotating JSON-lines logs with VIN and registration redaction.
+
+## Screenshots
+
+These are real renders of the application, made with `scripts/capture_screenshots.py`.
+
+| | |
+|---|---|
+| ![Live monitoring](docs/screenshots/monitoring.png) | ![Simulation laboratory](docs/screenshots/simulation.png) |
+| ![Vehicle garage](docs/screenshots/garage.png) | ![Light theme, collapsed sidebar](docs/screenshots/garage-light-collapsed.png) |
+| ![Settings](docs/screenshots/settings.png) | ![Dashboard, light theme](docs/screenshots/dashboard-light.png) |
 
 ## Architecture
 
 ```mermaid
 flowchart TB
-    UI["Presentation (PySide6) — Phase 2"] --> SVC["Services: monitoring, simulator, OBD-II, replay, maintenance"]
-    SVC --> CORE["Core: diagnostics, safety engine, health score, events"]
-    SVC --> AI["AI: preprocessing, classifier, anomaly detector, explainability"]
-    SVC --> REPO["Repositories"]
-    CORE --> MODELS["Domain models (Pydantic)"]
-    REPO --> DB[("SQLite via SQLAlchemy + Alembic")]
-    CFG["Config & paths"] -.-> SVC
-    LOG["Structured logging"] -.-> SVC
+    subgraph GUI thread
+      UI["Pages & widgets (PySide6, PyQtGraph)"] --> MC["MonitoringController"]
+      UI --> SVC["Services: vehicles, telemetry, backup"]
+    end
+    MC -- "queued signals" --> MW["MonitoringWorker (QThread)"]
+    MC -- "queued signals" --> PW["PersistenceWorker (QThread)"]
+    MW --> SRC["TelemetrySource: SimulationSource (OBD-II & replay in Phase 4)"]
+    SRC --> VAL["Shared validation pipeline"]
+    PW --> SVC
+    SVC --> REPO["Repositories"] --> DB[("SQLite via SQLAlchemy + Alembic")]
 ```
 
-The interface never queries the database, trains models or talks to the adapter directly. See
-[docs/architecture.md](docs/architecture.md) for the layers and the decision log.
+Pages never query the database or touch a worker thread directly. Details and the decision log
+are in [docs/architecture.md](docs/architecture.md).
 
 ## Technology stack
 
-| Area | Phase 1 (in use) | Later phases |
+| Area | In use | Later phases |
 |---|---|---|
 | Language | Python 3.12 | — |
+| Desktop UI | PySide6-Essentials 6.12, PyQtGraph 0.14, QSS themes | — |
 | Configuration | Pydantic 2, platformdirs | — |
 | Persistence | SQLite, SQLAlchemy 2, Alembic | — |
-| Quality | pytest, pytest-cov, Ruff, Mypy (strict), pip-audit, GitHub Actions | pytest-qt |
-| UI | — | PySide6, PyQtGraph, QSS |
-| ML | — | scikit-learn, NumPy, pandas, SHAP, joblib |
-| Hardware | — | python-OBD, pySerial |
-| Output | — | ReportLab, pyttsx3 |
-| Distribution | — | PyInstaller, Inno Setup, GitHub Releases |
+| Quality | pytest, pytest-qt, pytest-cov, Ruff, Mypy (strict), pip-audit, GitHub Actions | — |
+| ML | — | scikit-learn, pandas, SHAP, joblib (Phase 3) |
+| Hardware | — | python-OBD, pySerial (Phase 4) |
+| Output | — | ReportLab, pyttsx3 (Phase 4) |
+| Distribution | — | PyInstaller, Inno Setup (Phase 5) |
 
-Dependencies are added in the phase that first uses them. Version ranges are in `pyproject.toml`,
-and exact cross-platform pins are in `requirements*.txt`.
-
-## Installation (developers, Windows PowerShell)
+## Installation (Windows PowerShell)
 
 Prerequisites: [Python 3.12 (64-bit)](https://www.python.org/downloads/) with the `py` launcher, and Git.
 
 ```powershell
-cd E:\SmartDrive-Guardian-AI
+cd "E:\3rd Year\SmartDrive-Guardian-AI-Phase1\SmartDrive-Guardian-AI"   # your project folder
 powershell -ExecutionPolicy Bypass -File .\scripts\setup-dev.ps1
 .\.venv\Scripts\Activate.ps1
 ```
 
-The setup script creates `.venv`, installs the pinned dependencies, installs the package in
-editable mode and runs every quality gate. To do it by hand:
-
-```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
-.\.venv\Scripts\python.exe -m pip install --no-deps -e .
-```
+The setup script creates `.venv`, installs the pinned dependencies, installs the app in editable
+mode and runs every quality gate.
 
 ## Usage
 
 ```powershell
-smartdrive                       # version, data locations, schema revision, disclaimer
-smartdrive --version
-smartdrive db check              # SQLite integrity check
-smartdrive db backup             # timestamped backup in the backups folder (old ones rotated)
-smartdrive db backup --output D:\Backups\smartdrive.db
-smartdrive db restore D:\Backups\smartdrive.db
-smartdrive settings show
-smartdrive settings reset
-smartdrive --home .\portable-data info   # portable mode: keep everything in one folder
+smartdrive gui                    # launch the desktop application
+smartdrive-gui                    # same, without a console window
+python -m smartdrive gui          # same, without the installed entry point
+
+smartdrive                        # CLI: version, data locations, schema revision
+smartdrive db backup | db check | db restore <file>
+smartdrive settings show | settings reset
+smartdrive --home .\portable-data gui   # portable mode: keep everything in one folder
 ```
 
-`python -m smartdrive` and `python main.py` are equivalent. From Phase 2, running `smartdrive`
-with no command launches the desktop application.
+Keyboard shortcuts:
+
+| Shortcut | Action |
+|---|---|
+| Ctrl+1 … Ctrl+6 | Open Dashboard, Live Monitoring, Garage, Simulation Lab, Settings, About |
+| Ctrl+M | Start or stop monitoring |
+| Ctrl+P | Pause or resume |
+| Ctrl+B | Collapse or expand the sidebar |
+| Tab | Move between controls |
 
 ## Testing
 
 ```powershell
-.\scripts\check.ps1                     # ruff, format check, mypy, pytest + coverage
-python -m pytest -m "not integration"   # fast unit tests only
+.\scripts\check.ps1                       # ruff, format check, mypy, pytest + coverage
+python -m pytest -m "not ui"              # skip the GUI tests
+python scripts\capture_screenshots.py     # regenerate docs/screenshots
 ```
 
-Tests use temporary folders and databases only. They never touch your real application data.
+GUI tests run headless (`QT_QPA_PLATFORM=offscreen` is set automatically) and use temporary data
+folders. They never touch your real data.
 
 ## Project structure
 
 ```text
 src/smartdrive/
-├── app.py, cli.py, __main__.py     bootstrap/shutdown and command-line entry
-├── config/                         constants, per-user paths, validated settings
-├── models/                         Pydantic domain models (vehicle, session, telemetry)
-├── database/                       engine, ORM schema, UTC types, repositories, migrations/
-└── utils/                          logging, validators, exception hierarchy
-tests/{unit,integration}/           pytest suites
-docs/                               specification, architecture, database, developer guide
-scripts/                            PowerShell setup, checks, dependency locking
+├── app.py, cli.py              bootstrap/shutdown, command line (info, gui, db, settings)
+├── config/                     constants, per-user paths, validated settings
+├── core/                       sensor metadata, units, validation pipeline, bounded buffers
+├── models/                     Pydantic domain models (vehicle, session, telemetry, alert)
+├── database/                   engine, ORM schema, repositories, migrations/
+├── services/                   data-source interface, simulator & scenarios, vehicle,
+│                               telemetry and backup services
+├── ui/
+│   ├── application.py          Qt lifecycle and service wiring
+│   ├── main_window.py, navigation.py, top_bar.py, monitoring_controller.py
+│   ├── pages/                  dashboard, live monitoring, garage, simulation lab, settings, about
+│   ├── widgets/                cards, gauges, charts, status, states, notifications, inputs
+│   ├── dialogs/                confirmation and vehicle dialogs
+│   ├── workers/                monitoring and persistence workers
+│   └── themes/                 palettes, stylesheet template, theme manager
+└── utils/                      logging, validators, exceptions
+tests/{unit,integration,ui}/    pytest and pytest-qt suites
 ```
-
-Later phases add packages under `src/smartdrive/` (`core/`, `ai/`, `services/`, `ui/`,
-`reports/`) when they gain real code. Empty placeholder modules are not committed.
-
-## Documentation
-
-- [Master specification](docs/SPECIFICATION.md)
-- [Roadmap and progress](ROADMAP.md)
-- [Architecture and decision log](docs/architecture.md)
-- [Database design](docs/database.md)
-- [Developer guide](docs/developer-guide.md)
-- [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Changelog](CHANGELOG.md)
 
 ## Known limitations
 
-- There is no graphical interface yet; Phase 1 ships the foundation and a maintenance CLI.
-- No machine-learning models exist yet, so no metrics are claimed.
-- No OBD-II hardware has been tested. Hardware support will be marked experimental until it is
-  physically verified.
+- There is no machine-learning diagnostics, health score or automatic alert generation yet
+  (Phase 3). The Recent alerts card shows stored alerts only, so for now it is empty.
+- All telemetry currently comes from the simulator. Simulated faults are illustrative and not
+  calibrated to any real vehicle.
+- No OBD-II hardware support or testing yet (Phase 4).
+- The GUI has been tested headless on Linux. It has not been run on Windows by the developer.
+  The pinned Windows wheels are standard PySide6 builds.
+
+## Documentation
+
+- [Master specification](docs/SPECIFICATION.md) · [Roadmap](ROADMAP.md) · [Changelog](CHANGELOG.md)
+- [Architecture](docs/architecture.md) · [Database](docs/database.md) · [Developer guide](docs/developer-guide.md)
+- [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md)
 
 ## Licence
 

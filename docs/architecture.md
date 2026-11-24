@@ -4,9 +4,9 @@
 
 | Layer | Package | Responsibility | May depend on |
 |---|---|---|---|
-| Presentation | `ui/` (Phase 2) | Widgets, pages, themes, Qt workers | services, models, config |
-| Services | `services/` (Phase 2+) | Monitoring, data sources, maintenance, notifications | core, ai, repositories, models |
-| Core | `core/` (Phase 2–3) | Diagnostics, safety rules, health score, events | models, config |
+| Presentation | `ui/` | Widgets, pages, themes, Qt workers | services, models, config |
+| Services | `services/` | Data sources and simulator, vehicles, telemetry sessions, backup | core, ai, repositories, models |
+| Core | `core/` | Sensor metadata, units, validation pipeline, bounded buffers (diagnostics in Phase 3) | models, config |
 | AI | `ai/` (Phase 3) | Preprocessing, training, inference, explanations | models |
 | Persistence | `database/` | Engine, schema, migrations, repositories | models, config, utils |
 | Domain models | `models/` | Validated Pydantic types exchanged between layers | config, utils |
@@ -40,6 +40,43 @@ session must reference the recording it replays, and only a replay session may. 
 session can't receive more telemetry. Every sensor value is nullable, and "not reported" is
 stored as `NULL`, never zero.
 
+## Desktop application (Phase 2)
+
+### Threading model
+
+```text
+GUI thread                                   Worker threads
+──────────                                   ──────────────
+Pages ─► MonitoringController ── signal ──► MonitoringWorker (QThread)
+  ▲            │  ▲                              │  QTimer tick → TelemetrySource.read()
+  │            │  └──────── frame_ready ─────────┘
+  │            └──── enqueue (signal) ─────────► PersistenceWorker (QThread)
+  │                                                 batches → TelemetryService.append()
+  └── refresh timers (200–250 ms) read the bounded TelemetryBuffer
+```
+
+- Widgets are created and updated only on the GUI thread. Workers communicate exclusively
+  through queued signals.
+- Configuration changes (overrides, speed, scenario, reset) are sent to the worker as callables
+  and executed inside the worker thread, so the telemetry source needs no locks.
+- Stopping uses a blocking queued `stop()` on each worker, followed by `quit()` and `wait()`.
+  The persistence worker flushes its queue before the session is closed. Quitting the
+  application runs the same path.
+- Pages redraw on a timer only when new data has arrived and the page is visible, which keeps
+  chart updates cheap at high refresh rates.
+- Memory is bounded: the telemetry buffer holds at most `chart_history_seconds × 10` points per
+  sensor (maximum 36,000), and the persistence queue holds at most 10,000 samples, dropping the
+  oldest and counting the drops.
+- Sessions left open by a crash are closed at the next startup, at their last recorded reading.
+
+### Data integrity in the UI
+
+Every telemetry source goes through `core.telemetry_processing.build_sample`. Values outside the
+plausibility bounds of `TelemetrySample` become *missing* and are reported as *rejected*. Missing
+data is drawn as a gap and shown as "—". When monitoring stops, gauges blank out, and the live
+table keeps the last trace but marks it "Stopped". The simulator is labelled everywhere it
+appears (banners, mode pill, session source).
+
 ## Decision log
 
 | # | Decision | Rationale |
@@ -55,3 +92,11 @@ stored as `NULL`, never zero.
 | 9 | Dependencies added per phase | The specification forbids unnecessary dependencies. Phase 1 needs only platformdirs, Pydantic, SQLAlchemy and Alembic. |
 | 10 | `requires-python = ">=3.12,<3.13"` | The specification targets Python 3.12. Pinning one minor version keeps the PyInstaller build reproducible. |
 | 11 | No GUI placeholder in Phase 1; the entry point is a maintenance CLI | The specification forbids placeholder screens. The CLI commands (backup, restore, check) stay useful after the GUI arrives. |
+| 12 | One QSS template plus typed palettes instead of separate `dark.qss`/`light.qss` | A single source of styling; palettes are unit-tested for WCAG contrast. |
+| 13 | PySide6-Essentials instead of the PySide6 meta-package | Provides every module used (QtWidgets, QtSvg) without WebEngine and other add-ons, so installs and the Phase 5 bundle are much smaller. |
+| 14 | Separate `MonitoringController` (GUI thread) and workers (QThreads) | Pages depend on one signal-based façade, workers stay UI-free, and the controller can be tested without pages. |
+| 15 | Simulator uses seeded `random.Random` streams per concern (profile, noise, events, faults) | Runs are reproducible, and adding noise does not alter the driving profile, which suits Phase 3 dataset generation. |
+| 16 | Fault effects are applied inside the vehicle dynamics, not painted onto outputs | Signatures emerge coherently (for example, coolant loss raises oil temperature too), giving more realistic training data. Only sensor faults alter readings directly. |
+| 17 | Unimplemented modules are shown disabled with their phase | Honest navigation without placeholder screens (§7, §3). |
+| 18 | PyQtGraph context menus are re-parented to their plot | PyQtGraph creates them without a parent; otherwise every closed chart leaked about 5 top-level menus. |
+
