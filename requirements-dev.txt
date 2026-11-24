@@ -13,8 +13,10 @@ certifi==2026.11.20
     # via requests
 charset-normalizer==3.5.3
     # via requests
-colorama==0.4.6 ; sys_platform == 'win32'
-    # via pytest
+colorama==0.4.6
+    # via
+    #   pyqtgraph
+    #   pytest
 coverage==7.17.5
     # via pytest-cov
 cyclonedx-python-lib==11.12.0
@@ -47,6 +49,10 @@ mypy-extensions==1.2.0
     # via
     #   librt
     #   mypy
+numpy==2.5.5
+    # via
+    #   smartdrive-guardian-ai (pyproject.toml)
+    #   pyqtgraph
 packageurl-python==0.17.6
     # via cyclonedx-python-lib
 packaging==26.4
@@ -72,6 +78,7 @@ pluggy==1.7.0
     # via
     #   pytest
     #   pytest-cov
+    #   pytest-qt
 py-serializable==2.2.0
     # via cyclonedx-python-lib
 pydantic==2.14.4
@@ -84,11 +91,18 @@ pygments==2.21.0
     #   rich
 pyparsing==3.3.3
     # via pip-requirements-parser
+pyqtgraph==0.14.0
+    # via smartdrive-guardian-ai (pyproject.toml)
+pyside6-essentials==6.12.0
+    # via smartdrive-guardian-ai (pyproject.toml)
 pytest==9.2.0
     # via
     #   smartdrive-guardian-ai (pyproject.toml)
     #   pytest-cov
+    #   pytest-qt
 pytest-cov==7.1.0
+    # via smartdrive-guardian-ai (pyproject.toml)
+pytest-qt==4.5.0
     # via smartdrive-guardian-ai (pyproject.toml)
 requests==2.34.2
     # via
@@ -98,6 +112,8 @@ rich==15.0.0
     # via pip-audit
 ruff==0.17.6
     # via smartdrive-guardian-ai (pyproject.toml)
+shiboken6==6.12.0
+    # via pyside6-essentials
 sortedcontainers==2.4.0
     # via cyclonedx-python-lib
 sqlalchemy==2.1.9
@@ -115,6 +131,7 @@ typing-extensions==4.16.0
     #   mypy
     #   pydantic
     #   pydantic-core
+    #   pytest-qt
     #   sqlalchemy
     #   typing-inspection
 typing-inspection==0.4.5

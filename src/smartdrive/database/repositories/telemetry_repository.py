@@ -58,6 +58,17 @@ class TelemetryRepository:
         stmt = select(func.count()).where(TelemetryReadingRecord.session_id == session_id)
         return int(self._session.scalar(stmt) or 0)
 
+    def counts_by_session(self, session_ids: Sequence[int]) -> dict[int, int]:
+        if not session_ids:
+            return {}
+        stmt = (
+            select(TelemetryReadingRecord.session_id, func.count())
+            .where(TelemetryReadingRecord.session_id.in_(session_ids))
+            .group_by(TelemetryReadingRecord.session_id)
+        )
+        counts = {int(sid): int(n) for sid, n in self._session.execute(stmt)}
+        return {sid: counts.get(sid, 0) for sid in session_ids}
+
     def purge_sessions_before(self, cutoff: datetime) -> int:
         """Retention policy: delete finished sessions that started before ``cutoff``.
         Their telemetry is removed by the foreign-key cascade."""

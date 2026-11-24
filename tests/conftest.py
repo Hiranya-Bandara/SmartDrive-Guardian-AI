@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+import os
+
+# Qt must run headless in tests; set before any QApplication exists. Override to watch locally.
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
 from pathlib import Path

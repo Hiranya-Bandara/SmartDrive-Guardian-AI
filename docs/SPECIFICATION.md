@@ -1443,3 +1443,9 @@ docs/architecture.md (decision log).
 | 2026-11-24 | §4 dependencies | Runtime dependencies are declared in the phase that first imports them. Phase 1 uses platformdirs, Pydantic, SQLAlchemy and Alembic. |
 | 2026-11-24 | §27 CI | `release.yml` is added in Phase 5 with the packaging work, so the workflow is not a non-functional placeholder. `ci.yml` is active from Phase 1. |
 | 2026-11-24 | §32 entry point | Phase 1's entry point is a maintenance CLI (`info`, `db check/backup/restore`, `settings show/reset`), not a placeholder window. From Phase 2 the default command launches the GUI. |
+| 2026-11-24 | §5 themes | `ui/themes/dark.qss` and `light.qss` are replaced by one `stylesheet.qss` template filled from typed palettes (`palette.py`), so the themes cannot drift apart (DRY). |
+| 2026-11-24 | §4 dependencies | `PySide6-Essentials` is used instead of the `PySide6` meta-package. It contains every module the application uses (QtWidgets, QtSvg) without the large add-ons, which reduces install and bundle size. |
+| 2026-11-24 | §7 navigation | Pages planned for later phases appear in a "Coming later" sidebar section, disabled and labelled with their phase, so no placeholder screens exist. |
+| 2026-11-24 | §8 dashboard | No health score or diagnostic summary is shown until the Phase 3 engine exists. Recent alerts lists stored alerts only and states that an empty list is not proof of safety. Gauge colour bands are generic display ranges, not diagnoses. |
+| 2026-11-24 | §32 entry point | `smartdrive` with no command still prints `info` (keeps the Phase 1 CLI and tests stable). The GUI is launched with `smartdrive gui` or the windowless `smartdrive-gui` entry point. |
+
