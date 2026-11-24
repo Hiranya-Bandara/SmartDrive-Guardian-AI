@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Runtime data — must never be committed
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.log
+logs/
+settings.json
+.smartdrive-home/
+
+# Generated datasets and models are tracked explicitly (see docs) — ignore scratch output
+datasets/scratch/
+trained_models/scratch/
+
+# Packaging
+installer/Output/
+*.spec.bak
+
+# Secrets and editor files
+.env
+.env.*
+*.pem
+*.key
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

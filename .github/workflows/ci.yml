@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [main, development, "feature/**"]
+  pull_request:
+    branches: [main, development]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint, types and tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install pinned dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+          python -m pip install --no-deps -e .
+
+      - name: Validate project configuration
+        run: python -m pip check
+
+      - name: Ruff lint
+        run: python -m ruff check .
+
+      - name: Ruff format check
+        run: python -m ruff format --check .
+
+      - name: Mypy (strict)
+        run: python -m mypy
+
+      - name: Pytest with coverage
+        run: python -m pytest --cov --cov-report=term --cov-report=xml
+
+      - name: Application smoke test
+        shell: bash
+        run: |
+          python -m smartdrive --home "${RUNNER_TEMP}/smartdrive-smoke" info
+          python -m smartdrive --home "${RUNNER_TEMP}/smartdrive-smoke" db check
+
+      - name: Upload coverage report
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          retention-days: 14
+
+  dependency-audit:
+    name: Dependency vulnerability audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Audit pinned requirements
+        run: |
+          python -m pip install pip-audit
+          python -m pip_audit --strict -r requirements-dev.txt

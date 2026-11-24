@@ -1,0 +1,104 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smartdrive-guardian-ai"
+version = "2.0.0"
+description = "AI-powered desktop application for intelligent vehicle diagnostics, real-time telemetry monitoring, anomaly detection and predictive maintenance assistance."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["vehicle-diagnostics", "obd2", "predictive-maintenance", "pyside6", "machine-learning"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Win32 (MS Windows)",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+# Runtime dependencies are added phase by phase, only when code uses them.
+# Phase 2 adds PySide6/PyQtGraph, Phase 3 the ML stack, Phase 4 python-OBD/ReportLab.
+dependencies = [
+    "platformdirs>=4.3,<5",
+    "pydantic>=2.10,<3",
+    "SQLAlchemy>=2.0.36,<2.2",
+    "alembic>=1.14,<2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+    "ruff>=0.9",
+    "mypy>=1.14",
+    "pip-audit>=2.7",
+]
+
+[project.scripts]
+smartdrive = "smartdrive.cli:main"
+
+[project.urls]
+Repository = "https://github.com/Hiranya-Bandara/SmartDrive-Guardian-AI"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+smartdrive = [
+    "py.typed",
+    "database/migrations/env.py",
+    "database/migrations/script.py.mako",
+    "database/migrations/versions/*.py",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "N", "RUF", "S", "PTH", "LOG", "G"]
+ignore = ["G004"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S603", "PLR2004"]
+"src/smartdrive/database/migrations/versions/*.py" = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+mypy_path = "src"
+packages = ["smartdrive"]
+plugins = ["pydantic.mypy"]
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = ["smartdrive.database.migrations.*"]
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+xfail_strict = true
+markers = [
+    "integration: tests that touch the filesystem or a real SQLite database",
+]
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+source = ["smartdrive"]
+branch = true
+omit = ["*/database/migrations/versions/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError"]

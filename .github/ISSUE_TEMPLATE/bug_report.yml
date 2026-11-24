@@ -1,0 +1,34 @@
+name: Bug report
+description: Report something that does not work as documented.
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Include the steps to reproduce and what you expected instead.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Application version
+      placeholder: "2.0.0 (run: smartdrive --version)"
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Operating mode
+      options: [Simulation, Live vehicle (OBD-II), Replay, Not applicable]
+  - type: input
+    id: adapter
+    attributes:
+      label: OBD-II adapter and vehicle (if live mode)
+      description: Adapter model and vehicle make/model/year. Do NOT include your VIN or registration number.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log lines
+      description: From smartdrive.log. Review for personal information before posting.
+      render: shell
