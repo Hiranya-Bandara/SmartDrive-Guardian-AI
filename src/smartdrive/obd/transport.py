@@ -13,6 +13,7 @@ import threading
 import time
 from typing import Final, Protocol, runtime_checkable
 
+from smartdrive.obd.commands import ensure_allowed_frame
 from smartdrive.obd.errors import (
     AdapterDisconnectedError,
     CommunicationTimeoutError,
@@ -98,6 +99,7 @@ class SerialTransport:
             raise InvalidPortError(f"Cannot open {self._port}: {exc}") from exc
 
     def write(self, data: bytes) -> None:
+        ensure_allowed_frame(data)  # read-only allowlist, checked again at the serial boundary
         handle = self._require()
         import serial
 

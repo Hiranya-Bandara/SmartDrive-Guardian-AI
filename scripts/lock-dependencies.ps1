@@ -11,7 +11,10 @@ $header = '# Generated from pyproject.toml - do not edit by hand. Regenerate wit
 
 $targets = @(
     @{ File = 'requirements.txt'; Extra = @() },
-    @{ File = 'requirements-dev.txt'; Extra = @('--extra', 'dev') }
+    @{ File = 'requirements-dev.txt'; Extra = @('--extra', 'dev') },
+    # Release tools are locked against the dev pins so that one environment can hold both and the
+    # runtime versions in the build are exactly those in requirements.txt.
+    @{ File = 'requirements-release.txt'; Extra = @('--extra', 'release', '-c', 'requirements-dev.txt') }
 )
 foreach ($target in $targets) {
     uv pip compile pyproject.toml @($target.Extra) --universal --python-version 3.12 --no-header -q -o $target.File

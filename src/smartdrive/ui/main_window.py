@@ -10,6 +10,7 @@ from smartdrive import APP_NAME, __version__
 from smartdrive.config.constants import NotificationSeverity
 from smartdrive.models.notification import Notification
 from smartdrive.ui.context import UiContext
+from smartdrive.ui.icons import app_icon
 from smartdrive.ui.navigation import NavItem, Sidebar
 from smartdrive.ui.pages.about import AboutPage
 from smartdrive.ui.pages.ai_diagnostics import AiDiagnosticsPage
@@ -66,6 +67,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.ctx = ctx
         self.setWindowTitle(f"{APP_NAME} {__version__}")
+        self.setWindowIcon(app_icon())
         self.setMinimumSize(MIN_WIDTH, MIN_HEIGHT)
         self.resize(1440, 900)
 

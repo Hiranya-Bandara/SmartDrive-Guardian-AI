@@ -1,0 +1,26 @@
+SmartDrive Guardian AI 2.0.0
+
+Offline desktop assistant for vehicle diagnostics, trip history and maintenance records.
+
+Please read before installing:
+
+* Educational and informational software. It is not a certified automotive diagnostic or
+  safety system and does not confirm that a vehicle is safe to drive.
+
+* The machine-learning models were trained and evaluated on SIMULATED data only. Their
+  accuracy on real vehicles has not been measured.
+
+* OBD-II support is strictly read-only (it cannot clear trouble codes, program or control the
+  vehicle). Communication with physical OBD-II adapters and vehicles has not yet been verified;
+  simulation mode needs no hardware.
+
+* Do not operate the application while driving. Set it up while parked or let a passenger use
+  it.
+
+* Everything stays on this computer. There is no account, no internet requirement and no
+  telemetry. Your data is stored in %LOCALAPPDATA%\SmartDriveGuardianAI and is kept when the
+  application is uninstalled or upgraded.
+
+* This installer and the application are not code-signed. Windows SmartScreen may warn about
+  an unrecognised application. Verify the SHA-256 checksum published with the release before
+  running it.

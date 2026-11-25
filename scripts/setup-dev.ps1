@@ -3,10 +3,14 @@
     Creates the development virtual environment, installs pinned dependencies and verifies the setup.
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File .\scripts\setup-dev.ps1
+.EXAMPLE
+    powershell -ExecutionPolicy Bypass -File .\scripts\setup-dev.ps1 -Release -SkipTests
 #>
 [CmdletBinding()]
 param(
-    [switch]$SkipTests
+    [switch]$SkipTests,
+    # Also install the release tools (PyInstaller, SBOM and licence generators).
+    [switch]$Release
 )
 
 $ErrorActionPreference = 'Stop'
@@ -32,6 +36,9 @@ $python = Join-Path $root '.venv\Scripts\python.exe'
 
 Invoke-Checked 'Upgrading pip' { & $python -m pip install --upgrade pip }
 Invoke-Checked 'Installing pinned dependencies' { & $python -m pip install -r requirements-dev.txt }
+if ($Release) {
+    Invoke-Checked 'Installing release tools' { & $python -m pip install -r requirements-release.txt }
+}
 Invoke-Checked 'Installing SmartDrive (editable)' { & $python -m pip install --no-deps -e . }
 Invoke-Checked 'Checking dependency consistency' { & $python -m pip check }
 

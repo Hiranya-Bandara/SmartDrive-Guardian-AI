@@ -189,4 +189,4 @@ data:
 
 Connection history stores the port name, adapter version, protocol, supported PIDs and sample
 counts — not the VIN (mode 09 is blocked). Everything stays in the local database. See
-[privacy.md](privacy.md).
+[PRIVACY.md](../PRIVACY.md).

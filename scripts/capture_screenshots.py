@@ -16,6 +16,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 from pathlib import Path
 
+from PIL import Image
 from PySide6.QtCore import QEventLoop, QTimer
 from PySide6.QtWidgets import QApplication, QScrollArea, QWidget
 
@@ -35,6 +36,7 @@ from smartdrive.services.maintenance_service import EXAMPLE_INTERVALS
 from smartdrive.services.scenarios import ScenarioId
 from smartdrive.services.simulator import SimulationConfig
 from smartdrive.ui.application import GuiApplication, ensure_qapplication
+from smartdrive.ui.dialogs.welcome import show_welcome
 
 
 def wait(ms: int) -> None:
@@ -54,15 +56,15 @@ def capture(output: Path, width: int, height: int) -> list[Path]:
         ui, window = gui.ui, gui.window
         vehicle = ui.vehicles.add(
             VehicleProfile(
-                name="Family Hatchback",
-                manufacturer="Toyota",
-                model="Aqua",
+                # Fictional demonstration vehicle: no real make, registration or VIN.
+                name="Demo Hatchback (fictional)",
+                manufacturer="Example",
+                model="Hatchback",
                 year=2017,
                 fuel_type=FuelType.HYBRID,
                 transmission=TransmissionType.CVT,
                 engine_capacity_cc=1500,
                 mileage_km=86_400,
-                registration_number="CAB-4821",
             )
         )
         ui.state.set_active_vehicle(vehicle.id)
@@ -121,6 +123,10 @@ def capture(output: Path, width: int, height: int) -> list[Path]:
             window.show_page(key)
             wait(400)
             written.append(_grab(window, output / f"{key}.png"))
+        welcome = show_welcome(ui, window)
+        wait(500)
+        written.append(_grab(welcome, output / "welcome.png"))
+        welcome.accept()
         ui.theme.set_preference(ThemePreference.LIGHT)
         ui.monitoring.start()
         wait(4000)
@@ -266,6 +272,10 @@ def _wait_until(condition: Callable[[], bool], timeout_ms: int, what: str) -> No
 
 def _grab(window: QWidget, path: Path) -> Path:
     window.grab().save(str(path))
+    # Lossless re-compression keeps text sharp and the files small.
+    with Image.open(path) as image:
+        image.load()
+    image.save(path, optimize=True)
     return path
 
 

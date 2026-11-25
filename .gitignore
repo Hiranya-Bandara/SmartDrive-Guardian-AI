@@ -36,8 +36,9 @@ settings.json
 datasets/scratch/
 trained_models/scratch/
 
-# Packaging
+# Packaging and release output (built by scripts/build-*.ps1, published via GitHub Releases)
 installer/Output/
+release/
 *.spec.bak
 
 # Secrets and editor files

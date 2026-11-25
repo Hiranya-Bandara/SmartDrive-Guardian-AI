@@ -15,6 +15,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Final
 
+from smartdrive.obd.commands import ensure_allowed_frame
 from smartdrive.obd.errors import (
     AdapterDisconnectedError,
     CommunicationTimeoutError,
@@ -210,6 +211,7 @@ class MockElm327Transport:
         self.disconnected = True
 
     def write(self, data: bytes) -> None:
+        ensure_allowed_frame(data)  # the mock enforces the same boundary as the serial port
         if not self._open or self.disconnected:
             raise AdapterDisconnectedError("Mock adapter is not connected")
         text = data.decode("ascii").strip().upper()

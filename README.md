@@ -1,142 +1,119 @@
-# SmartDrive Guardian AI
+<p align="center">
+  <img src="docs/branding/smartdrive-logo-on-light.png#gh-light-mode-only" alt="SmartDrive Guardian AI" width="560">
+  <img src="docs/branding/smartdrive-logo-on-dark.png#gh-dark-mode-only" alt="SmartDrive Guardian AI" width="560">
+</p>
 
-**Intelligent Vehicle Diagnostics & Predictive Maintenance**
+<h1 align="center">SmartDrive Guardian AI</h1>
 
-SmartDrive Guardian AI is a Windows-first desktop application for vehicle telemetry monitoring,
-hybrid rule-based and machine-learning diagnostics, anomaly detection and maintenance management.
-It works fully offline, works without vehicle hardware through a built-in simulator, and can
-optionally read live data from compatible ELM327 OBD-II adapters in a strictly read-only mode.
+<p align="center"><strong>Intelligent Diagnostics. Smarter Maintenance.</strong></p>
 
-> **Project status: version 2.0.0 is in development. Phases 1–4 are implemented** (foundation,
-> desktop application, AI engine, vehicle integration). Phase 5 (release packaging) remains.
-> See [ROADMAP.md](ROADMAP.md) for verified progress.
+<p align="center">
+  <a href="https://github.com/Hiranya-Bandara/SmartDrive-Guardian-AI/actions/workflows/ci.yml"><img src="https://github.com/Hiranya-Bandara/SmartDrive-Guardian-AI/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <img src="https://img.shields.io/badge/python-3.12-3776AB" alt="Python 3.12">
+  <img src="https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078D4" alt="Windows 10/11 x64">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"></a>
+</p>
+
+SmartDrive Guardian AI is an offline-first Windows desktop application for **educational**
+vehicle diagnostics and maintenance. It monitors engine telemetry in real time, analyses it with
+a hybrid engine of transparent rules and machine-learning models that explain their predictions,
+records and replays trips, keeps maintenance records and produces PDF and CSV reports. It works
+without any hardware through a built-in simulator, and can read live data from ELM327-compatible
+OBD-II adapters in a strictly read-only mode.
+
+> **Status — version 2.0.0 release candidate (not yet published).** All features are
+> implemented and tested in the development environment. The Windows executable and installer
+> are fully configured but have **not yet been built and verified on Windows**; see the
+> [release checklist](docs/release-checklist.md).
 >
-> **The OBD-II integration has been tested only against a software mock adapter.** It has not
-> yet been tested with a physical adapter or vehicle; see the
-> [real-hardware checklist](docs/hardware-verification-checklist.md).
->
-> **All machine-learning models were trained and evaluated on simulated data only.** The
-> results below show how well they recover the simulator's own fault patterns. They are not
-> evidence of real-world diagnostic accuracy.
+> **Hardware:** tested only with a software mock adapter — physical adapters and vehicles are
+> **unverified**. **AI:** all models were trained and evaluated on **simulated data only**; the
+> results below are not evidence of real-world accuracy. This is not a certified diagnostic or
+> safety system. **Do not use it while driving.**
 
 ![AI Diagnostics during a simulated overheating scenario](docs/screenshots/diagnostics.png)
 
-## Safety disclaimer
+## Key features
 
-SmartDrive Guardian AI is an experimental diagnostic and maintenance assistant. It is not a
-certified vehicle safety system, autonomous driving system or replacement for a qualified
-mechanic. If no abnormality is detected, that does not prove a vehicle is safe to drive.
+| Area | What it does |
+|---|---|
+| **Monitoring** | Dashboard gauges and live charts for 11 signals, simulation, live (read-only OBD-II) and replay sources, each labelled on screen. |
+| **Hybrid AI diagnostics** | 7 transparent rules + Random Forest fault classifier + Isolation Forest anomaly detector over 96 features; tree-path explanations; experimental health score; abstains on stale, incomplete or incompatible data. |
+| **Simulation Lab** | 15 documented scenarios (overheating, electrical, fuel, lubrication, sensor failure, missing sensors, connection loss, …) with seed, speed, noise and fault development. |
+| **Vehicle connection** | In-house ELM327 client: USB and Bluetooth COM ports, 19 standard parameters, supported-PID discovery, link quality, reconnection; never connects on its own. |
+| **Trouble codes** | Stored, pending and permanent codes, MIL and freeze frame, scan history, generic descriptions; **no clear-codes function**. |
+| **Trips** | Recording, summaries, estimated distance, diagnostic timeline, replay at 0.5–4× with seek. |
+| **Maintenance** | Records, your own schedules and reminders, odometer, costs per currency, AI-related observations. |
+| **Reports** | 7 PDF report types and 8 CSV datasets; identifiers excluded by default; formula-injection-safe CSV. |
+| **Notifications** | Alert Centre with de-duplication and acknowledgement, Windows desktop notifications, optional offline voice. |
+| **Desktop** | 13 pages, dark/light/system themes, keyboard shortcuts, background workers, first-run guide. |
 
-## Features available today
+## Download and installation
 
-### Vehicle integration (Phase 4)
+**Packaged Windows release** (installer or portable ZIP): published on the
+[Releases page](https://github.com/Hiranya-Bandara/SmartDrive-Guardian-AI/releases) once
+version 2.0.0 has been approved and released. The files are not code-signed; verify their
+SHA-256 checksums as described in the [installation guide](docs/installation.md).
 
-- **Read-only OBD-II** through ELM327-compatible USB or Bluetooth Classic (serial) adapters, with
-  an in-house client in which every request must pass a closed allowlist. No code clearing, no
-  writes, no actuator or CAN commands, no VIN reading. [Details](docs/hardware.md)
-- **Vehicle Connection page.** Port discovery (never auto-connects), separate adapter and ECU
-  states, supported-parameter discovery, per-parameter status each cycle, measured link
-  quality, connection diagnostics, setup guidance and vehicle-specific rule thresholds.
-- **Robust failure handling.** Timeouts, malformed and empty replies, unsupported PIDs, ignition
-  off, adapter loss with bounded back-off reconnection, stale data — all on a worker thread.
-- **Diagnostic trouble codes.** Stored, pending and permanent codes, MIL state and freeze frame;
-  scan history, filters, details, sourced generic descriptions (manufacturer-specific codes
-  are never given a meaning) and related AI findings.
-- **Three telemetry modes** through one pipeline: simulation, live vehicle and **replay**, each
-  clearly labelled; switching resets windows and diagnostic state.
-- **Trip History.** Statistics with time-aware *estimated* distance, timelines, charts, filters,
-  export, safe deletion, and replay at 0.5–4× with seeking (replays never write history).
-- **Maintenance centre.** Records, your own date/mileage schedules, reminder states including
-  "insufficient mileage information", odometer freshness, costs per currency (never summed
-  across currencies) and cautious AI-related observations.
-- **Reports.** Seven PDF report types (ReportLab) and eight CSV datasets with formula-injection
-  protection, privacy options, export history. [Details](docs/reports.md),
-  [samples](docs/samples/) (simulated data).
-- **Notifications.** In-app toasts, Alert Centre with read/acknowledged/condition states,
-  optional Windows desktop notifications, sounds and **offline voice announcements**, with
-  deduplication and cooldowns.
+**From source** (Windows PowerShell, CPython 3.12 x64):
 
-### AI diagnostics (Phase 3)
+```powershell
+git clone https://github.com/Hiranya-Bandara/SmartDrive-Guardian-AI.git
+cd SmartDrive-Guardian-AI
+powershell -ExecutionPolicy Bypass -File .\scripts\setup-dev.ps1
+.\.venv\Scripts\Activate.ps1
+smartdrive gui
+```
 
-- **Hybrid diagnostic engine.**
-  - A transparent rule engine with configurable thresholds, persistence, hysteresis and
-    missing/stale-data handling.
-  - A multi-label **Random Forest** classifier covering cooling, lubrication, fuel, electrical and
-    sensor faults.
-  - An **Isolation Forest** anomaly detector trained on normal driving.
-  - Rules are never overridden by a model. Model findings are at most *warning*, and an
-    unexplained anomaly is *information* only.
-- **Explainable AI.** Exact per-prediction feature contributions (tree-path decomposition)
-  with supporting and opposing evidence, plus global permutation importance, shown as charts.
-- **Experimental health score (0–100).** Every deduction is itemised, and the score is
-  unavailable when data is insufficient. It is never presented as a safety rating.
-- **AI Diagnostics page.**
-  - Status, model availability, last inference time and inference latency, data completeness,
-    findings with sources and evidence, model output per category, anomaly score and threshold.
-  - Explanations, cautious recommendations, a live health trend, and a filterable, searchable
-    diagnostic history.
-  - Explicit states for: stopped, loading, insufficient data, stale, model unavailable,
-    inference failure, no abnormality, warning and critical.
-- **Background inference.**
-  - Runs on its own thread every 2 s (configurable) and never overlaps or queues.
-  - Results from a stopped run are discarded.
-  - Telemetry keeps updating while inference runs, and shutdown is clean.
-- **Persistence and alerts.** Assessments, findings, anomaly events and health history are
-  stored per vehicle and session. Alerts are deduplicated with a cooldown.
-- **Trusted models.** The bundled artefacts are verified by SHA-256 against the shipped
-  manifest and checked against the scikit-learn minor version and the feature schema before
-  loading. User-supplied model files are never loaded.
-- **Reproducible pipeline.** One command regenerates the dataset, both models, the evaluation
-  report and the figures (`scripts/train_models.py`).
+## System requirements
 
-### Desktop application (Phase 2)
+Windows 10 or 11, 64-bit; about 500 MB of disk space for the application; 4 GB RAM or more
+recommended; no Python, internet connection or administrator rights needed for the packaged
+version. Optional: an ELM327-compatible USB or Bluetooth (COM port) adapter. Details:
+[docs/system-requirements.md](docs/system-requirements.md).
 
-- **Dashboard.** Active vehicle, monitoring controls, source and connection status, last-update
-  time, coolant and RPM gauges, a digital speedometer, fuel, load and voltage indicators, live
-  speed and coolant trends, and recent alerts.
-- **Live monitoring.** Charts for 11 telemetry parameters with sensor selection, start, stop,
-  pause and resume, configurable refresh interval (100 ms – 5 s) and time range, plus a
-  minimum/maximum/average table. History is held in a bounded buffer.
-  - Status is shown per sensor: OK, Missing, Not supported, Rejected (implausible),
-    No response, Stale or Stopped.
-  - Missing readings appear as gaps and "—", never as zero.
-- **Vehicle garage.**
-  - Add, edit and delete vehicles; deleting asks for confirmation.
-  - Search and fuel filter, active-vehicle selection and optional vehicle images.
-  - Validated forms with inline errors.
-  - VIN and registration number are masked on screen and can be erased.
-  - Per-vehicle history of recorded sessions, with a chart for any sensor.
-- **Simulation laboratory.**
-  - 15 reproducible, time-dependent scenarios: normal, idle, highway, urban, heavy traffic,
-    rapid acceleration, overheating, cooling, lubrication, electrical and fuel-system
-    abnormalities, sensor failure, missing sensors, intermittent connection loss, and multiple
-    simultaneous faults.
-  - Controls for seed, simulation speed (0.5–10×), noise level, ambient temperature and
-    abnormality development time.
-  - A manual driver mode, plus sliders that override individual sensor values.
-  - Live ground-truth labels showing which faults are active and how severe they are.
-- **Settings.** Dark, light or follow-system theme, metric or imperial units, monitoring
-  intervals, data retention, log privacy and log level. Includes backup, restore and reset.
-  Every change is saved immediately.
-- **About.** Version, safety disclaimer, environment details, feature availability and licences.
-- **Background workers.**
-  - Telemetry polling and database writes run on their own threads.
-  - Widgets are only updated through Qt signals.
-  - Stopping or quitting shuts the workers down cleanly.
-- **Interface.**
-  - Collapsible sidebar, keyboard shortcuts and original line icons.
-  - WCAG AA text contrast in both themes (checked by tests).
-  - High-DPI support, and layouts that fit 1366×768 and up.
+## Getting started
 
-### Foundation (Phase 1)
+1. Start the application. The **welcome guide** explains the modes and limits; reopen it from
+   About.
+2. **Vehicle Garage → Add vehicle** (VIN and registration are optional).
+3. **Simulation Lab** → pick a scenario → **Start**. Watch the Dashboard, Live Monitoring and
+   AI Diagnostics pages. Tick **Record session** to save a trip.
+4. Explore **Trip History** (replay), **Maintenance**, **Reports** and the **Alert Centre**.
 
-- **Storage location.** Data lives in per-user OS folders, with a portable `--home` mode.
-- **Preferences.** Validated preferences are saved atomically.
-- **Database.** SQLite with Alembic migrations, verified backups, and validated restore with a
-  safety copy taken first.
-- **Logging.** Rotating JSON-lines logs with VIN and registration redaction.
+Full walkthrough: [user guide](docs/user-guide.md) · problems: [troubleshooting](docs/troubleshooting.md).
 
-## Model evaluation (synthetic data)
+### Simulation mode
+
+The default. Needs no hardware; every value is synthetic and labelled "Simulated telemetry".
+Scenarios develop faults over time so you can see how rules, models and alerts respond.
+
+### Live vehicle mode (experimental, read-only)
+
+Pair or plug in an ELM327-compatible adapter, open **Vehicle Connection**, choose the port and
+click **Connect** — the application never connects by itself. Only 65 allowlisted read
+requests can be sent (checked twice, in the client and on the raw serial bytes): no clearing of
+codes, ECU writes, actuator control, flashing, security access or typed commands. Live machine
+learning is off by default. **Not yet verified with physical hardware** —
+[hardware guide](docs/hardware.md) · [verification checklist](docs/hardware-verification-checklist.md).
+
+## AI diagnostic architecture
+
+```mermaid
+flowchart LR
+  W["60 s telemetry window"] --> Q{"stale or<br/>insufficient?"}
+  Q --> R["Rule engine<br/>7 rules"]
+  Q --> F["96 features"] --> RF["Random Forest<br/>(abstains)"] --> X["Tree-path<br/>explanations"]
+  F --> IF["Isolation Forest"]
+  R & RF & IF --> M["Merge: rules never overridden,<br/>model ≤ warning, anomaly-only = info"]
+  M --> H["Experimental health score"]
+  M --> A["Findings, alerts,<br/>history, reports"]
+```
+
+Rule findings, model predictions, anomaly flags, trouble codes and maintenance reminders are
+always shown as separate kinds of evidence. Details: [docs/ml/README.md](docs/ml/README.md).
+
+## Model evaluation results (synthetic data only)
 
 Source: [docs/ml/evaluation_report.md](docs/ml/evaluation_report.md), produced by
 `python scripts/train_models.py`. The test split is 46 independent simulated sessions that were
@@ -160,121 +137,133 @@ which is why an anomaly on its own never raises an alert.
 
 ![Confusion matrices](docs/ml/confusion_matrix.png)
 
-## Screenshots
+## Technology stack
 
-These are real renders of the application, made with `scripts/capture_screenshots.py`.
-
-![Explanations and model output](docs/screenshots/diagnostics-explanations.png)
-
-Vehicle Connection and Diagnostic Codes are shown with the **mock adapter** (simulated data,
-labelled as such on the page); no physical adapter was used.
-
-| | |
+| Area | Technology |
 |---|---|
-| ![Vehicle Connection, mock adapter](docs/screenshots/connection-mock-adapter.png) | ![Vehicle Connection, no adapter](docs/screenshots/connection-no-adapter.png) |
-| ![Diagnostic Codes, mock adapter](docs/screenshots/codes-mock-adapter.png) | ![Trip History during a replay](docs/screenshots/trips-replay.png) |
-| ![Maintenance](docs/screenshots/maintenance.png) | ![Alert Centre](docs/screenshots/alerts.png) |
-| ![Reports](docs/screenshots/reports.png) | ![Dashboard](docs/screenshots/dashboard.png) |
-| ![Live monitoring](docs/screenshots/monitoring.png) | ![Simulation laboratory](docs/screenshots/simulation.png) |
-| ![Vehicle garage](docs/screenshots/garage.png) | ![Light theme, collapsed sidebar](docs/screenshots/garage-light-collapsed.png) |
-| ![Settings](docs/screenshots/settings.png) | ![Dashboard, light theme](docs/screenshots/dashboard-light.png) |
-| ![About](docs/screenshots/about.png) | |
+| Language | Python 3.12 |
+| Desktop UI | PySide6-Essentials 6.12 (Qt 6), PyQtGraph 0.14, QSS themes |
+| Data | SQLite, SQLAlchemy 2, Alembic, Pydantic 2, platformdirs |
+| Machine learning | scikit-learn 1.9 (Random Forest, Isolation Forest), NumPy, SciPy, joblib; matplotlib for training reports only |
+| Vehicle | pySerial 3.5 with an in-house read-only ELM327 client |
+| Output | ReportLab (PDF), `csv`, pyttsx3 (offline speech, SAPI 5) |
+| Quality | pytest, pytest-qt, pytest-cov, Ruff, Mypy (strict), pip-audit |
+| Release | PyInstaller 6.22, Inno Setup 6, CycloneDX SBOM, GitHub Actions |
 
-## Architecture
+## System architecture
 
 ```mermaid
 flowchart TB
-    subgraph GUI thread
-      UI["Pages & widgets (PySide6, PyQtGraph)"] --> MC["MonitoringController"]
-      UI --> SVC["Services: vehicles, trips, maintenance, notifications, reports"]
-      UI --> VC["VehicleConnectionController"]
-      UI --> NC["NotificationController"]
-    end
-    MC -- "queued signals" --> MW["MonitoringWorker (QThread): simulator, replay"]
-    MC -- "queued signals" --> PW["PersistenceWorker (QThread)"]
-    VC -- "queued signals" --> OW["ObdWorker (QThread): ELM327 client + allowlist"]
-    OW -- "live frames" --> MC
-    UI --> DC["DiagnosticsController"]
-    DC -- "snapshot, no queue" --> IW["InferenceWorker (QThread)"]
-    IW --> ENG["Hybrid engine: rules + Random Forest + Isolation Forest + explanations + health"]
-    UI -- "jobs" --> TR["TaskRunner (QThread): trip summaries, replay loading, PDF/CSV"]
-    NC -- "queued signals" --> VW["VoiceWorker (QThread): offline speech"]
-    ENG --> SVC
-    SVC --> DB[("SQLite (Alembic 0003)")]
+  subgraph GUI["GUI thread"]
+    P["13 pages"] <--> C["Controllers: monitoring, diagnostics,<br/>connection, trips, notifications"]
+  end
+  C <-->|queued signals| T["Worker threads: monitoring, persistence,<br/>inference, OBD, voice, background jobs"]
+  T --> S["Services: simulator, hybrid engine, telemetry, trips,<br/>maintenance, notifications, reports"]
+  T --> O["Read-only ELM327 client<br/>(allowlist ×2)"] --> AD["User-selected adapter"]
+  S --> DB[("SQLite · Alembic 0003")]
+  S --> RS["Bundled models (SHA-256 manifest),<br/>migrations, themes, branding"]
 ```
 
-Pages never query the database or touch a worker thread directly. Details and the decision log
-are in [docs/architecture.md](docs/architecture.md).
+All nine diagrams (telemetry, AI, modules, database, threading, hardware, packaging, CI):
+[docs/architecture-diagrams.md](docs/architecture-diagrams.md) · decisions:
+[docs/architecture.md](docs/architecture.md).
 
-## Technology stack
+## Database and storage
 
-| Area | In use | Later phases |
-|---|---|---|
-| Language | Python 3.12 | — |
-| Desktop UI | PySide6-Essentials 6.12, PyQtGraph 0.14, QSS themes | — |
-| Configuration | Pydantic 2, platformdirs | — |
-| Persistence | SQLite, SQLAlchemy 2, Alembic | — |
-| Quality | pytest, pytest-qt, pytest-cov, Ruff, Mypy (strict), pip-audit, GitHub Actions | — |
-| ML | scikit-learn 1.9 (Random Forest, Isolation Forest), NumPy, SciPy, joblib; matplotlib for training reports only | — |
-| Hardware | PySerial 3.5 with an in-house read-only ELM327 client | — |
-| Output | ReportLab (PDF), standard-library `csv`, pyttsx3 (offline speech) | — |
-| Distribution | — | PyInstaller, Inno Setup (Phase 5) |
+One SQLite database with 18 tables (vehicles, trips and telemetry, diagnostics and alerts, OBD
+connections and trouble codes, maintenance, notifications, export history), migrated with
+Alembic (revisions 0001–0003) and backed up automatically before every schema upgrade. Data
+lives in `%LOCALAPPDATA%\SmartDriveGuardianAI`, never in the installation folder, and is kept
+when the application is upgraded or uninstalled. [docs/database.md](docs/database.md)
 
-## Installation (Windows PowerShell)
+## Security and privacy
 
-Prerequisites: [Python 3.12 (64-bit)](https://www.python.org/downloads/) with the `py` launcher, and Git.
+No account, no internet requirement, no telemetry, analytics or advertising code. Identifiers
+are optional, masked in logs and left out of reports by default. Only bundled, checksum-verified
+models are loaded. Dependencies are pinned and audited; a CycloneDX SBOM accompanies each
+release. [PRIVACY.md](PRIVACY.md) · [SECURITY.md](SECURITY.md) ·
+[security review and threat model](docs/security-review.md)
 
-```powershell
-cd "E:\3rd Year\SmartDrive-Guardian-AI-Phase1\SmartDrive-Guardian-AI"   # your project folder
-powershell -ExecutionPolicy Bypass -File .\scripts\setup-dev.ps1
-.\.venv\Scripts\Activate.ps1
-```
+## Automotive safety limitations
 
-The setup script creates `.venv`, installs the pinned dependencies, installs the app in editable
-mode and runs every quality gate.
+- Educational software; not a certified diagnostic, safety or autonomous-driving system, and no
+  replacement for a qualified mechanic. "No finding" never means "safe to drive".
+- A trouble code or finding is not a confirmed failed part; only generic code descriptions are
+  provided.
+- Physical OBD-II hardware is unverified; vehicle compatibility varies.
+- Do not operate the application while driving.
 
-## Usage
+More: [docs/known-limitations.md](docs/known-limitations.md).
 
-```powershell
-smartdrive gui                    # launch the desktop application
-smartdrive-gui                    # same, without a console window
-python -m smartdrive gui          # same, without the installed entry point
+## Screenshots
 
-smartdrive                        # CLI: version, data locations, schema revision
-smartdrive db backup | db check | db restore <file>
-smartdrive settings show | settings reset
-smartdrive --home .\portable-data gui   # portable mode: keep everything in one folder
-```
+Real renders of the application (`scripts/capture_screenshots.py`) with a fictional vehicle and
+simulated data. Vehicle Connection and Diagnostic Codes show the **mock adapter**, labelled as
+such; no physical adapter was used.
 
-Keyboard shortcuts:
-
-| Shortcut | Action |
+| | |
 |---|---|
-| Ctrl+1 … Ctrl+7 | Dashboard, Live Monitoring, Garage, Simulation Lab, AI Diagnostics, Settings, About |
-| Ctrl+8 / Ctrl+9 / Ctrl+0 | Vehicle Connection, Diagnostic Codes, Alert Centre |
-| Ctrl+Shift+T / M / R | Trip History, Maintenance, Reports |
-| Ctrl+M | Start or stop monitoring |
-| Ctrl+P | Pause or resume |
-| Ctrl+B | Collapse or expand the sidebar |
-| Tab | Move between controls |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Dashboard, light theme](docs/screenshots/dashboard-light.png) |
+| ![Live monitoring](docs/screenshots/monitoring.png) | ![Explainable AI](docs/screenshots/diagnostics-explanations.png) |
+| ![Simulation laboratory](docs/screenshots/simulation.png) | ![Vehicle garage](docs/screenshots/garage.png) |
+| ![Vehicle Connection, mock adapter](docs/screenshots/connection-mock-adapter.png) | ![Vehicle Connection, no adapter](docs/screenshots/connection-no-adapter.png) |
+| ![Diagnostic Codes, mock adapter](docs/screenshots/codes-mock-adapter.png) | ![Trip History during a replay](docs/screenshots/trips-replay.png) |
+| ![Maintenance](docs/screenshots/maintenance.png) | ![Reports](docs/screenshots/reports.png) |
+| ![Alert Centre](docs/screenshots/alerts.png) | ![Settings](docs/screenshots/settings.png) |
+| ![About](docs/screenshots/about.png) | ![Welcome guide](docs/screenshots/welcome.png) |
 
-## Testing
+## Developer setup
 
 ```powershell
-.\scripts\check.ps1                       # ruff, format check, mypy, pytest + coverage
-python -m pytest -m "not ui"              # skip the GUI tests
-python scripts\capture_screenshots.py     # regenerate docs/screenshots
-python scripts\train_models.py           # regenerate dataset, models and evaluation (~20 min)
+powershell -ExecutionPolicy Bypass -File .\scripts\setup-dev.ps1   # add -Release for build tools
+.\.venv\Scripts\Activate.ps1
+smartdrive gui                       # desktop application
+smartdrive self-test                 # end-to-end installation check (simulated data)
+smartdrive db backup | db check | db restore <file>
+smartdrive --home .\portable-data gui   # keep all data in one folder
 ```
 
-GUI tests run headless (`QT_QPA_PLATFORM=offscreen` is set automatically) and use temporary data
-folders. They never touch your real data.
+Keyboard shortcuts: Ctrl+1…7 (Dashboard, Live Monitoring, Garage, Simulation Lab, AI
+Diagnostics, Settings, About), Ctrl+8/9/0 (Vehicle Connection, Diagnostic Codes, Alert Centre),
+Ctrl+Shift+T/M/R (Trip History, Maintenance, Reports), Ctrl+M start/stop, Ctrl+P pause,
+Ctrl+B sidebar. Guide: [docs/developer-guide.md](docs/developer-guide.md).
+
+## Testing and verification
+
+```powershell
+.\scripts\check.ps1                 # Ruff, format check, Mypy (strict), pytest + coverage
+python -m pytest tests\e2e          # end-to-end release scenarios A–H
+```
+
+Latest verified results (Linux development container, 25 November 2026): **643 tests, all
+passing** (331 unit, 188 integration, 112 GUI, 12 end-to-end; 0 skipped), **91 % line and
+branch coverage**, Ruff and strict Mypy clean, 0 known vulnerabilities in pinned dependencies.
+These are not Windows results; Windows verification status is tracked in the
+[release checklist](docs/release-checklist.md). GUI tests run headless and use temporary data
+folders — they never touch your data. The hardware tests use a byte-level mock adapter.
+
+## Build instructions
+
+```powershell
+python -m pip install -r requirements-release.txt
+.\scripts\build-windows.ps1         # PyInstaller build, validation, smoke test, portable ZIP
+.\scripts\build-installer.ps1       # Inno Setup installer
+.\scripts\test-installer.ps1        # silent install, smoke test, upgrade, uninstall
+.\scripts\generate-checksums.ps1    # SBOM, notices, build information, SHA256SUMS.txt
+.\scripts\verify-release.ps1
+```
+
+The same steps run in GitHub Actions (`windows-build.yml`). Guide:
+[docs/build-guide.md](docs/build-guide.md) · design: [docs/packaging.md](docs/packaging.md).
 
 ## Project structure
 
 ```text
 src/smartdrive/
-├── app.py, cli.py              bootstrap/shutdown, command line (info, gui, db, settings)
+├── app.py, cli.py              bootstrap/shutdown, command line (info, gui, db, settings, self-test)
+├── launcher.py, selftest.py    packaged entry point, installation self-test
+├── resources.py                bundled read-only resources (dev and frozen)
+├── branding/                   logo and icons (SVG masters, ICO, PNG)
 ├── ai/                         dataset, features, training, classifier, anomaly detector,
 │   │                           explanations, evaluation, reporting, trusted model registry
 │   └── artifacts/              shipped models + manifest.json (SHA-256, versions, metrics)
@@ -305,42 +294,37 @@ src/smartdrive/
 datasets/sdg-ds-1.1.0/          dataset metadata (the .npz itself is regenerated, not committed)
 docs/ml/                        evaluation report, model and dataset cards, metrics, figures
 docs/samples/                   sample PDF and CSV reports (simulated data)
+packaging/                      PyInstaller spec, Inno Setup script, installer artwork
 scripts/                        setup, checks, dependency lock, screenshots, train_models.py,
-                                generate_sample_reports.py
-tests/{unit,integration,ui}/    pytest and pytest-qt suites
+                                sample reports, brand assets, benchmark, release metadata,
+                                build-windows / build-installer / smoke-test / test-installer /
+                                generate-checksums / verify-release (.ps1)
+tests/{unit,integration,ui,e2e}/  pytest and pytest-qt suites
 ```
-
-## Known limitations
-
-- **Synthetic data only.** The models have never seen real vehicle data. Diagnostic
-  categories are limited to what the 11 available signals can show; transmission and brake
-  faults are not assessed.
-- Simulated faults are illustrative and not calibrated to any real vehicle.
-- **OBD-II has been tested only against the mock adapter.** Physical adapter and vehicle
-  compatibility is unverified ([checklist](docs/hardware-verification-checklist.md)).
-  Bluetooth LE and Wi-Fi adapters are not supported. Generic OBD-II mostly reaches
-  powertrain modules and has no oil-pressure parameter, so on real vehicles the ML models
-  report "incompatible" and only the rules run.
-- The model misses many developing cooling faults, especially in heavy-traffic and mixed
-  driving (see the evaluation report). The rules still apply, but a clean result is never proof
-  of safety.
-- Desktop notifications depend on Windows settings (Focus assist can hide them) and voice
-  depends on the installed SAPI voices; neither has been exercised on Windows by the developer.
-- The GUI has been tested headless on Linux. It has not been run on Windows by the developer.
-  The pinned Windows wheels are standard PySide6 builds.
 
 ## Documentation
 
-- [Master specification](docs/SPECIFICATION.md) · [Roadmap](ROADMAP.md) · [Changelog](CHANGELOG.md)
-- [User guide](docs/user-guide.md) · [Architecture](docs/architecture.md) · [Database](docs/database.md) · [Developer guide](docs/developer-guide.md)
-- [Vehicle hardware (OBD-II)](docs/hardware.md) · [Real-hardware checklist](docs/hardware-verification-checklist.md) · [Reports](docs/reports.md) · [Privacy](docs/privacy.md)
-- [Machine learning](docs/ml/README.md) · [Evaluation report](docs/ml/evaluation_report.md) · [Model card](docs/ml/model_card.md) · [Dataset card](docs/ml/dataset_card.md)
-- [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md)
+- **Users:** [Installation](docs/installation.md) · [User guide](docs/user-guide.md) · [Troubleshooting](docs/troubleshooting.md) · [System requirements](docs/system-requirements.md) · [Known limitations](docs/known-limitations.md) · [Privacy](PRIVACY.md)
+- **Vehicle hardware:** [OBD-II guide](docs/hardware.md) · [Hardware verification checklist](docs/hardware-verification-checklist.md) · [Reports](docs/reports.md)
+- **AI:** [Machine learning](docs/ml/README.md) · [Evaluation report](docs/ml/evaluation_report.md) · [Model card](docs/ml/model_card.md) · [Dataset card](docs/ml/dataset_card.md)
+- **Engineering:** [Architecture](docs/architecture.md) · [Diagrams](docs/architecture-diagrams.md) · [Database](docs/database.md) · [Developer guide](docs/developer-guide.md) · [Specification](docs/SPECIFICATION.md) · [Performance](docs/performance.md)
+- **Release:** [Build guide](docs/build-guide.md) · [Packaging](docs/packaging.md) · [Release checklist](docs/release-checklist.md) · [Release verification](docs/release-verification.md) · [Security review](docs/security-review.md) · [Licensing](docs/licensing.md) · [Code signing](docs/code-signing.md) · [Release notes](RELEASE_NOTES.md) · [Changelog](CHANGELOG.md)
+- **Project:** [Roadmap](ROADMAP.md) · [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Third-party notices](THIRD_PARTY_NOTICES.md) · [Portfolio summary](docs/portfolio.md) · [Demo storyboard](docs/demo/storyboard.md)
 
-## Licence
+## Roadmap
 
-MIT has been proposed (see [LICENSE](LICENSE)) and is awaiting the repository owner's approval.
+Phases 1–4 (foundation, desktop application, AI engine, vehicle integration) are complete;
+Phase 5 (professional release) is complete in the development environment with Windows builds,
+installer verification and publication pending. Next: Windows verification, physical adapter
+testing, then publication of 2.0.0 as a pre-release. [ROADMAP.md](ROADMAP.md)
 
-## Developer
+## License
 
-Developed by [Hiranya-Bandara](https://github.com/Hiranya-Bandara).
+[MIT](LICENSE) © 2026 Hiranya Bandara. Third-party components keep their own licences
+([THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)).
+
+## Author
+
+**Hiranya Bandara** — [github.com/Hiranya-Bandara](https://github.com/Hiranya-Bandara).
+Built with AI-assisted development; design decisions, verification status and limitations are
+documented in this repository.

@@ -45,6 +45,14 @@ def _build_parser() -> argparse.ArgumentParser:
     restore.add_argument("source", type=Path)
     restore.add_argument("--yes", action="store_true", help="Do not ask for confirmation.")
 
+    selftest = commands.add_parser(
+        "self-test",
+        help="Check this installation end to end in a temporary data folder (simulated data).",
+    )
+    selftest.add_argument("--report", type=Path, help="Also write the results as JSON here.")
+    selftest.add_argument("--keep", action="store_true", help="Keep the temporary data folder.")
+    selftest.add_argument("--no-qt", action="store_true", help="Skip the Qt platform check.")
+
     settings = commands.add_parser("settings", help="Show or reset preferences.").add_subparsers(
         dest="settings_command", required=True
     )
@@ -113,6 +121,10 @@ def _run(args: argparse.Namespace, ctx: ApplicationContext) -> int:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
+    if args.command == "self-test":
+        from smartdrive.selftest import main_self_test
+
+        return main_self_test(args.home, args.report, args.keep, args.no_qt)
     if args.command == "gui":
         from smartdrive.ui.application import run as run_gui
 

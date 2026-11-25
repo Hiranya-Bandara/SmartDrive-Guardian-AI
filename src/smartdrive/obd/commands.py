@@ -134,6 +134,27 @@ def validate(request: str) -> AllowedCommand:
     return command
 
 
+def ensure_allowed_frame(data: bytes) -> AllowedCommand:
+    """Check raw bytes at the transport boundary: exactly one allowlisted request plus CR.
+
+    This is a second, independent gate below :class:`~smartdrive.obd.elm327.Elm327Client`, so
+    that no other code path (or a future change) can put arbitrary bytes on the serial line:
+    no other line terminators, no second command in the same write, no non-ASCII bytes.
+    """
+    if not isinstance(data, bytes | bytearray):
+        raise ProhibitedCommandError(f"Frame must be bytes, got {type(data).__name__}")
+    if not data.endswith(b"\r") or data.count(b"\r") != 1 or b"\n" in data:
+        raise ProhibitedCommandError("Frame must be exactly one command terminated by CR")
+    try:
+        text = bytes(data[:-1]).decode("ascii")
+    except UnicodeDecodeError as exc:
+        raise ProhibitedCommandError("Frame contains non-ASCII bytes") from exc
+    command = validate(text)
+    if text != command.request:
+        raise ProhibitedCommandError(f"Frame {text!r} is not in canonical allowlisted form")
+    return command
+
+
 def is_allowed(request: str) -> bool:
     try:
         validate(request)

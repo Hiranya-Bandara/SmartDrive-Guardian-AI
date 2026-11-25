@@ -5,7 +5,7 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Final
 
-from PySide6.QtCore import QByteArray, QRectF, Qt
+from PySide6.QtCore import QByteArray, QRectF, QSize, Qt
 from PySide6.QtGui import QIcon, QPainter, QPixmap
 from PySide6.QtSvg import QSvgRenderer
 
@@ -86,3 +86,33 @@ def icon(name: str, colour: str, *, disabled_colour: str | None = None, size: in
     if disabled_colour:
         result.addPixmap(pixmap(name, disabled_colour, size), QIcon.Mode.Disabled)
     return result
+
+
+@lru_cache(maxsize=1)
+def app_icon() -> QIcon:
+    """The application icon: the simplified mark up to 32 px, the full mark above."""
+    from smartdrive.resources import APP_ICON_SMALL_SVG, APP_ICON_SVG, resource_path
+
+    result = QIcon()
+    small, full = resource_path(*APP_ICON_SMALL_SVG), resource_path(*APP_ICON_SVG)
+    for size in (16, 24, 32):
+        result.addFile(str(small), QSize(size, size))
+    for size in (48, 64, 128, 256):
+        result.addFile(str(full), QSize(size, size))
+    return result
+
+
+def brand_pixmap(size: int, device_pixel_ratio: float = 1.0) -> QPixmap:
+    """The full brand mark rendered crisply for a logical size."""
+    from smartdrive.resources import APP_ICON_SMALL_SVG, APP_ICON_SVG, resource_path
+
+    parts = APP_ICON_SMALL_SVG if size <= 24 else APP_ICON_SVG
+    physical = max(1, round(size * device_pixel_ratio))
+    image = QPixmap(physical, physical)
+    image.fill(Qt.GlobalColor.transparent)
+    painter = QPainter(image)
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    QSvgRenderer(str(resource_path(*parts))).render(painter, QRectF(0, 0, physical, physical))
+    painter.end()
+    image.setDevicePixelRatio(device_pixel_ratio)
+    return image

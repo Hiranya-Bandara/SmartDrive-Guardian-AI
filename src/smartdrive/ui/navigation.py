@@ -17,7 +17,7 @@ from PySide6.QtWidgets import (
 )
 
 from smartdrive import APP_NAME
-from smartdrive.ui.icons import icon, pixmap
+from smartdrive.ui.icons import brand_pixmap, icon, pixmap
 from smartdrive.ui.themes.palette import DARK, ThemePalette
 from smartdrive.ui.widgets.base import label
 
@@ -232,6 +232,6 @@ class Sidebar(QFrame):
 
     def _refresh_icons(self) -> None:
         p = self._palette
-        self.logo.setPixmap(pixmap("shield", p.accent, 30))
+        self.logo.setPixmap(brand_pixmap(30, self.devicePixelRatioF()))
         name = "chevrons-right" if self._collapsed else "chevrons-left"
         self.toggle_button.setIcon(icon(name, p.text_secondary))
