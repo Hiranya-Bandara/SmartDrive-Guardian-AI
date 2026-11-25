@@ -13,22 +13,36 @@ certifi==2026.11.20
     # via requests
 charset-normalizer==3.5.3
     # via requests
+cloudpickle==3.1.3
+    # via joblib
 colorama==0.4.6
     # via
     #   pyqtgraph
     #   pytest
+contourpy==1.4.0
+    # via matplotlib
 coverage==7.17.5
     # via pytest-cov
+cycler==0.12.1
+    # via matplotlib
 cyclonedx-python-lib==11.12.0
     # via pip-audit
 defusedxml==0.7.1
     # via py-serializable
 filelock==4.3.1
     # via cachecontrol
+fonttools==4.68.0
+    # via matplotlib
 idna==3.20
     # via requests
 iniconfig==2.3.1
     # via pytest
+joblib==1.6.0
+    # via
+    #   smartdrive-guardian-ai (pyproject.toml)
+    #   scikit-learn
+kiwisolver==1.5.1
+    # via matplotlib
 librt==0.17.0 ; platform_python_implementation != 'PyPy'
     # via mypy
 license-expression==30.4.4
@@ -39,6 +53,8 @@ markdown-it-py==4.3.0
     # via rich
 markupsafe==3.0.4
     # via mako
+matplotlib==3.11.2
+    # via smartdrive-guardian-ai (pyproject.toml)
 mdurl==0.1.2
     # via markdown-it-py
 msgpack==1.2.4
@@ -49,19 +65,28 @@ mypy-extensions==1.2.0
     # via
     #   librt
     #   mypy
+narwhals==2.29.0
+    # via scikit-learn
 numpy==2.5.5
     # via
     #   smartdrive-guardian-ai (pyproject.toml)
+    #   contourpy
+    #   matplotlib
     #   pyqtgraph
+    #   scikit-learn
+    #   scipy
 packageurl-python==0.17.6
     # via cyclonedx-python-lib
 packaging==26.4
     # via
+    #   matplotlib
     #   pip-audit
     #   pip-requirements-parser
     #   pytest
 pathspec==1.1.1
     # via mypy
+pillow==13.0.0
+    # via matplotlib
 pip==26.3
     # via pip-api
 pip-api==0.0.35
@@ -90,7 +115,9 @@ pygments==2.21.0
     #   pytest
     #   rich
 pyparsing==3.3.3
-    # via pip-requirements-parser
+    # via
+    #   matplotlib
+    #   pip-requirements-parser
 pyqtgraph==0.14.0
     # via smartdrive-guardian-ai (pyproject.toml)
 pyside6-essentials==6.12.0
@@ -104,6 +131,8 @@ pytest-cov==7.1.0
     # via smartdrive-guardian-ai (pyproject.toml)
 pytest-qt==4.5.0
     # via smartdrive-guardian-ai (pyproject.toml)
+python-dateutil==4.0.0
+    # via matplotlib
 requests==2.34.2
     # via
     #   cachecontrol
@@ -112,6 +141,10 @@ rich==15.0.0
     # via pip-audit
 ruff==0.17.6
     # via smartdrive-guardian-ai (pyproject.toml)
+scikit-learn==1.9.1
+    # via smartdrive-guardian-ai (pyproject.toml)
+scipy==1.18.1
+    # via scikit-learn
 shiboken6==6.12.0
     # via pyside6-essentials
 sortedcontainers==2.4.0
@@ -120,6 +153,8 @@ sqlalchemy==2.1.9
     # via
     #   smartdrive-guardian-ai (pyproject.toml)
     #   alembic
+threadpoolctl==3.8.0
+    # via scikit-learn
 tomli==2.5.0
     # via pip-audit
 tomli-w==1.2.0
@@ -136,5 +171,7 @@ typing-extensions==4.16.0
     #   typing-inspection
 typing-inspection==0.4.5
     # via pydantic
+tzdata==2026.6
+    # via python-dateutil
 urllib3==2.8.0
     # via requests

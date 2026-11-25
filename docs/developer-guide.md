@@ -120,3 +120,33 @@ python -m pip install uv
 .\scripts\lock-dependencies.ps1
 python -m pip install -r requirements-dev.txt
 ```
+
+## Machine-learning models
+
+The trained models ship in `src\smartdrive\ai\artifacts\`. The application never trains at
+startup. To regenerate the dataset, models, evaluation report and figures:
+
+```powershell
+python -m pip install -e ".[training]"          # matplotlib, only needed for the figures
+python scripts\train_models.py                  # full run: dataset 1.1.0, both models, all reports
+python scripts\train_models.py --profile small --artifacts-dir out\models --reports-dir out\ml --datasets-dir out\ds
+```
+
+A full run takes about 20 minutes on a 2-core machine; most of that is the built-in scenario
+check. It writes:
+
+- `datasets\sdg-ds-1.1.0\` (`dataset.npz` is git-ignored; `metadata.json` and `sessions.json` are tracked)
+- `src\smartdrive\ai\artifacts\` (models and `manifest.json` with SHA-256 hashes)
+- `docs\ml\` (metrics, model card, dataset card, evaluation report, figures)
+
+Commit the artefacts and the reports together: the registry refuses any model whose hash does
+not match the manifest. Changing the feature extraction requires bumping
+`FEATURE_SCHEMA_VERSION` in `ai\features.py` and retraining. Upgrading scikit-learn to a new minor
+version requires retraining, because the registry refuses models from another minor version.
+
+AI tests use a tiny dataset and small forests, so they run in seconds:
+
+```powershell
+python -m pytest tests\unit\test_diagnostics_core.py tests\integration\test_ai_pipeline.py tests\integration\test_diagnostic_persistence.py tests\ui\test_ai_diagnostics.py
+```
+

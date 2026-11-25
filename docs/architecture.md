@@ -5,9 +5,9 @@
 | Layer | Package | Responsibility | May depend on |
 |---|---|---|---|
 | Presentation | `ui/` | Widgets, pages, themes, Qt workers | services, models, config |
-| Services | `services/` | Data sources and simulator, vehicles, telemetry sessions, backup | core, ai, repositories, models |
-| Core | `core/` | Sensor metadata, units, validation pipeline, bounded buffers (diagnostics in Phase 3) | models, config |
-| AI | `ai/` (Phase 3) | Preprocessing, training, inference, explanations | models |
+| Services | `services/` | Data sources and simulator, vehicles, telemetry sessions, backup, hybrid diagnostic engine, diagnostic persistence and alerts | core, ai, repositories, models |
+| Core | `core/` | Sensor metadata, units, validation pipeline, bounded buffers, telemetry windows, rule engine, health score, recommendations | models, config |
+| AI | `ai/` | Dataset generation and validation, features, training, classifier, anomaly detector, explanations, evaluation, trusted model registry | models, core |
 | Persistence | `database/` | Engine, schema, migrations, repositories | models, config, utils |
 | Domain models | `models/` | Validated Pydantic types exchanged between layers | config, utils |
 | Infrastructure | `config/`, `utils/` | Paths, settings, constants, logging, validators, errors | — |
@@ -77,6 +77,36 @@ data is drawn as a gap and shown as "—". When monitoring stops, gauges blank o
 table keeps the last trace but marks it "Stopped". The simulator is labelled everywhere it
 appears (banners, mode pill, session source).
 
+## AI diagnostics (Phase 3)
+
+```text
+GUI thread                                       Inference thread
+──────────                                       ────────────────
+DiagnosticsController ── every N s, if idle ──► InferenceWorker
+  snapshot of the bounded buffer (60 s)            TelemetryWindow → features
+  generation counter                               RuleEngine (stateful) ┐
+  ▲                                                RandomForest          ├► DiagnosticEngine
+  │                                                IsolationForest       ┘   (hybrid policy)
+  │                                                explanations, health score, recommendations
+  └──────────── finished(result) ◄───────────────  DiagnosticService → SQLite (history, alerts)
+Pages: AI Diagnostics, Dashboard summary, alerts toast
+```
+
+- **One engine, one thread.** The rule engine and anomaly persistence are stateful, so the
+  `DiagnosticEngine` lives only in the inference thread. The GUI sends immutable
+  `InferenceRequest` snapshots and receives immutable `DiagnosticAssessment` results.
+- **No queue.** A tick is skipped (and counted) while a job is in flight, so slow inference can
+  never accumulate work. Stopping monitoring or switching vehicle increments a generation counter,
+  and late results from the previous run are discarded.
+- **Models load once, off the GUI thread**, through the trusted registry (SHA-256 against the
+  bundled manifest, scikit-learn and feature-schema compatibility) and are reused for every
+  analysis.
+- **Persistence** happens in the worker: assessments are throttled (every `history_interval_s`, or
+  immediately when the status or set of findings changes). Alerts are deduplicated per vehicle
+  and finding, and their cooldown is applied on top.
+- Full methodology: [docs/ml/README.md](ml/README.md); results:
+  [docs/ml/evaluation_report.md](ml/evaluation_report.md).
+
 ## Decision log
 
 | # | Decision | Rationale |
@@ -99,4 +129,11 @@ appears (banners, mode pill, session source).
 | 16 | Fault effects are applied inside the vehicle dynamics, not painted onto outputs | Signatures emerge coherently (for example, coolant loss raises oil temperature too), giving more realistic training data. Only sensor faults alter readings directly. |
 | 17 | Unimplemented modules are shown disabled with their phase | Honest navigation without placeholder screens (§7, §3). |
 | 18 | PyQtGraph context menus are re-parented to their plot | PyQtGraph creates them without a parent; otherwise every closed chart leaked about 5 top-level menus. |
+| 19 | Hybrid policy: rules are never overridden, model findings are at most WARNING, anomaly-only findings are INFORMATION | Models trained on synthetic data cannot confirm faults; an unexplained anomaly is weak evidence (measured false alarms on healthy aggressive driving). Agreement is shown as evidence, never as proof. |
+| 20 | Exact tree-path decomposition instead of SHAP | SHAP's tree explainer pulls in `numba`/`llvmlite` (>100 MB, hard to bundle with PyInstaller). The path decomposition is exact and additive for a Random Forest (verified by tests). Its limitation (not Shapley values) is documented. |
+| 21 | Models ship as package data with a SHA-256 manifest; scikit-learn pinned to the training minor version | Joblib files are pickles; only artefacts listed in the bundled manifest with a matching hash are loaded. Pickles are not portable across scikit-learn minor versions, so the registry refuses mismatches instead of risking silent errors. |
+| 22 | 60 s window resampled to 1-second bins | Features become independent of the refresh interval, so data recorded at 1 Hz (training) and polled at 100 ms (runtime) are comparable. |
+| 23 | Dataset 1.1.0 with healthy sessions spread evenly over every driving pattern and cold-to-warm starts | The first models raised cooling false alarms on healthy idling; the catalogue scenario check now runs on every training run. |
+| 24 | Lubrication omitted ("not assessed") when the vehicle reports no oil pressure | The model must not report a confident negative for a fault it cannot observe. |
+| 25 | NumPy `.npz` + JSON for datasets; no pandas | Avoids an unnecessary runtime dependency; the dataset is a numeric matrix with metadata. |
 

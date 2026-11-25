@@ -11,6 +11,7 @@ from PySide6.QtCore import Qt, qVersion
 from PySide6.QtWidgets import QFormLayout, QGridLayout, QHBoxLayout, QLabel
 
 from smartdrive import APP_NAME, APP_TAGLINE, __version__
+from smartdrive.ai.model_registry import ModelRegistry
 from smartdrive.config.constants import SAFETY_DISCLAIMER
 from smartdrive.ui.context import UiContext
 from smartdrive.ui.icons import pixmap
@@ -25,7 +26,7 @@ FEATURES: tuple[tuple[str, str, StatusLevel], ...] = (
     ("Dashboard and live monitoring", "Available", StatusLevel.NORMAL),
     ("Vehicle garage", "Available", StatusLevel.NORMAL),
     ("Simulation laboratory", "Available", StatusLevel.NORMAL),
-    ("AI diagnostics and health score", "Phase 3", StatusLevel.OFFLINE),
+    ("AI diagnostics and experimental health score", "Available", StatusLevel.NORMAL),
     ("OBD-II live vehicle connection", "Phase 4", StatusLevel.OFFLINE),
     ("Trip analytics and replay", "Phase 4", StatusLevel.OFFLINE),
     ("Maintenance centre", "Phase 4", StatusLevel.OFFLINE),
@@ -37,11 +38,25 @@ THIRD_PARTY = (
     ("PySide6 / Qt", "LGPL-3.0"),
     ("PyQtGraph", "MIT"),
     ("NumPy", "BSD-3-Clause"),
+    ("scikit-learn", "BSD-3-Clause"),
+    ("SciPy", "BSD-3-Clause"),
+    ("joblib", "BSD-3-Clause"),
     ("SQLAlchemy", "MIT"),
     ("Alembic", "MIT"),
     ("Pydantic", "MIT"),
     ("platformdirs", "MIT"),
 )
+
+
+def _model_summary() -> str:
+    manifest = ModelRegistry().manifest()
+    if not manifest:
+        return "No trusted models installed (rule engine only)"
+    return ", ".join(
+        f"{entry['name'].replace('_', ' ')} {entry['version']} "
+        f"(dataset {entry['dataset_version']}, synthetic)"
+        for entry in manifest.values()
+    )
 
 
 def _package_version(name: str) -> str:
@@ -96,7 +111,7 @@ class AboutPage(Page):
             ("Database schema", str(ctx.app.database.current_revision())),
             ("Data folder", str(paths.data_dir)),
             ("Log file", str(paths.log_file)),
-            ("Machine-learning models", "None installed (diagnostic engine: Phase 3)"),
+            ("Machine-learning models", _model_summary()),
         ):
             value_label = label(value, wrap=True)
             value_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)

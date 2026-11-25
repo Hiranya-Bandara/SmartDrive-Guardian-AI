@@ -1,0 +1,294 @@
+{
+  "schema": 1,
+  "models": [
+    {
+      "version": "1.1.0",
+      "trained_at": "2026-11-25T05:24:56+00:00",
+      "synthetic": true,
+      "dataset_version": "sdg-ds-1.1.0",
+      "dataset_fingerprint": "0127b6cc6e2046dab27d67aee4dcab4a6dc11bbe26dbb81918b5a15d31267d45",
+      "dataset_source": "SmartDrive Guardian AI vehicle simulator (no real-vehicle data)",
+      "feature_schema_version": "fs-1",
+      "sklearn_version": "1.9.1",
+      "library_versions": {
+        "python": "3.12.3",
+        "scikit-learn": "1.9.1",
+        "numpy": "2.5.5",
+        "scipy": "1.18.1",
+        "joblib": "1.6.0"
+      },
+      "training_config": {
+        "seed": 42,
+        "n_estimators": 150,
+        "grid": [
+          {
+            "max_depth": 12,
+            "min_samples_leaf": 2
+          },
+          {
+            "max_depth": 18,
+            "min_samples_leaf": 2
+          },
+          {
+            "max_depth": 18,
+            "min_samples_leaf": 5
+          },
+          {
+            "max_depth": null,
+            "min_samples_leaf": 5
+          }
+        ],
+        "anomaly_estimators": 200,
+        "importance_repeats": 3,
+        "n_jobs": -1
+      },
+      "name": "fault_classifier",
+      "model_type": "RandomForestClassifier (multi-label)",
+      "file": "fault_classifier-1.1.0.joblib",
+      "sha256": "b199092390c38fc1258c8084e65b7ad3dbcc74258c11e52cdffa7f627a22ff6b",
+      "parameters": {
+        "n_estimators": 150,
+        "max_depth": 18,
+        "min_samples_leaf": 2,
+        "max_features": "sqrt",
+        "class_weight": "balanced_subsample"
+      },
+      "thresholds": {
+        "cooling": 0.55,
+        "lubrication": 0.2,
+        "fuel": 0.3,
+        "electrical": 0.4,
+        "sensor": 0.55
+      },
+      "labels": [
+        "cooling",
+        "lubrication",
+        "fuel",
+        "electrical",
+        "sensor"
+      ],
+      "training_seconds": 78.2,
+      "evaluation": {
+        "test_macro_f1": 0.8606,
+        "test_micro_f1": 0.8635,
+        "rule_baseline_macro_f1": 0.5728,
+        "test_sessions": 46,
+        "catalogue_worst_healthy_alarm_rate": 0.0
+      },
+      "global_importance": [
+        {
+          "feature": "rpm__min",
+          "permutation_mean": 0.07734690995650424,
+          "permutation_std": 0.0020567840914553163,
+          "impurity": 0.027078342662361105
+        },
+        {
+          "feature": "coolant_temp_c__recent_mean",
+          "permutation_mean": 0.056498795226064935,
+          "permutation_std": 0.0026050850666432214,
+          "impurity": 0.0415250899850611
+        },
+        {
+          "feature": "coolant_temp_c__max",
+          "permutation_mean": 0.05279778769589216,
+          "permutation_std": 0.001947953121270877,
+          "impurity": 0.018200245797724515
+        },
+        {
+          "feature": "coolant_temp_c__mean",
+          "permutation_mean": 0.03050970925556103,
+          "permutation_std": 0.00595218374981596,
+          "impurity": 0.03167451910351091
+        },
+        {
+          "feature": "oil_pressure_per_krpm",
+          "permutation_mean": 0.02883658982398718,
+          "permutation_std": 0.00271083728280873,
+          "impurity": 0.01580414678709006
+        },
+        {
+          "feature": "coolant_temp_c__min",
+          "permutation_mean": 0.026798900000051657,
+          "permutation_std": 0.0008910773424706912,
+          "impurity": 0.058380488076707794
+        },
+        {
+          "feature": "coolant_minus_oil",
+          "permutation_mean": 0.02594454798226194,
+          "permutation_std": 0.0010470273233029064,
+          "impurity": 0.04688971346955308
+        },
+        {
+          "feature": "oil_pressure_kpa__min",
+          "permutation_mean": 0.022941705795639145,
+          "permutation_std": 0.001424276557348905,
+          "impurity": 0.04425793974939871
+        },
+        {
+          "feature": "fuel_rate_lph__min",
+          "permutation_mean": 0.02152074387237246,
+          "permutation_std": 0.0025338033962714,
+          "impurity": 0.017016839658841484
+        },
+        {
+          "feature": "coolant_temp_c__last",
+          "permutation_mean": 0.018684843000964586,
+          "permutation_std": 0.0013763701135620326,
+          "impurity": 0.014345220785874947
+        },
+        {
+          "feature": "engine_load_pct__min",
+          "permutation_mean": 0.016321822557337457,
+          "permutation_std": 0.0013169918482452384,
+          "impurity": 0.02067159495406867
+        },
+        {
+          "feature": "fuel_level_pct__std",
+          "permutation_mean": 0.012617946007380199,
+          "permutation_std": 0.0011129438079459416,
+          "impurity": 0.007793159978587505
+        },
+        {
+          "feature": "oil_temp_c__min",
+          "permutation_mean": 0.012584553036848392,
+          "permutation_std": 0.00099713166381595,
+          "impurity": 0.008141300340056886
+        },
+        {
+          "feature": "coolant_max_jump",
+          "permutation_mean": 0.008945167913353832,
+          "permutation_std": 0.0015166459300586755,
+          "impurity": 0.041865728976639496
+        },
+        {
+          "feature": "control_module_voltage_v__std",
+          "permutation_mean": 0.0067215901423790525,
+          "permutation_std": 0.0006152332321811468,
+          "impurity": 0.00984263409616289
+        },
+        {
+          "feature": "oil_pressure_kpa__mean",
+          "permutation_mean": 0.00583146947529134,
+          "permutation_std": 0.00040941131260447344,
+          "impurity": 0.02442874831049345
+        },
+        {
+          "feature": "oil_temp_c__max",
+          "permutation_mean": 0.005110223949562361,
+          "permutation_std": 0.0005071870008854353,
+          "impurity": 0.012344285577160148
+        },
+        {
+          "feature": "oil_temp_c__last",
+          "permutation_mean": 0.0035389237479152755,
+          "permutation_std": 0.0004866470616076367,
+          "impurity": 0.00807672928966947
+        },
+        {
+          "feature": "intake_air_temp_c__min",
+          "permutation_mean": 0.0033423494792884645,
+          "permutation_std": 0.001388275107889152,
+          "impurity": 0.013378088241723771
+        },
+        {
+          "feature": "oil_temp_c__recent_mean",
+          "permutation_mean": 0.0033283936812154393,
+          "permutation_std": 0.0009555061976549727,
+          "impurity": 0.010914478233898168
+        },
+        {
+          "feature": "rpm_jitter",
+          "permutation_mean": 0.0031384746285669416,
+          "permutation_std": 0.0007953088650554357,
+          "impurity": 0.006490461823528249
+        },
+        {
+          "feature": "speed_kph__mean",
+          "permutation_mean": 0.0031093713135098198,
+          "permutation_std": 0.0015165200426241429,
+          "impurity": 0.00505691879567411
+        },
+        {
+          "feature": "fuel_rate_lph__max",
+          "permutation_mean": 0.002777545008508908,
+          "permutation_std": 0.0005852738312361478,
+          "impurity": 0.007319191979077845
+        },
+        {
+          "feature": "oil_pressure_kpa__last",
+          "permutation_mean": 0.002720992412380663,
+          "permutation_std": 0.0005598362216908951,
+          "impurity": 0.018358879765962694
+        },
+        {
+          "feature": "oil_pressure_kpa__recent_mean",
+          "permutation_mean": 0.002446060020701616,
+          "permutation_std": 0.0006582614752915126,
+          "impurity": 0.022952665279537394
+        }
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "trained_at": "2026-11-25T05:24:56+00:00",
+      "synthetic": true,
+      "dataset_version": "sdg-ds-1.1.0",
+      "dataset_fingerprint": "0127b6cc6e2046dab27d67aee4dcab4a6dc11bbe26dbb81918b5a15d31267d45",
+      "dataset_source": "SmartDrive Guardian AI vehicle simulator (no real-vehicle data)",
+      "feature_schema_version": "fs-1",
+      "sklearn_version": "1.9.1",
+      "library_versions": {
+        "python": "3.12.3",
+        "scikit-learn": "1.9.1",
+        "numpy": "2.5.5",
+        "scipy": "1.18.1",
+        "joblib": "1.6.0"
+      },
+      "training_config": {
+        "seed": 42,
+        "n_estimators": 150,
+        "grid": [
+          {
+            "max_depth": 12,
+            "min_samples_leaf": 2
+          },
+          {
+            "max_depth": 18,
+            "min_samples_leaf": 2
+          },
+          {
+            "max_depth": 18,
+            "min_samples_leaf": 5
+          },
+          {
+            "max_depth": null,
+            "min_samples_leaf": 5
+          }
+        ],
+        "anomaly_estimators": 200,
+        "importance_repeats": 3,
+        "n_jobs": -1
+      },
+      "name": "anomaly_detector",
+      "model_type": "IsolationForest",
+      "file": "anomaly_detector-1.1.0.joblib",
+      "sha256": "1b0d92d07dbb9bc2bd316214b01b5188d50ede5d3aaa01025bb9d824b9ff3b78",
+      "parameters": {
+        "n_estimators": 200,
+        "contamination": "auto",
+        "max_samples": "auto"
+      },
+      "thresholds": {
+        "low": 0.596050403880242,
+        "standard": 0.5644250866327188,
+        "high": 0.5372235451147588
+      },
+      "baseline_rows": 13450,
+      "training_seconds": 0.3,
+      "evaluation": {
+        "test_roc_auc": 0.7292,
+        "window_false_positive_rate": 0.0401
+      }
+    }
+  ]
+}

@@ -9,8 +9,10 @@ from PySide6.QtCore import QObject, Signal
 
 from smartdrive.app import ApplicationContext
 from smartdrive.models.vehicle import Vehicle
+from smartdrive.services.diagnostic_service import DiagnosticService
 from smartdrive.services.telemetry_service import TelemetryService
 from smartdrive.services.vehicle_service import VehicleService
+from smartdrive.ui.diagnostics_controller import DiagnosticsController
 from smartdrive.ui.monitoring_controller import MonitoringController
 from smartdrive.ui.themes.theme_manager import ThemeManager
 from smartdrive.ui.widgets.status import StatusLevel
@@ -84,3 +86,5 @@ class UiContext:
     vehicles: VehicleService
     telemetry: TelemetryService
     notifier: Notifier
+    diagnostics: DiagnosticsController
+    diagnostic_history: DiagnosticService

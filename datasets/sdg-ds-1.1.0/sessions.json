@@ -1,0 +1,7181 @@
+[
+ {
+  "session_id": 0,
+  "group": "healthy",
+  "seed": 591842323,
+  "duration_s": 477,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.82,
+  "ambient_c": 15.1,
+  "initial_coolant_c": 68.4,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 84,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 1,
+  "group": "healthy",
+  "seed": 1057790257,
+  "duration_s": 776,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 0.61,
+  "ambient_c": 19.1,
+  "initial_coolant_c": 53.8,
+  "dropout_probability": 0.015,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 144,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 2,
+  "group": "healthy",
+  "seed": 1945636434,
+  "duration_s": 301,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 0.94,
+  "ambient_c": 37.2,
+  "initial_coolant_c": 89.1,
+  "dropout_probability": 0.018,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 49,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 3,
+  "group": "healthy",
+  "seed": 1513889725,
+  "duration_s": 327,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.38,
+  "ambient_c": 39.9,
+  "initial_coolant_c": 78.1,
+  "dropout_probability": 0.023,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 54,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 4,
+  "group": "healthy",
+  "seed": 1932647089,
+  "duration_s": 374,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.32,
+  "ambient_c": 21.4,
+  "initial_coolant_c": 68.6,
+  "dropout_probability": 0.002,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 63,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 5,
+  "group": "healthy",
+  "seed": 1156016119,
+  "duration_s": 630,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.05,
+  "ambient_c": 21.5,
+  "initial_coolant_c": 70.6,
+  "dropout_probability": 0.007,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 115,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 6,
+  "group": "healthy",
+  "seed": 652297423,
+  "duration_s": 889,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.88,
+  "ambient_c": 23.4,
+  "initial_coolant_c": 47.5,
+  "dropout_probability": 0.004,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 166,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 7,
+  "group": "healthy",
+  "seed": 1731805352,
+  "duration_s": 590,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.61,
+  "ambient_c": 26.7,
+  "initial_coolant_c": 55.9,
+  "dropout_probability": 0.016,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 107,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 8,
+  "group": "healthy",
+  "seed": 774272934,
+  "duration_s": 827,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 0.69,
+  "ambient_c": 20.2,
+  "initial_coolant_c": 83.0,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 154,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 9,
+  "group": "healthy",
+  "seed": 1788588740,
+  "duration_s": 803,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 0.75,
+  "ambient_c": 19.8,
+  "initial_coolant_c": 83.6,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 149,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 10,
+  "group": "healthy",
+  "seed": 1778322043,
+  "duration_s": 741,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.36,
+  "ambient_c": 17.7,
+  "initial_coolant_c": 25.0,
+  "dropout_probability": 0.012,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 137,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 11,
+  "group": "healthy",
+  "seed": 2124059357,
+  "duration_s": 399,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 0.75,
+  "ambient_c": 27.3,
+  "initial_coolant_c": 65.5,
+  "dropout_probability": 0.001,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 68,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 12,
+  "group": "healthy",
+  "seed": 150127657,
+  "duration_s": 446,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 0.89,
+  "ambient_c": 26.7,
+  "initial_coolant_c": 72.9,
+  "dropout_probability": 0.03,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 78,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 13,
+  "group": "healthy",
+  "seed": 382429924,
+  "duration_s": 712,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 0.51,
+  "ambient_c": 38.7,
+  "initial_coolant_c": 74.4,
+  "dropout_probability": 0.012,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 131,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 14,
+  "group": "healthy",
+  "seed": 1869558309,
+  "duration_s": 442,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.33,
+  "ambient_c": 21.9,
+  "initial_coolant_c": 71.6,
+  "dropout_probability": 0.025,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 77,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 15,
+  "group": "healthy",
+  "seed": 1447827208,
+  "duration_s": 377,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.2,
+  "ambient_c": 26.0,
+  "initial_coolant_c": 34.8,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 64,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 16,
+  "group": "healthy",
+  "seed": 934773700,
+  "duration_s": 784,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.18,
+  "ambient_c": 35.1,
+  "initial_coolant_c": 51.5,
+  "dropout_probability": 0.012,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 145,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 17,
+  "group": "healthy",
+  "seed": 91738952,
+  "duration_s": 579,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.04,
+  "ambient_c": 37.4,
+  "initial_coolant_c": 56.3,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 104,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 18,
+  "group": "healthy",
+  "seed": 79921939,
+  "duration_s": 307,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.61,
+  "ambient_c": 23.4,
+  "initial_coolant_c": 53.1,
+  "dropout_probability": 0.021,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 50,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 19,
+  "group": "healthy",
+  "seed": 1742574031,
+  "duration_s": 443,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 0.72,
+  "ambient_c": 32.5,
+  "initial_coolant_c": 49.2,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 77,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 20,
+  "group": "healthy",
+  "seed": 1860533350,
+  "duration_s": 887,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.22,
+  "ambient_c": 16.2,
+  "initial_coolant_c": 46.5,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 166,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 21,
+  "group": "healthy",
+  "seed": 1175414303,
+  "duration_s": 607,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 0.8,
+  "ambient_c": 37.1,
+  "initial_coolant_c": 46.5,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 110,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 22,
+  "group": "healthy",
+  "seed": 586253027,
+  "duration_s": 376,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 0.52,
+  "ambient_c": 18.7,
+  "initial_coolant_c": 79.0,
+  "dropout_probability": 0.022,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 64,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 23,
+  "group": "healthy",
+  "seed": 565126123,
+  "duration_s": 525,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.26,
+  "ambient_c": 26.3,
+  "initial_coolant_c": 72.5,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 94,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 24,
+  "group": "healthy",
+  "seed": 1002314060,
+  "duration_s": 576,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 0.76,
+  "ambient_c": 25.8,
+  "initial_coolant_c": 77.9,
+  "dropout_probability": 0.012,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 104,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 25,
+  "group": "healthy",
+  "seed": 1896082118,
+  "duration_s": 306,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.8,
+  "ambient_c": 40.0,
+  "initial_coolant_c": 53.1,
+  "dropout_probability": 0.025,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 50,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 26,
+  "group": "healthy",
+  "seed": 860405866,
+  "duration_s": 484,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 0.93,
+  "ambient_c": 23.8,
+  "initial_coolant_c": 62.3,
+  "dropout_probability": 0.022,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 85,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 27,
+  "group": "healthy",
+  "seed": 1385291976,
+  "duration_s": 862,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.01,
+  "ambient_c": 35.5,
+  "initial_coolant_c": 76.9,
+  "dropout_probability": 0.018,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 161,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 28,
+  "group": "healthy",
+  "seed": 1289427367,
+  "duration_s": 429,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.47,
+  "ambient_c": 27.2,
+  "initial_coolant_c": 35.8,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 74,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 29,
+  "group": "healthy",
+  "seed": 848131702,
+  "duration_s": 378,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.54,
+  "ambient_c": 38.4,
+  "initial_coolant_c": 91.3,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 64,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 30,
+  "group": "healthy",
+  "seed": 1220972039,
+  "duration_s": 646,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.1,
+  "ambient_c": 16.0,
+  "initial_coolant_c": 55.6,
+  "dropout_probability": 0.028,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 118,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 31,
+  "group": "healthy",
+  "seed": 48539039,
+  "duration_s": 656,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.14,
+  "ambient_c": 20.8,
+  "initial_coolant_c": 58.8,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 120,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 32,
+  "group": "healthy",
+  "seed": 1156584310,
+  "duration_s": 487,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.07,
+  "ambient_c": 23.4,
+  "initial_coolant_c": 52.2,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 86,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 33,
+  "group": "healthy",
+  "seed": 676026136,
+  "duration_s": 590,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.11,
+  "ambient_c": 19.3,
+  "initial_coolant_c": 71.0,
+  "dropout_probability": 0.0,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 107,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 34,
+  "group": "healthy",
+  "seed": 1907485068,
+  "duration_s": 809,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 0.89,
+  "ambient_c": 29.6,
+  "initial_coolant_c": 82.8,
+  "dropout_probability": 0.001,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 150,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 35,
+  "group": "healthy",
+  "seed": 1639071249,
+  "duration_s": 402,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.39,
+  "ambient_c": 27.1,
+  "initial_coolant_c": 80.3,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 69,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 36,
+  "group": "healthy",
+  "seed": 1389806342,
+  "duration_s": 738,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.99,
+  "ambient_c": 21.0,
+  "initial_coolant_c": 39.9,
+  "dropout_probability": 0.021,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 136,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 37,
+  "group": "healthy",
+  "seed": 232772090,
+  "duration_s": 728,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.43,
+  "ambient_c": 39.2,
+  "initial_coolant_c": 63.9,
+  "dropout_probability": 0.025,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 134,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 38,
+  "group": "healthy",
+  "seed": 1995708644,
+  "duration_s": 860,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 0.88,
+  "ambient_c": 22.8,
+  "initial_coolant_c": 31.3,
+  "dropout_probability": 0.001,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 161,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 39,
+  "group": "healthy",
+  "seed": 650281186,
+  "duration_s": 602,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.77,
+  "ambient_c": 23.8,
+  "initial_coolant_c": 45.6,
+  "dropout_probability": 0.004,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 109,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 40,
+  "group": "healthy",
+  "seed": 1526177868,
+  "duration_s": 744,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.23,
+  "ambient_c": 17.9,
+  "initial_coolant_c": 88.9,
+  "dropout_probability": 0.029,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 137,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 41,
+  "group": "healthy",
+  "seed": 167037309,
+  "duration_s": 576,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.61,
+  "ambient_c": 34.2,
+  "initial_coolant_c": 81.6,
+  "dropout_probability": 0.009,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 104,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 42,
+  "group": "healthy",
+  "seed": 903974547,
+  "duration_s": 547,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 0.91,
+  "ambient_c": 36.5,
+  "initial_coolant_c": 65.2,
+  "dropout_probability": 0.018,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 98,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 43,
+  "group": "healthy",
+  "seed": 269152074,
+  "duration_s": 575,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.01,
+  "ambient_c": 23.8,
+  "initial_coolant_c": 53.3,
+  "dropout_probability": 0.017,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 104,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 44,
+  "group": "healthy",
+  "seed": 1389807945,
+  "duration_s": 792,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 0.95,
+  "ambient_c": 35.9,
+  "initial_coolant_c": 52.3,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 147,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 45,
+  "group": "healthy",
+  "seed": 1780721879,
+  "duration_s": 465,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 0.64,
+  "ambient_c": 38.7,
+  "initial_coolant_c": 50.7,
+  "dropout_probability": 0.03,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 82,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 46,
+  "group": "healthy",
+  "seed": 1394205524,
+  "duration_s": 304,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 0.72,
+  "ambient_c": 34.0,
+  "initial_coolant_c": 40.0,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 49,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 47,
+  "group": "healthy",
+  "seed": 1799798772,
+  "duration_s": 540,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 0.92,
+  "ambient_c": 16.7,
+  "initial_coolant_c": 69.6,
+  "dropout_probability": 0.026,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 97,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 48,
+  "group": "healthy",
+  "seed": 1950598488,
+  "duration_s": 651,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.28,
+  "ambient_c": 22.6,
+  "initial_coolant_c": 60.5,
+  "dropout_probability": 0.007,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 119,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 49,
+  "group": "healthy",
+  "seed": 1499783963,
+  "duration_s": 714,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.5,
+  "ambient_c": 39.6,
+  "initial_coolant_c": 48.4,
+  "dropout_probability": 0.005,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 131,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 50,
+  "group": "healthy",
+  "seed": 1504809802,
+  "duration_s": 720,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.07,
+  "ambient_c": 29.9,
+  "initial_coolant_c": 37.3,
+  "dropout_probability": 0.029,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 133,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 51,
+  "group": "healthy",
+  "seed": 871599707,
+  "duration_s": 826,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.79,
+  "ambient_c": 15.6,
+  "initial_coolant_c": 66.5,
+  "dropout_probability": 0.014,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 154,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 52,
+  "group": "healthy",
+  "seed": 314250887,
+  "duration_s": 344,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 0.85,
+  "ambient_c": 17.6,
+  "initial_coolant_c": 83.4,
+  "dropout_probability": 0.009,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 57,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 53,
+  "group": "healthy",
+  "seed": 1925484405,
+  "duration_s": 679,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.96,
+  "ambient_c": 38.3,
+  "initial_coolant_c": 43.7,
+  "dropout_probability": 0.007,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 124,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 54,
+  "group": "healthy",
+  "seed": 931636326,
+  "duration_s": 763,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.73,
+  "ambient_c": 19.1,
+  "initial_coolant_c": 25.8,
+  "dropout_probability": 0.016,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 141,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 55,
+  "group": "healthy",
+  "seed": 301406341,
+  "duration_s": 614,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.39,
+  "ambient_c": 28.9,
+  "initial_coolant_c": 55.5,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 111,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 56,
+  "group": "healthy",
+  "seed": 719086155,
+  "duration_s": 828,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 0.98,
+  "ambient_c": 32.9,
+  "initial_coolant_c": 79.1,
+  "dropout_probability": 0.002,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 154,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 57,
+  "group": "healthy",
+  "seed": 827582090,
+  "duration_s": 780,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.18,
+  "ambient_c": 16.1,
+  "initial_coolant_c": 90.3,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 145,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 58,
+  "group": "healthy",
+  "seed": 740563528,
+  "duration_s": 395,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 0.63,
+  "ambient_c": 35.7,
+  "initial_coolant_c": 43.8,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 68,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 59,
+  "group": "healthy",
+  "seed": 1491739990,
+  "duration_s": 636,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.1,
+  "ambient_c": 23.0,
+  "initial_coolant_c": 91.5,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 116,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 60,
+  "group": "healthy",
+  "seed": 1628521499,
+  "duration_s": 610,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.32,
+  "ambient_c": 17.0,
+  "initial_coolant_c": 86.2,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 111,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 61,
+  "group": "healthy",
+  "seed": 318151049,
+  "duration_s": 727,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 0.93,
+  "ambient_c": 30.3,
+  "initial_coolant_c": 53.7,
+  "dropout_probability": 0.014,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 134,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 62,
+  "group": "healthy",
+  "seed": 1993940945,
+  "duration_s": 471,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 0.7,
+  "ambient_c": 26.6,
+  "initial_coolant_c": 80.0,
+  "dropout_probability": 0.009,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 83,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 63,
+  "group": "healthy",
+  "seed": 1176760067,
+  "duration_s": 846,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.51,
+  "ambient_c": 28.0,
+  "initial_coolant_c": 85.0,
+  "dropout_probability": 0.002,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 158,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 64,
+  "group": "healthy",
+  "seed": 123415169,
+  "duration_s": 337,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 0.6,
+  "ambient_c": 38.4,
+  "initial_coolant_c": 52.4,
+  "dropout_probability": 0.023,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 56,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 65,
+  "group": "healthy",
+  "seed": 1638183071,
+  "duration_s": 578,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.96,
+  "ambient_c": 34.9,
+  "initial_coolant_c": 67.3,
+  "dropout_probability": 0.004,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 104,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 66,
+  "group": "healthy",
+  "seed": 996104920,
+  "duration_s": 477,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 0.62,
+  "ambient_c": 35.6,
+  "initial_coolant_c": 50.6,
+  "dropout_probability": 0.017,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 84,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 67,
+  "group": "healthy",
+  "seed": 87391586,
+  "duration_s": 796,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 0.54,
+  "ambient_c": 36.3,
+  "initial_coolant_c": 63.2,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 148,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 68,
+  "group": "healthy",
+  "seed": 551869506,
+  "duration_s": 503,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.45,
+  "ambient_c": 17.0,
+  "initial_coolant_c": 49.2,
+  "dropout_probability": 0.008,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 89,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 69,
+  "group": "healthy",
+  "seed": 70967170,
+  "duration_s": 347,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 0.95,
+  "ambient_c": 18.4,
+  "initial_coolant_c": 41.4,
+  "dropout_probability": 0.022,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 58,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 70,
+  "group": "healthy",
+  "seed": 550217608,
+  "duration_s": 808,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.84,
+  "ambient_c": 39.0,
+  "initial_coolant_c": 83.2,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 150,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 71,
+  "group": "healthy",
+  "seed": 244505775,
+  "duration_s": 870,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.83,
+  "ambient_c": 19.8,
+  "initial_coolant_c": 34.5,
+  "dropout_probability": 0.016,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 163,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 72,
+  "group": "healthy",
+  "seed": 923823354,
+  "duration_s": 783,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.07,
+  "ambient_c": 31.7,
+  "initial_coolant_c": 46.5,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 145,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 73,
+  "group": "healthy",
+  "seed": 1948151450,
+  "duration_s": 871,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 0.54,
+  "ambient_c": 23.3,
+  "initial_coolant_c": 50.8,
+  "dropout_probability": 0.0,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 163,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 74,
+  "group": "healthy",
+  "seed": 2121980780,
+  "duration_s": 568,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.83,
+  "ambient_c": 31.1,
+  "initial_coolant_c": 41.1,
+  "dropout_probability": 0.028,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 102,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 75,
+  "group": "healthy",
+  "seed": 1641250446,
+  "duration_s": 512,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.65,
+  "ambient_c": 22.3,
+  "initial_coolant_c": 60.8,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 91,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 76,
+  "group": "healthy",
+  "seed": 1633021899,
+  "duration_s": 531,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 0.64,
+  "ambient_c": 25.1,
+  "initial_coolant_c": 65.4,
+  "dropout_probability": 0.016,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 95,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 77,
+  "group": "healthy",
+  "seed": 1505014853,
+  "duration_s": 463,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 0.6,
+  "ambient_c": 26.1,
+  "initial_coolant_c": 47.2,
+  "dropout_probability": 0.028,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 81,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 78,
+  "group": "healthy",
+  "seed": 1910012852,
+  "duration_s": 835,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 0.67,
+  "ambient_c": 35.6,
+  "initial_coolant_c": 62.3,
+  "dropout_probability": 0.011,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 156,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 79,
+  "group": "healthy",
+  "seed": 312508796,
+  "duration_s": 709,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 0.91,
+  "ambient_c": 17.6,
+  "initial_coolant_c": 61.2,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 130,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 80,
+  "group": "healthy",
+  "seed": 1427075019,
+  "duration_s": 895,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 0.99,
+  "ambient_c": 34.3,
+  "initial_coolant_c": 48.5,
+  "dropout_probability": 0.012,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 168,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 81,
+  "group": "healthy",
+  "seed": 1634756254,
+  "duration_s": 833,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.92,
+  "ambient_c": 15.6,
+  "initial_coolant_c": 27.0,
+  "dropout_probability": 0.005,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 155,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 82,
+  "group": "healthy",
+  "seed": 449526893,
+  "duration_s": 316,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.59,
+  "ambient_c": 39.7,
+  "initial_coolant_c": 63.5,
+  "dropout_probability": 0.018,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 52,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 83,
+  "group": "healthy",
+  "seed": 1326331922,
+  "duration_s": 354,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.93,
+  "ambient_c": 18.1,
+  "initial_coolant_c": 64.7,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 59,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 84,
+  "group": "healthy",
+  "seed": 1743105646,
+  "duration_s": 341,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.91,
+  "ambient_c": 24.6,
+  "initial_coolant_c": 83.6,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 57,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 85,
+  "group": "healthy",
+  "seed": 1729351081,
+  "duration_s": 842,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.73,
+  "ambient_c": 17.9,
+  "initial_coolant_c": 64.2,
+  "dropout_probability": 0.0,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 157,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 86,
+  "group": "healthy",
+  "seed": 2124832050,
+  "duration_s": 711,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.22,
+  "ambient_c": 24.4,
+  "initial_coolant_c": 87.7,
+  "dropout_probability": 0.028,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 131,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 87,
+  "group": "healthy",
+  "seed": 1720370843,
+  "duration_s": 601,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.26,
+  "ambient_c": 21.7,
+  "initial_coolant_c": 75.9,
+  "dropout_probability": 0.009,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 109,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 88,
+  "group": "healthy",
+  "seed": 1316099508,
+  "duration_s": 554,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 0.68,
+  "ambient_c": 23.8,
+  "initial_coolant_c": 76.4,
+  "dropout_probability": 0.017,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 99,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 89,
+  "group": "healthy",
+  "seed": 292657834,
+  "duration_s": 821,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.7,
+  "ambient_c": 39.3,
+  "initial_coolant_c": 73.2,
+  "dropout_probability": 0.003,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 153,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 90,
+  "group": "healthy",
+  "seed": 1793332082,
+  "duration_s": 458,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.46,
+  "ambient_c": 32.5,
+  "initial_coolant_c": 72.3,
+  "dropout_probability": 0.029,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 80,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 91,
+  "group": "healthy",
+  "seed": 852969382,
+  "duration_s": 635,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.72,
+  "ambient_c": 29.8,
+  "initial_coolant_c": 50.9,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 116,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 92,
+  "group": "healthy",
+  "seed": 1484489283,
+  "duration_s": 324,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.83,
+  "ambient_c": 34.8,
+  "initial_coolant_c": 45.7,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 53,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 93,
+  "group": "healthy",
+  "seed": 264365881,
+  "duration_s": 667,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 0.62,
+  "ambient_c": 17.0,
+  "initial_coolant_c": 63.6,
+  "dropout_probability": 0.022,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 122,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 94,
+  "group": "healthy",
+  "seed": 1995856924,
+  "duration_s": 868,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 0.88,
+  "ambient_c": 36.0,
+  "initial_coolant_c": 90.3,
+  "dropout_probability": 0.025,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 162,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 95,
+  "group": "healthy",
+  "seed": 1847982999,
+  "duration_s": 783,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.11,
+  "ambient_c": 25.8,
+  "initial_coolant_c": 53.7,
+  "dropout_probability": 0.028,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 145,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 96,
+  "group": "healthy",
+  "seed": 246808398,
+  "duration_s": 896,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.67,
+  "ambient_c": 37.9,
+  "initial_coolant_c": 69.6,
+  "dropout_probability": 0.015,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 168,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 97,
+  "group": "healthy",
+  "seed": 1958649985,
+  "duration_s": 790,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.14,
+  "ambient_c": 34.1,
+  "initial_coolant_c": 58.8,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 147,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 98,
+  "group": "healthy",
+  "seed": 2144499424,
+  "duration_s": 398,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.2,
+  "ambient_c": 30.4,
+  "initial_coolant_c": 66.4,
+  "dropout_probability": 0.029,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 68,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 99,
+  "group": "healthy",
+  "seed": 636072304,
+  "duration_s": 500,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.06,
+  "ambient_c": 34.5,
+  "initial_coolant_c": 73.0,
+  "dropout_probability": 0.007,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 89,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 100,
+  "group": "healthy",
+  "seed": 684729479,
+  "duration_s": 783,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.99,
+  "ambient_c": 18.3,
+  "initial_coolant_c": 80.8,
+  "dropout_probability": 0.028,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 145,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 101,
+  "group": "healthy",
+  "seed": 748289668,
+  "duration_s": 499,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 0.59,
+  "ambient_c": 26.8,
+  "initial_coolant_c": 57.0,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 88,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 102,
+  "group": "healthy",
+  "seed": 903791826,
+  "duration_s": 573,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.79,
+  "ambient_c": 31.2,
+  "initial_coolant_c": 56.2,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 103,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 103,
+  "group": "healthy",
+  "seed": 895200345,
+  "duration_s": 441,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.83,
+  "ambient_c": 27.3,
+  "initial_coolant_c": 34.5,
+  "dropout_probability": 0.026,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 77,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 104,
+  "group": "healthy",
+  "seed": 346106149,
+  "duration_s": 398,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.7,
+  "ambient_c": 21.7,
+  "initial_coolant_c": 71.8,
+  "dropout_probability": 0.018,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 68,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 105,
+  "group": "healthy",
+  "seed": 202873780,
+  "duration_s": 871,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.01,
+  "ambient_c": 17.9,
+  "initial_coolant_c": 75.9,
+  "dropout_probability": 0.026,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 163,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 106,
+  "group": "healthy",
+  "seed": 802737056,
+  "duration_s": 605,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.43,
+  "ambient_c": 34.1,
+  "initial_coolant_c": 82.1,
+  "dropout_probability": 0.03,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 110,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 107,
+  "group": "healthy",
+  "seed": 379841113,
+  "duration_s": 745,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 0.88,
+  "ambient_c": 26.8,
+  "initial_coolant_c": 72.0,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 138,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 108,
+  "group": "healthy",
+  "seed": 582795686,
+  "duration_s": 337,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.22,
+  "ambient_c": 18.9,
+  "initial_coolant_c": 74.9,
+  "dropout_probability": 0.03,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 56,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 109,
+  "group": "healthy",
+  "seed": 1705662961,
+  "duration_s": 779,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.38,
+  "ambient_c": 19.0,
+  "initial_coolant_c": 86.1,
+  "dropout_probability": 0.003,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 144,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 110,
+  "group": "healthy",
+  "seed": 69206066,
+  "duration_s": 447,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.33,
+  "ambient_c": 37.7,
+  "initial_coolant_c": 66.3,
+  "dropout_probability": 0.008,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 78,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 111,
+  "group": "healthy",
+  "seed": 2083676632,
+  "duration_s": 314,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.77,
+  "ambient_c": 23.6,
+  "initial_coolant_c": 88.1,
+  "dropout_probability": 0.007,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 51,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 112,
+  "group": "healthy",
+  "seed": 2126101403,
+  "duration_s": 539,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.8,
+  "ambient_c": 27.0,
+  "initial_coolant_c": 65.0,
+  "dropout_probability": 0.015,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 96,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 113,
+  "group": "healthy",
+  "seed": 1405918445,
+  "duration_s": 378,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.87,
+  "ambient_c": 36.8,
+  "initial_coolant_c": 60.7,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 64,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 114,
+  "group": "healthy",
+  "seed": 6220900,
+  "duration_s": 719,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 0.69,
+  "ambient_c": 32.1,
+  "initial_coolant_c": 51.8,
+  "dropout_probability": 0.007,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 132,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 115,
+  "group": "healthy",
+  "seed": 1353456251,
+  "duration_s": 822,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.32,
+  "ambient_c": 22.6,
+  "initial_coolant_c": 43.1,
+  "dropout_probability": 0.017,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 153,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 116,
+  "group": "healthy",
+  "seed": 2003883908,
+  "duration_s": 717,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 0.64,
+  "ambient_c": 16.4,
+  "initial_coolant_c": 79.2,
+  "dropout_probability": 0.015,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 132,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 117,
+  "group": "healthy",
+  "seed": 1007526173,
+  "duration_s": 516,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.36,
+  "ambient_c": 18.3,
+  "initial_coolant_c": 87.7,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 92,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 118,
+  "group": "healthy",
+  "seed": 851748018,
+  "duration_s": 505,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.58,
+  "ambient_c": 37.3,
+  "initial_coolant_c": 60.5,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 90,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 119,
+  "group": "healthy",
+  "seed": 171714547,
+  "duration_s": 604,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.09,
+  "ambient_c": 17.6,
+  "initial_coolant_c": 86.4,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 109,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 120,
+  "group": "fault:cooling",
+  "seed": 2084943475,
+  "duration_s": 524,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 134.5,
+    "ramp_s": 50.7,
+    "max_severity": 0.7,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.74,
+  "ambient_c": 16.3,
+  "initial_coolant_c": 44.4,
+  "dropout_probability": 0.029,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 88,
+  "ambiguous_windows": 5
+ },
+ {
+  "session_id": 121,
+  "group": "fault:cooling",
+  "seed": 358380506,
+  "duration_s": 728,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 54.0,
+    "ramp_s": 159.4,
+    "max_severity": 0.99,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.17,
+  "ambient_c": 32.4,
+  "initial_coolant_c": 69.8,
+  "dropout_probability": 0.012,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 125,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 122,
+  "group": "fault:cooling",
+  "seed": 1981566197,
+  "duration_s": 346,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 69.0,
+    "ramp_s": 123.9,
+    "max_severity": 0.5,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.26,
+  "ambient_c": 37.0,
+  "initial_coolant_c": 87.8,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 43,
+  "ambiguous_windows": 15
+ },
+ {
+  "session_id": 123,
+  "group": "fault:cooling",
+  "seed": 1412617956,
+  "duration_s": 846,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "overheating",
+    "onset_s": 123.1,
+    "ramp_s": 146.3,
+    "max_severity": 0.51,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.76,
+  "ambient_c": 16.8,
+  "initial_coolant_c": 23.7,
+  "dropout_probability": 0.025,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 141,
+  "ambiguous_windows": 17
+ },
+ {
+  "session_id": 124,
+  "group": "fault:cooling",
+  "seed": 1446531781,
+  "duration_s": 645,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 285.7,
+    "ramp_s": 87.9,
+    "max_severity": 0.55,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.64,
+  "ambient_c": 16.7,
+  "initial_coolant_c": 45.0,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 109,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 125,
+  "group": "fault:cooling",
+  "seed": 1111730568,
+  "duration_s": 466,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 161.8,
+    "ramp_s": 163.8,
+    "max_severity": 0.9,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.92,
+  "ambient_c": 35.4,
+  "initial_coolant_c": 82.9,
+  "dropout_probability": 0.029,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 71,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 126,
+  "group": "fault:cooling",
+  "seed": 374787172,
+  "duration_s": 745,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 142.3,
+    "ramp_s": 51.3,
+    "max_severity": 0.43,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.83,
+  "ambient_c": 35.7,
+  "initial_coolant_c": 77.3,
+  "dropout_probability": 0.005,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 131,
+  "ambiguous_windows": 7
+ },
+ {
+  "session_id": 127,
+  "group": "fault:cooling",
+  "seed": 1067173583,
+  "duration_s": 377,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 130.5,
+    "ramp_s": 90.5,
+    "max_severity": 0.58,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.71,
+  "ambient_c": 27.6,
+  "initial_coolant_c": 78.3,
+  "dropout_probability": 0.028,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 55,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 128,
+  "group": "fault:cooling",
+  "seed": 1389874911,
+  "duration_s": 524,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 80.6,
+    "ramp_s": 88.4,
+    "max_severity": 0.81,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.22,
+  "ambient_c": 17.1,
+  "initial_coolant_c": 45.4,
+  "dropout_probability": 0.005,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 87,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 129,
+  "group": "fault:cooling",
+  "seed": 1905879139,
+  "duration_s": 366,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "overheating",
+    "onset_s": 73.1,
+    "ramp_s": 117.5,
+    "max_severity": 0.79,
+    "intermittent_period_s": 36.946495432190076
+   }
+  ],
+  "noise_scale": 0.85,
+  "ambient_c": 17.5,
+  "initial_coolant_c": 47.4,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 50,
+  "ambiguous_windows": 12
+ },
+ {
+  "session_id": 130,
+  "group": "fault:cooling",
+  "seed": 68452091,
+  "duration_s": 573,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 251.8,
+    "ramp_s": 124.0,
+    "max_severity": 0.79,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.32,
+  "ambient_c": 28.6,
+  "initial_coolant_c": 52.1,
+  "dropout_probability": 0.025,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 94,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 131,
+  "group": "fault:cooling",
+  "seed": 1535065549,
+  "duration_s": 765,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 69.5,
+    "ramp_s": 74.8,
+    "max_severity": 0.76,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.81,
+  "ambient_c": 31.6,
+  "initial_coolant_c": 86.3,
+  "dropout_probability": 0.008,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 136,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 132,
+  "group": "fault:cooling",
+  "seed": 1675867532,
+  "duration_s": 426,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 35.3,
+    "ramp_s": 40.2,
+    "max_severity": 0.49,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.68,
+  "ambient_c": 37.2,
+  "initial_coolant_c": 56.4,
+  "dropout_probability": 0.001,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 74,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 133,
+  "group": "fault:cooling",
+  "seed": 2082062993,
+  "duration_s": 346,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "overheating",
+    "onset_s": 67.1,
+    "ramp_s": 95.2,
+    "max_severity": 0.91,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.51,
+  "ambient_c": 36.2,
+  "initial_coolant_c": 55.3,
+  "dropout_probability": 0.0,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 52,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 134,
+  "group": "fault:cooling",
+  "seed": 1680277342,
+  "duration_s": 753,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "overheating",
+    "onset_s": 35.2,
+    "ramp_s": 152.0,
+    "max_severity": 0.74,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.84,
+  "ambient_c": 39.5,
+  "initial_coolant_c": 84.9,
+  "dropout_probability": 0.012,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 131,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 135,
+  "group": "fault:cooling",
+  "seed": 1554083066,
+  "duration_s": 378,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "overheating",
+    "onset_s": 113.6,
+    "ramp_s": 106.3,
+    "max_severity": 0.94,
+    "intermittent_period_s": 26.308072068137417
+   }
+  ],
+  "noise_scale": 1.91,
+  "ambient_c": 39.4,
+  "initial_coolant_c": 49.3,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 55,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 136,
+  "group": "fault:cooling",
+  "seed": 848178744,
+  "duration_s": 601,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 111.5,
+    "ramp_s": 131.5,
+    "max_severity": 1.0,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.05,
+  "ambient_c": 21.8,
+  "initial_coolant_c": 89.7,
+  "dropout_probability": 0.011,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 101,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 137,
+  "group": "fault:cooling",
+  "seed": 1545352571,
+  "duration_s": 771,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 52.2,
+    "ramp_s": 177.2,
+    "max_severity": 0.67,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.03,
+  "ambient_c": 29.3,
+  "initial_coolant_c": 46.9,
+  "dropout_probability": 0.003,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 128,
+  "ambiguous_windows": 15
+ },
+ {
+  "session_id": 138,
+  "group": "fault:cooling",
+  "seed": 292990222,
+  "duration_s": 320,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 118.6,
+    "ramp_s": 106.8,
+    "max_severity": 0.43,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.79,
+  "ambient_c": 34.9,
+  "initial_coolant_c": 67.8,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 38,
+  "ambiguous_windows": 15
+ },
+ {
+  "session_id": 139,
+  "group": "fault:cooling",
+  "seed": 1350536430,
+  "duration_s": 360,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 89.0,
+    "ramp_s": 133.7,
+    "max_severity": 0.6,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.67,
+  "ambient_c": 37.2,
+  "initial_coolant_c": 80.2,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 47,
+  "ambiguous_windows": 14
+ },
+ {
+  "session_id": 140,
+  "group": "fault:cooling",
+  "seed": 295593782,
+  "duration_s": 845,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 231.9,
+    "ramp_s": 158.1,
+    "max_severity": 0.53,
+    "intermittent_period_s": 25.18877222045507
+   }
+  ],
+  "noise_scale": 1.02,
+  "ambient_c": 39.4,
+  "initial_coolant_c": 78.5,
+  "dropout_probability": 0.012,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 140,
+  "ambiguous_windows": 18
+ },
+ {
+  "session_id": 141,
+  "group": "fault:cooling",
+  "seed": 1470703690,
+  "duration_s": 626,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 240.0,
+    "ramp_s": 101.6,
+    "max_severity": 0.51,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.64,
+  "ambient_c": 33.1,
+  "initial_coolant_c": 66.0,
+  "dropout_probability": 0.016,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 102,
+  "ambiguous_windows": 12
+ },
+ {
+  "session_id": 142,
+  "group": "fault:cooling",
+  "seed": 1724073367,
+  "duration_s": 717,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 259.6,
+    "ramp_s": 70.7,
+    "max_severity": 0.8,
+    "intermittent_period_s": 36.14975054248188
+   }
+  ],
+  "noise_scale": 1.77,
+  "ambient_c": 36.5,
+  "initial_coolant_c": 52.2,
+  "dropout_probability": 0.023,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 126,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 143,
+  "group": "fault:cooling",
+  "seed": 876399060,
+  "duration_s": 792,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 329.4,
+    "ramp_s": 168.9,
+    "max_severity": 0.58,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.56,
+  "ambient_c": 20.1,
+  "initial_coolant_c": 55.7,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 129,
+  "ambiguous_windows": 18
+ },
+ {
+  "session_id": 144,
+  "group": "fault:cooling",
+  "seed": 2003280835,
+  "duration_s": 814,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "overheating",
+    "onset_s": 120.1,
+    "ramp_s": 56.4,
+    "max_severity": 0.65,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.26,
+  "ambient_c": 38.1,
+  "initial_coolant_c": 61.8,
+  "dropout_probability": 0.016,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 146,
+  "ambiguous_windows": 5
+ },
+ {
+  "session_id": 145,
+  "group": "fault:cooling",
+  "seed": 348584797,
+  "duration_s": 694,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 217.8,
+    "ramp_s": 162.8,
+    "max_severity": 0.86,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.38,
+  "ambient_c": 29.4,
+  "initial_coolant_c": 83.4,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 116,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 146,
+  "group": "fault:cooling",
+  "seed": 1344357561,
+  "duration_s": 386,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "overheating",
+    "onset_s": 162.6,
+    "ramp_s": 147.6,
+    "max_severity": 0.63,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.99,
+  "ambient_c": 26.9,
+  "initial_coolant_c": 37.0,
+  "dropout_probability": 0.011,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 52,
+  "ambiguous_windows": 14
+ },
+ {
+  "session_id": 147,
+  "group": "fault:cooling",
+  "seed": 877356686,
+  "duration_s": 631,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "overheating",
+    "onset_s": 56.3,
+    "ramp_s": 152.9,
+    "max_severity": 0.51,
+    "intermittent_period_s": 38.66593515626092
+   }
+  ],
+  "noise_scale": 1.12,
+  "ambient_c": 15.5,
+  "initial_coolant_c": 35.4,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 101,
+  "ambiguous_windows": 14
+ },
+ {
+  "session_id": 148,
+  "group": "fault:cooling",
+  "seed": 1680275381,
+  "duration_s": 696,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 52.6,
+    "ramp_s": 175.3,
+    "max_severity": 0.51,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.94,
+  "ambient_c": 32.9,
+  "initial_coolant_c": 79.3,
+  "dropout_probability": 0.003,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 108,
+  "ambiguous_windows": 20
+ },
+ {
+  "session_id": 149,
+  "group": "fault:cooling",
+  "seed": 777654687,
+  "duration_s": 767,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 307.3,
+    "ramp_s": 117.8,
+    "max_severity": 0.93,
+    "intermittent_period_s": 18.58263184700356
+   }
+  ],
+  "noise_scale": 1.3,
+  "ambient_c": 27.7,
+  "initial_coolant_c": 33.7,
+  "dropout_probability": 0.011,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 134,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 150,
+  "group": "fault:lubrication",
+  "seed": 1211318909,
+  "duration_s": 336,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 118.0,
+    "ramp_s": 139.8,
+    "max_severity": 0.77,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.52,
+  "ambient_c": 37.7,
+  "initial_coolant_c": 74.0,
+  "dropout_probability": 0.023,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 45,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 151,
+  "group": "fault:lubrication",
+  "seed": 1453040143,
+  "duration_s": 429,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 191.6,
+    "ramp_s": 91.3,
+    "max_severity": 0.78,
+    "intermittent_period_s": 18.015863767884642
+   }
+  ],
+  "noise_scale": 0.77,
+  "ambient_c": 22.7,
+  "initial_coolant_c": 52.5,
+  "dropout_probability": 0.021,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 67,
+  "ambiguous_windows": 7
+ },
+ {
+  "session_id": 152,
+  "group": "fault:lubrication",
+  "seed": 1266862968,
+  "duration_s": 412,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 101.4,
+    "ramp_s": 154.9,
+    "max_severity": 0.9,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.59,
+  "ambient_c": 29.2,
+  "initial_coolant_c": 87.2,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 61,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 153,
+  "group": "fault:lubrication",
+  "seed": 343970200,
+  "duration_s": 754,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 209.6,
+    "ramp_s": 154.4,
+    "max_severity": 0.47,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.8,
+  "ambient_c": 35.3,
+  "initial_coolant_c": 63.6,
+  "dropout_probability": 0.001,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 119,
+  "ambiguous_windows": 20
+ },
+ {
+  "session_id": 154,
+  "group": "fault:lubrication",
+  "seed": 658520902,
+  "duration_s": 522,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 77.3,
+    "ramp_s": 177.1,
+    "max_severity": 0.6,
+    "intermittent_period_s": 36.51093142283787
+   }
+  ],
+  "noise_scale": 1.45,
+  "ambient_c": 17.5,
+  "initial_coolant_c": 64.4,
+  "dropout_probability": 0.001,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 79,
+  "ambiguous_windows": 14
+ },
+ {
+  "session_id": 155,
+  "group": "fault:lubrication",
+  "seed": 1838170429,
+  "duration_s": 524,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 164.8,
+    "ramp_s": 143.5,
+    "max_severity": 0.94,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.92,
+  "ambient_c": 18.2,
+  "initial_coolant_c": 65.1,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 83,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 156,
+  "group": "fault:lubrication",
+  "seed": 79538946,
+  "duration_s": 700,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 288.1,
+    "ramp_s": 67.8,
+    "max_severity": 0.52,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.44,
+  "ambient_c": 36.4,
+  "initial_coolant_c": 68.6,
+  "dropout_probability": 0.008,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 121,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 157,
+  "group": "fault:lubrication",
+  "seed": 1898615448,
+  "duration_s": 839,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 195.3,
+    "ramp_s": 44.9,
+    "max_severity": 0.49,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.65,
+  "ambient_c": 15.3,
+  "initial_coolant_c": 35.8,
+  "dropout_probability": 0.029,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 151,
+  "ambiguous_windows": 5
+ },
+ {
+  "session_id": 158,
+  "group": "fault:lubrication",
+  "seed": 2067605832,
+  "duration_s": 853,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 86.9,
+    "ramp_s": 141.9,
+    "max_severity": 0.44,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.38,
+  "ambient_c": 18.7,
+  "initial_coolant_c": 78.6,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 140,
+  "ambiguous_windows": 19
+ },
+ {
+  "session_id": 159,
+  "group": "fault:lubrication",
+  "seed": 249544753,
+  "duration_s": 418,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 112.0,
+    "ramp_s": 119.9,
+    "max_severity": 0.81,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.03,
+  "ambient_c": 26.8,
+  "initial_coolant_c": 35.8,
+  "dropout_probability": 0.012,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 63,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 160,
+  "group": "fault:lubrication",
+  "seed": 1218718380,
+  "duration_s": 511,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 127.7,
+    "ramp_s": 76.3,
+    "max_severity": 0.46,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.37,
+  "ambient_c": 20.0,
+  "initial_coolant_c": 53.4,
+  "dropout_probability": 0.014,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 81,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 161,
+  "group": "fault:lubrication",
+  "seed": 1928092184,
+  "duration_s": 633,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 55.1,
+    "ramp_s": 125.4,
+    "max_severity": 0.46,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.83,
+  "ambient_c": 37.5,
+  "initial_coolant_c": 65.5,
+  "dropout_probability": 0.009,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 99,
+  "ambiguous_windows": 16
+ },
+ {
+  "session_id": 162,
+  "group": "fault:lubrication",
+  "seed": 1293355429,
+  "duration_s": 536,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 140.1,
+    "ramp_s": 163.6,
+    "max_severity": 0.56,
+    "intermittent_period_s": 19.596824598388306
+   }
+  ],
+  "noise_scale": 0.72,
+  "ambient_c": 36.3,
+  "initial_coolant_c": 84.1,
+  "dropout_probability": 0.023,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 79,
+  "ambiguous_windows": 17
+ },
+ {
+  "session_id": 163,
+  "group": "fault:lubrication",
+  "seed": 1731768563,
+  "duration_s": 627,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 172.8,
+    "ramp_s": 119.1,
+    "max_severity": 0.79,
+    "intermittent_period_s": 33.20920953929743
+   }
+  ],
+  "noise_scale": 1.85,
+  "ambient_c": 26.3,
+  "initial_coolant_c": 40.9,
+  "dropout_probability": 0.025,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 103,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 164,
+  "group": "fault:lubrication",
+  "seed": 2094616603,
+  "duration_s": 879,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 369.6,
+    "ramp_s": 89.3,
+    "max_severity": 0.97,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.99,
+  "ambient_c": 22.4,
+  "initial_coolant_c": 83.2,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 158,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 165,
+  "group": "fault:lubrication",
+  "seed": 1705582331,
+  "duration_s": 603,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 148.8,
+    "ramp_s": 82.0,
+    "max_severity": 0.86,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.54,
+  "ambient_c": 31.1,
+  "initial_coolant_c": 91.4,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 103,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 166,
+  "group": "fault:lubrication",
+  "seed": 1999259884,
+  "duration_s": 511,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 190.0,
+    "ramp_s": 99.1,
+    "max_severity": 0.46,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.1,
+  "ambient_c": 28.5,
+  "initial_coolant_c": 79.5,
+  "dropout_probability": 0.0,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 79,
+  "ambiguous_windows": 12
+ },
+ {
+  "session_id": 167,
+  "group": "fault:lubrication",
+  "seed": 75576286,
+  "duration_s": 670,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 147.1,
+    "ramp_s": 80.8,
+    "max_severity": 0.52,
+    "intermittent_period_s": 29.162712794308668
+   }
+  ],
+  "noise_scale": 1.55,
+  "ambient_c": 18.8,
+  "initial_coolant_c": 57.3,
+  "dropout_probability": 0.012,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 113,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 168,
+  "group": "fault:lubrication",
+  "seed": 1101587719,
+  "duration_s": 830,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 119.2,
+    "ramp_s": 56.2,
+    "max_severity": 0.52,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.54,
+  "ambient_c": 38.7,
+  "initial_coolant_c": 47.7,
+  "dropout_probability": 0.0,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 148,
+  "ambiguous_windows": 7
+ },
+ {
+  "session_id": 169,
+  "group": "fault:lubrication",
+  "seed": 1487969900,
+  "duration_s": 544,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 90.9,
+    "ramp_s": 48.5,
+    "max_severity": 0.72,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.84,
+  "ambient_c": 15.9,
+  "initial_coolant_c": 39.0,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 93,
+  "ambiguous_windows": 4
+ },
+ {
+  "session_id": 170,
+  "group": "fault:lubrication",
+  "seed": 1886177285,
+  "duration_s": 888,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 338.1,
+    "ramp_s": 169.2,
+    "max_severity": 0.97,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.82,
+  "ambient_c": 27.3,
+  "initial_coolant_c": 78.8,
+  "dropout_probability": 0.011,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 155,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 171,
+  "group": "fault:lubrication",
+  "seed": 369665959,
+  "duration_s": 634,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 68.8,
+    "ramp_s": 129.1,
+    "max_severity": 0.54,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.81,
+  "ambient_c": 23.2,
+  "initial_coolant_c": 81.0,
+  "dropout_probability": 0.014,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 100,
+  "ambiguous_windows": 15
+ },
+ {
+  "session_id": 172,
+  "group": "fault:lubrication",
+  "seed": 1864173399,
+  "duration_s": 667,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 41.2,
+    "ramp_s": 128.6,
+    "max_severity": 0.87,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.19,
+  "ambient_c": 32.4,
+  "initial_coolant_c": 87.0,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 116,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 173,
+  "group": "fault:lubrication",
+  "seed": 898077854,
+  "duration_s": 315,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 109.6,
+    "ramp_s": 37.5,
+    "max_severity": 0.89,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.5,
+  "ambient_c": 18.2,
+  "initial_coolant_c": 60.7,
+  "dropout_probability": 0.001,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 49,
+  "ambiguous_windows": 3
+ },
+ {
+  "session_id": 174,
+  "group": "fault:lubrication",
+  "seed": 333727556,
+  "duration_s": 483,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 41.9,
+    "ramp_s": 46.6,
+    "max_severity": 0.84,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.86,
+  "ambient_c": 25.0,
+  "initial_coolant_c": 34.1,
+  "dropout_probability": 0.0,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 85,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 175,
+  "group": "fault:lubrication",
+  "seed": 288354995,
+  "duration_s": 312,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 33.6,
+    "ramp_s": 126.0,
+    "max_severity": 0.48,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.2,
+  "ambient_c": 32.6,
+  "initial_coolant_c": 81.2,
+  "dropout_probability": 0.011,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 40,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 176,
+  "group": "fault:lubrication",
+  "seed": 1820404862,
+  "duration_s": 577,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 52.2,
+    "ramp_s": 55.1,
+    "max_severity": 0.52,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.78,
+  "ambient_c": 22.7,
+  "initial_coolant_c": 79.4,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 99,
+  "ambiguous_windows": 5
+ },
+ {
+  "session_id": 177,
+  "group": "fault:lubrication",
+  "seed": 1227289770,
+  "duration_s": 548,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 138.5,
+    "ramp_s": 30.5,
+    "max_severity": 0.47,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.5,
+  "ambient_c": 33.0,
+  "initial_coolant_c": 51.0,
+  "dropout_probability": 0.028,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 94,
+  "ambiguous_windows": 4
+ },
+ {
+  "session_id": 178,
+  "group": "fault:lubrication",
+  "seed": 817796009,
+  "duration_s": 655,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 81.1,
+    "ramp_s": 177.0,
+    "max_severity": 0.51,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.49,
+  "ambient_c": 15.8,
+  "initial_coolant_c": 89.1,
+  "dropout_probability": 0.025,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 99,
+  "ambiguous_windows": 21
+ },
+ {
+  "session_id": 179,
+  "group": "fault:lubrication",
+  "seed": 2072200414,
+  "duration_s": 577,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 47.1,
+    "ramp_s": 88.8,
+    "max_severity": 0.53,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.58,
+  "ambient_c": 31.8,
+  "initial_coolant_c": 49.1,
+  "dropout_probability": 0.014,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 96,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 180,
+  "group": "fault:fuel",
+  "seed": 86442401,
+  "duration_s": 662,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 187.1,
+    "ramp_s": 103.5,
+    "max_severity": 0.85,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.8,
+  "ambient_c": 25.2,
+  "initial_coolant_c": 66.0,
+  "dropout_probability": 0.008,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 114,
+  "ambiguous_windows": 7
+ },
+ {
+  "session_id": 181,
+  "group": "fault:fuel",
+  "seed": 1030800792,
+  "duration_s": 608,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 84.1,
+    "ramp_s": 108.0,
+    "max_severity": 0.96,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.48,
+  "ambient_c": 26.5,
+  "initial_coolant_c": 36.3,
+  "dropout_probability": 0.022,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 103,
+  "ambiguous_windows": 7
+ },
+ {
+  "session_id": 182,
+  "group": "fault:fuel",
+  "seed": 1752237681,
+  "duration_s": 530,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 124.2,
+    "ramp_s": 33.1,
+    "max_severity": 0.65,
+    "intermittent_period_s": 31.530247819249936
+   }
+  ],
+  "noise_scale": 1.01,
+  "ambient_c": 37.3,
+  "initial_coolant_c": 61.1,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 92,
+  "ambiguous_windows": 3
+ },
+ {
+  "session_id": 183,
+  "group": "fault:fuel",
+  "seed": 1696460120,
+  "duration_s": 855,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 309.6,
+    "ramp_s": 43.1,
+    "max_severity": 0.67,
+    "intermittent_period_s": 35.15448723422203
+   }
+  ],
+  "noise_scale": 1.86,
+  "ambient_c": 37.9,
+  "initial_coolant_c": 44.3,
+  "dropout_probability": 0.016,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 156,
+  "ambiguous_windows": 4
+ },
+ {
+  "session_id": 184,
+  "group": "fault:fuel",
+  "seed": 1974647856,
+  "duration_s": 876,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 334.0,
+    "ramp_s": 142.3,
+    "max_severity": 0.58,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.39,
+  "ambient_c": 26.6,
+  "initial_coolant_c": 48.8,
+  "dropout_probability": 0.003,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 149,
+  "ambiguous_windows": 15
+ },
+ {
+  "session_id": 185,
+  "group": "fault:fuel",
+  "seed": 539719741,
+  "duration_s": 602,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 139.4,
+    "ramp_s": 167.2,
+    "max_severity": 0.66,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.86,
+  "ambient_c": 32.6,
+  "initial_coolant_c": 60.7,
+  "dropout_probability": 0.011,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 93,
+  "ambiguous_windows": 16
+ },
+ {
+  "session_id": 186,
+  "group": "fault:fuel",
+  "seed": 615395920,
+  "duration_s": 345,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 41.4,
+    "ramp_s": 168.2,
+    "max_severity": 0.45,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.56,
+  "ambient_c": 20.6,
+  "initial_coolant_c": 53.6,
+  "dropout_probability": 0.003,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 39,
+  "ambiguous_windows": 19
+ },
+ {
+  "session_id": 187,
+  "group": "fault:fuel",
+  "seed": 318661595,
+  "duration_s": 871,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 193.3,
+    "ramp_s": 105.7,
+    "max_severity": 0.82,
+    "intermittent_period_s": 36.744149803110474
+   }
+  ],
+  "noise_scale": 1.56,
+  "ambient_c": 32.0,
+  "initial_coolant_c": 74.6,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 152,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 188,
+  "group": "fault:fuel",
+  "seed": 941235061,
+  "duration_s": 444,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 88.9,
+    "ramp_s": 159.6,
+    "max_severity": 0.87,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.51,
+  "ambient_c": 29.3,
+  "initial_coolant_c": 69.0,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 66,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 189,
+  "group": "fault:fuel",
+  "seed": 287318444,
+  "duration_s": 775,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 338.2,
+    "ramp_s": 176.0,
+    "max_severity": 0.64,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.28,
+  "ambient_c": 28.8,
+  "initial_coolant_c": 90.1,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 127,
+  "ambiguous_windows": 17
+ },
+ {
+  "session_id": 190,
+  "group": "fault:fuel",
+  "seed": 795077539,
+  "duration_s": 395,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 83.1,
+    "ramp_s": 117.1,
+    "max_severity": 0.61,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.78,
+  "ambient_c": 22.1,
+  "initial_coolant_c": 80.9,
+  "dropout_probability": 0.023,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 56,
+  "ambiguous_windows": 12
+ },
+ {
+  "session_id": 191,
+  "group": "fault:fuel",
+  "seed": 560564898,
+  "duration_s": 708,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 155.1,
+    "ramp_s": 147.8,
+    "max_severity": 0.53,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.04,
+  "ambient_c": 26.1,
+  "initial_coolant_c": 43.7,
+  "dropout_probability": 0.014,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 114,
+  "ambiguous_windows": 16
+ },
+ {
+  "session_id": 192,
+  "group": "fault:fuel",
+  "seed": 1117871988,
+  "duration_s": 707,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 79.8,
+    "ramp_s": 70.3,
+    "max_severity": 0.46,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.78,
+  "ambient_c": 17.8,
+  "initial_coolant_c": 64.5,
+  "dropout_probability": 0.011,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 120,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 193,
+  "group": "fault:fuel",
+  "seed": 772203041,
+  "duration_s": 333,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 106.3,
+    "ramp_s": 54.1,
+    "max_severity": 0.76,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.99,
+  "ambient_c": 38.8,
+  "initial_coolant_c": 65.6,
+  "dropout_probability": 0.029,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 51,
+  "ambiguous_windows": 4
+ },
+ {
+  "session_id": 194,
+  "group": "fault:fuel",
+  "seed": 831783700,
+  "duration_s": 791,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 322.7,
+    "ramp_s": 33.8,
+    "max_severity": 0.62,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.8,
+  "ambient_c": 29.2,
+  "initial_coolant_c": 57.5,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 144,
+  "ambiguous_windows": 3
+ },
+ {
+  "session_id": 195,
+  "group": "fault:fuel",
+  "seed": 1888030955,
+  "duration_s": 799,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 331.5,
+    "ramp_s": 55.5,
+    "max_severity": 0.56,
+    "intermittent_period_s": 24.109578802752758
+   }
+  ],
+  "noise_scale": 1.72,
+  "ambient_c": 24.3,
+  "initial_coolant_c": 31.3,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 140,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 196,
+  "group": "fault:fuel",
+  "seed": 772403480,
+  "duration_s": 756,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 200.9,
+    "ramp_s": 52.9,
+    "max_severity": 0.76,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.75,
+  "ambient_c": 16.1,
+  "initial_coolant_c": 89.3,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 136,
+  "ambiguous_windows": 4
+ },
+ {
+  "session_id": 197,
+  "group": "fault:fuel",
+  "seed": 411306076,
+  "duration_s": 897,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 135.2,
+    "ramp_s": 86.7,
+    "max_severity": 0.44,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.95,
+  "ambient_c": 18.0,
+  "initial_coolant_c": 69.7,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 157,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 198,
+  "group": "fault:fuel",
+  "seed": 1908489258,
+  "duration_s": 877,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 290.4,
+    "ramp_s": 70.7,
+    "max_severity": 0.9,
+    "intermittent_period_s": 27.062141193082713
+   }
+  ],
+  "noise_scale": 0.93,
+  "ambient_c": 25.2,
+  "initial_coolant_c": 76.6,
+  "dropout_probability": 0.016,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 160,
+  "ambiguous_windows": 4
+ },
+ {
+  "session_id": 199,
+  "group": "fault:fuel",
+  "seed": 1189843295,
+  "duration_s": 688,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 235.2,
+    "ramp_s": 56.1,
+    "max_severity": 0.83,
+    "intermittent_period_s": 23.012944118125283
+   }
+  ],
+  "noise_scale": 1.2,
+  "ambient_c": 23.9,
+  "initial_coolant_c": 75.5,
+  "dropout_probability": 0.011,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 122,
+  "ambiguous_windows": 4
+ },
+ {
+  "session_id": 200,
+  "group": "fault:fuel",
+  "seed": 151469440,
+  "duration_s": 380,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 109.3,
+    "ramp_s": 83.9,
+    "max_severity": 0.51,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.89,
+  "ambient_c": 28.1,
+  "initial_coolant_c": 84.3,
+  "dropout_probability": 0.023,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 55,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 201,
+  "group": "fault:fuel",
+  "seed": 1054377901,
+  "duration_s": 536,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 103.3,
+    "ramp_s": 101.5,
+    "max_severity": 0.55,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.34,
+  "ambient_c": 21.9,
+  "initial_coolant_c": 41.2,
+  "dropout_probability": 0.005,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 85,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 202,
+  "group": "fault:fuel",
+  "seed": 1463343977,
+  "duration_s": 619,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 112.4,
+    "ramp_s": 164.0,
+    "max_severity": 0.99,
+    "intermittent_period_s": 21.858944079462226
+   }
+  ],
+  "noise_scale": 1.34,
+  "ambient_c": 20.5,
+  "initial_coolant_c": 63.9,
+  "dropout_probability": 0.018,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 103,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 203,
+  "group": "fault:fuel",
+  "seed": 399415486,
+  "duration_s": 577,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 38.8,
+    "ramp_s": 122.8,
+    "max_severity": 0.86,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.21,
+  "ambient_c": 19.0,
+  "initial_coolant_c": 62.1,
+  "dropout_probability": 0.002,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 99,
+  "ambiguous_windows": 5
+ },
+ {
+  "session_id": 204,
+  "group": "fault:fuel",
+  "seed": 1150277299,
+  "duration_s": 820,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 110.5,
+    "ramp_s": 124.6,
+    "max_severity": 0.84,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.57,
+  "ambient_c": 18.1,
+  "initial_coolant_c": 75.6,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 144,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 205,
+  "group": "fault:fuel",
+  "seed": 594209753,
+  "duration_s": 872,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 354.6,
+    "ramp_s": 167.9,
+    "max_severity": 0.62,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.12,
+  "ambient_c": 24.7,
+  "initial_coolant_c": 88.3,
+  "dropout_probability": 0.021,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 146,
+  "ambiguous_windows": 17
+ },
+ {
+  "session_id": 206,
+  "group": "fault:fuel",
+  "seed": 351732151,
+  "duration_s": 693,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 88.4,
+    "ramp_s": 78.5,
+    "max_severity": 0.88,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.96,
+  "ambient_c": 24.2,
+  "initial_coolant_c": 30.3,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 121,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 207,
+  "group": "fault:fuel",
+  "seed": 484273777,
+  "duration_s": 341,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 74.2,
+    "ramp_s": 126.4,
+    "max_severity": 0.86,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.64,
+  "ambient_c": 33.1,
+  "initial_coolant_c": 48.1,
+  "dropout_probability": 0.017,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 48,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 208,
+  "group": "fault:fuel",
+  "seed": 258835699,
+  "duration_s": 570,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 143.3,
+    "ramp_s": 71.1,
+    "max_severity": 0.91,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.56,
+  "ambient_c": 38.4,
+  "initial_coolant_c": 59.6,
+  "dropout_probability": 0.001,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 98,
+  "ambiguous_windows": 5
+ },
+ {
+  "session_id": 209,
+  "group": "fault:fuel",
+  "seed": 951927268,
+  "duration_s": 312,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 120.9,
+    "ramp_s": 122.3,
+    "max_severity": 0.93,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.85,
+  "ambient_c": 24.5,
+  "initial_coolant_c": 86.6,
+  "dropout_probability": 0.025,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 43,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 210,
+  "group": "fault:electrical",
+  "seed": 2142034960,
+  "duration_s": 657,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 76.0,
+    "ramp_s": 62.6,
+    "max_severity": 0.84,
+    "intermittent_period_s": 32.1649935597599
+   }
+  ],
+  "noise_scale": 1.34,
+  "ambient_c": 32.3,
+  "initial_coolant_c": 85.3,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 116,
+  "ambiguous_windows": 4
+ },
+ {
+  "session_id": 211,
+  "group": "fault:electrical",
+  "seed": 728825218,
+  "duration_s": 768,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 219.0,
+    "ramp_s": 82.7,
+    "max_severity": 0.85,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.31,
+  "ambient_c": 35.9,
+  "initial_coolant_c": 88.8,
+  "dropout_probability": 0.014,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 136,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 212,
+  "group": "fault:electrical",
+  "seed": 1515383639,
+  "duration_s": 532,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 190.1,
+    "ramp_s": 155.4,
+    "max_severity": 0.46,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.61,
+  "ambient_c": 18.0,
+  "initial_coolant_c": 65.3,
+  "dropout_probability": 0.003,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 75,
+  "ambiguous_windows": 20
+ },
+ {
+  "session_id": 213,
+  "group": "fault:electrical",
+  "seed": 585147495,
+  "duration_s": 744,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 257.1,
+    "ramp_s": 162.4,
+    "max_severity": 0.92,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.84,
+  "ambient_c": 25.6,
+  "initial_coolant_c": 84.0,
+  "dropout_probability": 0.012,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 127,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 214,
+  "group": "fault:electrical",
+  "seed": 492388135,
+  "duration_s": 777,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 169.8,
+    "ramp_s": 73.8,
+    "max_severity": 0.58,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.75,
+  "ambient_c": 39.4,
+  "initial_coolant_c": 70.4,
+  "dropout_probability": 0.022,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 136,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 215,
+  "group": "fault:electrical",
+  "seed": 1587455348,
+  "duration_s": 807,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 37.5,
+    "ramp_s": 158.4,
+    "max_severity": 0.71,
+    "intermittent_period_s": 29.776198942714778
+   }
+  ],
+  "noise_scale": 1.34,
+  "ambient_c": 34.7,
+  "initial_coolant_c": 77.5,
+  "dropout_probability": 0.009,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 143,
+  "ambiguous_windows": 7
+ },
+ {
+  "session_id": 216,
+  "group": "fault:electrical",
+  "seed": 1121469285,
+  "duration_s": 543,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 53.5,
+    "ramp_s": 176.1,
+    "max_severity": 0.86,
+    "intermittent_period_s": 35.49610051426018
+   }
+  ],
+  "noise_scale": 1.7,
+  "ambient_c": 24.2,
+  "initial_coolant_c": 48.3,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 87,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 217,
+  "group": "fault:electrical",
+  "seed": 314955287,
+  "duration_s": 622,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 93.3,
+    "ramp_s": 39.5,
+    "max_severity": 0.83,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.22,
+  "ambient_c": 31.1,
+  "initial_coolant_c": 86.5,
+  "dropout_probability": 0.016,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 110,
+  "ambiguous_windows": 3
+ },
+ {
+  "session_id": 218,
+  "group": "fault:electrical",
+  "seed": 21973670,
+  "duration_s": 735,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 243.6,
+    "ramp_s": 142.9,
+    "max_severity": 0.77,
+    "intermittent_period_s": 34.716082785310356
+   }
+  ],
+  "noise_scale": 1.39,
+  "ambient_c": 26.7,
+  "initial_coolant_c": 89.3,
+  "dropout_probability": 0.001,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 125,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 219,
+  "group": "fault:electrical",
+  "seed": 130457526,
+  "duration_s": 738,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 220.5,
+    "ramp_s": 157.2,
+    "max_severity": 0.57,
+    "intermittent_period_s": 36.811314537431365
+   }
+  ],
+  "noise_scale": 0.6,
+  "ambient_c": 27.5,
+  "initial_coolant_c": 56.9,
+  "dropout_probability": 0.017,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 123,
+  "ambiguous_windows": 13
+ },
+ {
+  "session_id": 220,
+  "group": "fault:electrical",
+  "seed": 1717126218,
+  "duration_s": 749,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 67.5,
+    "ramp_s": 172.9,
+    "max_severity": 0.61,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.82,
+  "ambient_c": 39.6,
+  "initial_coolant_c": 51.2,
+  "dropout_probability": 0.023,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 121,
+  "ambiguous_windows": 17
+ },
+ {
+  "session_id": 221,
+  "group": "fault:electrical",
+  "seed": 375581252,
+  "duration_s": 854,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 338.5,
+    "ramp_s": 154.8,
+    "max_severity": 0.96,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.2,
+  "ambient_c": 22.1,
+  "initial_coolant_c": 48.1,
+  "dropout_probability": 0.026,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 149,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 222,
+  "group": "fault:electrical",
+  "seed": 1861038630,
+  "duration_s": 774,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 335.7,
+    "ramp_s": 35.7,
+    "max_severity": 0.66,
+    "intermittent_period_s": 35.34165256623439
+   }
+  ],
+  "noise_scale": 1.03,
+  "ambient_c": 18.7,
+  "initial_coolant_c": 50.3,
+  "dropout_probability": 0.022,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 140,
+  "ambiguous_windows": 3
+ },
+ {
+  "session_id": 223,
+  "group": "fault:electrical",
+  "seed": 329467941,
+  "duration_s": 570,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 240.7,
+    "ramp_s": 111.6,
+    "max_severity": 0.54,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.47,
+  "ambient_c": 28.3,
+  "initial_coolant_c": 39.9,
+  "dropout_probability": 0.025,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 91,
+  "ambiguous_windows": 12
+ },
+ {
+  "session_id": 224,
+  "group": "fault:electrical",
+  "seed": 1748613162,
+  "duration_s": 550,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 128.7,
+    "ramp_s": 170.8,
+    "max_severity": 0.65,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.31,
+  "ambient_c": 26.2,
+  "initial_coolant_c": 48.4,
+  "dropout_probability": 0.03,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 83,
+  "ambiguous_windows": 16
+ },
+ {
+  "session_id": 225,
+  "group": "fault:electrical",
+  "seed": 1573312143,
+  "duration_s": 369,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 85.3,
+    "ramp_s": 91.0,
+    "max_severity": 0.79,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.67,
+  "ambient_c": 21.1,
+  "initial_coolant_c": 28.8,
+  "dropout_probability": 0.014,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 56,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 226,
+  "group": "fault:electrical",
+  "seed": 919413445,
+  "duration_s": 737,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 199.3,
+    "ramp_s": 58.9,
+    "max_severity": 0.65,
+    "intermittent_period_s": 23.19852803981677
+   }
+  ],
+  "noise_scale": 1.31,
+  "ambient_c": 23.4,
+  "initial_coolant_c": 75.7,
+  "dropout_probability": 0.026,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 127,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 227,
+  "group": "fault:electrical",
+  "seed": 940503296,
+  "duration_s": 451,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 80.3,
+    "ramp_s": 55.6,
+    "max_severity": 0.66,
+    "intermittent_period_s": 36.25652370977834
+   }
+  ],
+  "noise_scale": 0.61,
+  "ambient_c": 32.2,
+  "initial_coolant_c": 52.0,
+  "dropout_probability": 0.026,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 74,
+  "ambiguous_windows": 5
+ },
+ {
+  "session_id": 228,
+  "group": "fault:electrical",
+  "seed": 1301452291,
+  "duration_s": 842,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 173.6,
+    "ramp_s": 33.6,
+    "max_severity": 0.73,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.46,
+  "ambient_c": 31.2,
+  "initial_coolant_c": 92.0,
+  "dropout_probability": 0.003,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 154,
+  "ambiguous_windows": 3
+ },
+ {
+  "session_id": 229,
+  "group": "fault:electrical",
+  "seed": 238367600,
+  "duration_s": 831,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 275.1,
+    "ramp_s": 111.5,
+    "max_severity": 0.8,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.67,
+  "ambient_c": 28.4,
+  "initial_coolant_c": 53.3,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 147,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 230,
+  "group": "fault:electrical",
+  "seed": 2018449215,
+  "duration_s": 429,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 128.1,
+    "ramp_s": 140.4,
+    "max_severity": 0.4,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.8,
+  "ambient_c": 24.2,
+  "initial_coolant_c": 71.4,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 53,
+  "ambiguous_windows": 21
+ },
+ {
+  "session_id": 231,
+  "group": "fault:electrical",
+  "seed": 1163264401,
+  "duration_s": 323,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 71.5,
+    "ramp_s": 45.6,
+    "max_severity": 0.61,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.66,
+  "ambient_c": 33.6,
+  "initial_coolant_c": 91.0,
+  "dropout_probability": 0.002,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 49,
+  "ambiguous_windows": 4
+ },
+ {
+  "session_id": 232,
+  "group": "fault:electrical",
+  "seed": 1926566091,
+  "duration_s": 354,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 60.9,
+    "ramp_s": 92.6,
+    "max_severity": 0.75,
+    "intermittent_period_s": 21.64552021717897
+   }
+  ],
+  "noise_scale": 1.23,
+  "ambient_c": 37.7,
+  "initial_coolant_c": 87.1,
+  "dropout_probability": 0.016,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 51,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 233,
+  "group": "fault:electrical",
+  "seed": 141975228,
+  "duration_s": 332,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 117.6,
+    "ramp_s": 142.3,
+    "max_severity": 0.92,
+    "intermittent_period_s": 20.502562454058914
+   }
+  ],
+  "noise_scale": 0.8,
+  "ambient_c": 28.5,
+  "initial_coolant_c": 86.8,
+  "dropout_probability": 0.022,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 46,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 234,
+  "group": "fault:electrical",
+  "seed": 1465634763,
+  "duration_s": 777,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 242.8,
+    "ramp_s": 115.9,
+    "max_severity": 0.78,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.89,
+  "ambient_c": 27.3,
+  "initial_coolant_c": 46.8,
+  "dropout_probability": 0.03,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 135,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 235,
+  "group": "fault:electrical",
+  "seed": 373379560,
+  "duration_s": 398,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 109.4,
+    "ramp_s": 62.9,
+    "max_severity": 0.46,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.59,
+  "ambient_c": 18.0,
+  "initial_coolant_c": 76.2,
+  "dropout_probability": 0.014,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 59,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 236,
+  "group": "fault:electrical",
+  "seed": 1061373616,
+  "duration_s": 572,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 138.4,
+    "ramp_s": 150.0,
+    "max_severity": 0.85,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.52,
+  "ambient_c": 26.3,
+  "initial_coolant_c": 80.3,
+  "dropout_probability": 0.002,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 92,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 237,
+  "group": "fault:electrical",
+  "seed": 1529950350,
+  "duration_s": 505,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 136.4,
+    "ramp_s": 68.1,
+    "max_severity": 0.79,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.81,
+  "ambient_c": 34.9,
+  "initial_coolant_c": 84.4,
+  "dropout_probability": 0.03,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 85,
+  "ambiguous_windows": 5
+ },
+ {
+  "session_id": 238,
+  "group": "fault:electrical",
+  "seed": 157617913,
+  "duration_s": 706,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 263.0,
+    "ramp_s": 65.1,
+    "max_severity": 0.76,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.3,
+  "ambient_c": 26.0,
+  "initial_coolant_c": 62.3,
+  "dropout_probability": 0.023,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 125,
+  "ambiguous_windows": 5
+ },
+ {
+  "session_id": 239,
+  "group": "fault:electrical",
+  "seed": 961240620,
+  "duration_s": 455,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 160.2,
+    "ramp_s": 64.3,
+    "max_severity": 0.51,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.83,
+  "ambient_c": 35.0,
+  "initial_coolant_c": 56.5,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 73,
+  "ambiguous_windows": 7
+ },
+ {
+  "session_id": 240,
+  "group": "fault:sensor",
+  "seed": 2020556581,
+  "duration_s": 770,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 196.6,
+    "ramp_s": 90.3,
+    "max_severity": 0.41,
+    "intermittent_period_s": 29.000274550292758
+   }
+  ],
+  "noise_scale": 0.68,
+  "ambient_c": 23.2,
+  "initial_coolant_c": 76.9,
+  "dropout_probability": 0.002,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 131,
+  "ambiguous_windows": 12
+ },
+ {
+  "session_id": 241,
+  "group": "fault:sensor",
+  "seed": 741143330,
+  "duration_s": 337,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 48.8,
+    "ramp_s": 164.9,
+    "max_severity": 0.87,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.66,
+  "ambient_c": 38.8,
+  "initial_coolant_c": 83.9,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 46,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 242,
+  "group": "fault:sensor",
+  "seed": 1518580479,
+  "duration_s": 356,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 112.6,
+    "ramp_s": 34.3,
+    "max_severity": 0.73,
+    "intermittent_period_s": 15.883946318349954
+   }
+  ],
+  "noise_scale": 1.34,
+  "ambient_c": 21.2,
+  "initial_coolant_c": 78.4,
+  "dropout_probability": 0.017,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 57,
+  "ambiguous_windows": 3
+ },
+ {
+  "session_id": 243,
+  "group": "fault:sensor",
+  "seed": 1037360929,
+  "duration_s": 597,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 201.7,
+    "ramp_s": 102.5,
+    "max_severity": 0.51,
+    "intermittent_period_s": 16.145552209536206
+   }
+  ],
+  "noise_scale": 1.85,
+  "ambient_c": 20.2,
+  "initial_coolant_c": 51.1,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 95,
+  "ambiguous_windows": 13
+ },
+ {
+  "session_id": 244,
+  "group": "fault:sensor",
+  "seed": 1287826170,
+  "duration_s": 480,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 142.2,
+    "ramp_s": 103.5,
+    "max_severity": 0.81,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.8,
+  "ambient_c": 21.4,
+  "initial_coolant_c": 86.6,
+  "dropout_probability": 0.021,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 77,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 245,
+  "group": "fault:sensor",
+  "seed": 54411459,
+  "duration_s": 312,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 136.2,
+    "ramp_s": 126.2,
+    "max_severity": 0.75,
+    "intermittent_period_s": 21.279772791826293
+   }
+  ],
+  "noise_scale": 1.32,
+  "ambient_c": 25.3,
+  "initial_coolant_c": 86.6,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 41,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 246,
+  "group": "fault:sensor",
+  "seed": 199919218,
+  "duration_s": 595,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 58.5,
+    "ramp_s": 61.3,
+    "max_severity": 0.74,
+    "intermittent_period_s": 22.478892901705773
+   }
+  ],
+  "noise_scale": 1.38,
+  "ambient_c": 37.1,
+  "initial_coolant_c": 67.0,
+  "dropout_probability": 0.018,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 99,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 247,
+  "group": "fault:sensor",
+  "seed": 1462102266,
+  "duration_s": 881,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 86.4,
+    "ramp_s": 129.0,
+    "max_severity": 0.44,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.05,
+  "ambient_c": 26.2,
+  "initial_coolant_c": 45.7,
+  "dropout_probability": 0.008,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 148,
+  "ambiguous_windows": 17
+ },
+ {
+  "session_id": 248,
+  "group": "fault:sensor",
+  "seed": 1553328244,
+  "duration_s": 812,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 42.0,
+    "ramp_s": 126.9,
+    "max_severity": 0.83,
+    "intermittent_period_s": 38.955214058726504
+   }
+  ],
+  "noise_scale": 1.03,
+  "ambient_c": 27.5,
+  "initial_coolant_c": 77.1,
+  "dropout_probability": 0.021,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 142,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 249,
+  "group": "fault:sensor",
+  "seed": 178388637,
+  "duration_s": 894,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 160.6,
+    "ramp_s": 80.4,
+    "max_severity": 0.57,
+    "intermittent_period_s": 20.727048969508928
+   }
+  ],
+  "noise_scale": 0.93,
+  "ambient_c": 31.4,
+  "initial_coolant_c": 76.9,
+  "dropout_probability": 0.004,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 159,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 250,
+  "group": "fault:sensor",
+  "seed": 1271256043,
+  "duration_s": 603,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 157.8,
+    "ramp_s": 119.1,
+    "max_severity": 0.59,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.45,
+  "ambient_c": 36.2,
+  "initial_coolant_c": 82.1,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 97,
+  "ambiguous_windows": 12
+ },
+ {
+  "session_id": 251,
+  "group": "fault:sensor",
+  "seed": 1971457033,
+  "duration_s": 542,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 154.4,
+    "ramp_s": 32.4,
+    "max_severity": 0.76,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.8,
+  "ambient_c": 19.4,
+  "initial_coolant_c": 68.6,
+  "dropout_probability": 0.002,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 94,
+  "ambiguous_windows": 3
+ },
+ {
+  "session_id": 252,
+  "group": "fault:sensor",
+  "seed": 606298395,
+  "duration_s": 516,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 135.9,
+    "ramp_s": 122.4,
+    "max_severity": 0.48,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.5,
+  "ambient_c": 24.3,
+  "initial_coolant_c": 79.3,
+  "dropout_probability": 0.026,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 77,
+  "ambiguous_windows": 15
+ },
+ {
+  "session_id": 253,
+  "group": "fault:sensor",
+  "seed": 1529244194,
+  "duration_s": 887,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 327.4,
+    "ramp_s": 73.8,
+    "max_severity": 0.55,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.4,
+  "ambient_c": 28.7,
+  "initial_coolant_c": 90.9,
+  "dropout_probability": 0.003,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 158,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 254,
+  "group": "fault:sensor",
+  "seed": 602473991,
+  "duration_s": 778,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 86.8,
+    "ramp_s": 47.4,
+    "max_severity": 0.49,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.5,
+  "ambient_c": 25.4,
+  "initial_coolant_c": 37.8,
+  "dropout_probability": 0.018,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 138,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 255,
+  "group": "fault:sensor",
+  "seed": 262386494,
+  "duration_s": 530,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 212.0,
+    "ramp_s": 167.2,
+    "max_severity": 0.45,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.53,
+  "ambient_c": 34.4,
+  "initial_coolant_c": 62.9,
+  "dropout_probability": 0.003,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 73,
+  "ambiguous_windows": 22
+ },
+ {
+  "session_id": 256,
+  "group": "fault:sensor",
+  "seed": 699518896,
+  "duration_s": 455,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 76.4,
+    "ramp_s": 106.1,
+    "max_severity": 0.97,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.29,
+  "ambient_c": 34.9,
+  "initial_coolant_c": 81.1,
+  "dropout_probability": 0.017,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 74,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 257,
+  "group": "fault:sensor",
+  "seed": 891417125,
+  "duration_s": 373,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 136.4,
+    "ramp_s": 168.9,
+    "max_severity": 0.91,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.05,
+  "ambient_c": 34.0,
+  "initial_coolant_c": 68.9,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 52,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 258,
+  "group": "fault:sensor",
+  "seed": 998178602,
+  "duration_s": 461,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 207.1,
+    "ramp_s": 137.5,
+    "max_severity": 0.41,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.27,
+  "ambient_c": 19.3,
+  "initial_coolant_c": 56.3,
+  "dropout_probability": 0.022,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 61,
+  "ambiguous_windows": 20
+ },
+ {
+  "session_id": 259,
+  "group": "fault:sensor",
+  "seed": 1983629771,
+  "duration_s": 329,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 130.7,
+    "ramp_s": 95.3,
+    "max_severity": 0.98,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.78,
+  "ambient_c": 20.0,
+  "initial_coolant_c": 78.4,
+  "dropout_probability": 0.001,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 49,
+  "ambiguous_windows": 5
+ },
+ {
+  "session_id": 260,
+  "group": "fault:sensor",
+  "seed": 1100994604,
+  "duration_s": 317,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 75.7,
+    "ramp_s": 159.6,
+    "max_severity": 0.95,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.08,
+  "ambient_c": 30.9,
+  "initial_coolant_c": 65.5,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 42,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 261,
+  "group": "fault:sensor",
+  "seed": 1347746968,
+  "duration_s": 736,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 260.7,
+    "ramp_s": 101.4,
+    "max_severity": 0.73,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.46,
+  "ambient_c": 27.5,
+  "initial_coolant_c": 73.7,
+  "dropout_probability": 0.009,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 128,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 262,
+  "group": "fault:sensor",
+  "seed": 856383660,
+  "duration_s": 613,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 101.3,
+    "ramp_s": 164.5,
+    "max_severity": 0.94,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.03,
+  "ambient_c": 31.1,
+  "initial_coolant_c": 52.6,
+  "dropout_probability": 0.026,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 101,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 263,
+  "group": "fault:sensor",
+  "seed": 5447520,
+  "duration_s": 645,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 225.5,
+    "ramp_s": 109.8,
+    "max_severity": 0.44,
+    "intermittent_period_s": 23.23957467452533
+   }
+  ],
+  "noise_scale": 1.75,
+  "ambient_c": 18.6,
+  "initial_coolant_c": 50.7,
+  "dropout_probability": 0.0,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 102,
+  "ambiguous_windows": 16
+ },
+ {
+  "session_id": 264,
+  "group": "fault:sensor",
+  "seed": 176047172,
+  "duration_s": 548,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 215.3,
+    "ramp_s": 132.1,
+    "max_severity": 0.69,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.87,
+  "ambient_c": 29.5,
+  "initial_coolant_c": 72.4,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 87,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 265,
+  "group": "fault:sensor",
+  "seed": 347387376,
+  "duration_s": 557,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 247.4,
+    "ramp_s": 30.9,
+    "max_severity": 0.77,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.36,
+  "ambient_c": 22.2,
+  "initial_coolant_c": 52.7,
+  "dropout_probability": 0.013,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 98,
+  "ambiguous_windows": 2
+ },
+ {
+  "session_id": 266,
+  "group": "fault:sensor",
+  "seed": 1812303027,
+  "duration_s": 547,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 213.8,
+    "ramp_s": 84.4,
+    "max_severity": 0.56,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.72,
+  "ambient_c": 22.8,
+  "initial_coolant_c": 53.7,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 89,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 267,
+  "group": "fault:sensor",
+  "seed": 2018675461,
+  "duration_s": 352,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 113.3,
+    "ramp_s": 140.3,
+    "max_severity": 0.85,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.93,
+  "ambient_c": 31.1,
+  "initial_coolant_c": 55.9,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 49,
+  "ambiguous_windows": 10
+ },
+ {
+  "session_id": 268,
+  "group": "fault:sensor",
+  "seed": 462100165,
+  "duration_s": 359,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 35.5,
+    "ramp_s": 150.7,
+    "max_severity": 0.84,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.87,
+  "ambient_c": 31.4,
+  "initial_coolant_c": 87.7,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 54,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 269,
+  "group": "fault:sensor",
+  "seed": 578656633,
+  "duration_s": 505,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 92.3,
+    "ramp_s": 91.6,
+    "max_severity": 0.89,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.36,
+  "ambient_c": 32.5,
+  "initial_coolant_c": 86.9,
+  "dropout_probability": 0.022,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 84,
+  "ambiguous_windows": 6
+ },
+ {
+  "session_id": 270,
+  "group": "multiple",
+  "seed": 1933256946,
+  "duration_s": 515,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 194.9,
+    "ramp_s": 119.9,
+    "max_severity": 0.93,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 71.1,
+    "ramp_s": 150.4,
+    "max_severity": 0.63,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.77,
+  "ambient_c": 15.2,
+  "initial_coolant_c": 71.6,
+  "dropout_probability": 0.005,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 70,
+  "ambiguous_windows": 22
+ },
+ {
+  "session_id": 271,
+  "group": "multiple",
+  "seed": 626553764,
+  "duration_s": 700,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 209.9,
+    "ramp_s": 119.6,
+    "max_severity": 0.51,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "charging_failure",
+    "onset_s": 34.9,
+    "ramp_s": 88.6,
+    "max_severity": 0.51,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.2,
+  "ambient_c": 33.7,
+  "initial_coolant_c": 66.5,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 108,
+  "ambiguous_windows": 21
+ },
+ {
+  "session_id": 272,
+  "group": "multiple",
+  "seed": 167147484,
+  "duration_s": 706,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 145.9,
+    "ramp_s": 31.5,
+    "max_severity": 0.57,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "overheating",
+    "onset_s": 55.8,
+    "ramp_s": 100.9,
+    "max_severity": 0.51,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.75,
+  "ambient_c": 32.3,
+  "initial_coolant_c": 45.9,
+  "dropout_probability": 0.004,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 116,
+  "ambiguous_windows": 14
+ },
+ {
+  "session_id": 273,
+  "group": "multiple",
+  "seed": 470759974,
+  "duration_s": 884,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "overheating",
+    "onset_s": 109.8,
+    "ramp_s": 54.3,
+    "max_severity": 0.47,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 229.6,
+    "ramp_s": 172.0,
+    "max_severity": 0.43,
+    "intermittent_period_s": 31.433465401113494
+   }
+  ],
+  "noise_scale": 0.84,
+  "ambient_c": 34.6,
+  "initial_coolant_c": 51.6,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 137,
+  "ambiguous_windows": 28
+ },
+ {
+  "session_id": 274,
+  "group": "multiple",
+  "seed": 1440504359,
+  "duration_s": 410,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 43.1,
+    "ramp_s": 94.3,
+    "max_severity": 0.89,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 99.5,
+    "ramp_s": 170.9,
+    "max_severity": 0.46,
+    "intermittent_period_s": 35.23854110976798
+   }
+  ],
+  "noise_scale": 1.01,
+  "ambient_c": 38.0,
+  "initial_coolant_c": 59.0,
+  "dropout_probability": 0.004,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 46,
+  "ambiguous_windows": 25
+ },
+ {
+  "session_id": 275,
+  "group": "multiple",
+  "seed": 253595612,
+  "duration_s": 721,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 195.6,
+    "ramp_s": 81.2,
+    "max_severity": 0.98,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "charging_failure",
+    "onset_s": 315.4,
+    "ramp_s": 56.7,
+    "max_severity": 0.85,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.2,
+  "ambient_c": 16.2,
+  "initial_coolant_c": 57.0,
+  "dropout_probability": 0.022,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 124,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 276,
+  "group": "multiple",
+  "seed": 191295519,
+  "duration_s": 890,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 385.9,
+    "ramp_s": 152.0,
+    "max_severity": 0.58,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "charging_failure",
+    "onset_s": 197.6,
+    "ramp_s": 45.5,
+    "max_severity": 0.84,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.56,
+  "ambient_c": 34.2,
+  "initial_coolant_c": 48.2,
+  "dropout_probability": 0.023,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 149,
+  "ambiguous_windows": 18
+ },
+ {
+  "session_id": 277,
+  "group": "multiple",
+  "seed": 1671351618,
+  "duration_s": 502,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 143.9,
+    "ramp_s": 122.9,
+    "max_severity": 1.0,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 116.2,
+    "ramp_s": 52.4,
+    "max_severity": 0.74,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.99,
+  "ambient_c": 24.9,
+  "initial_coolant_c": 79.5,
+  "dropout_probability": 0.015,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 77,
+  "ambiguous_windows": 12
+ },
+ {
+  "session_id": 278,
+  "group": "multiple",
+  "seed": 1538983179,
+  "duration_s": 654,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 230.4,
+    "ramp_s": 30.1,
+    "max_severity": 0.66,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 277.2,
+    "ramp_s": 59.9,
+    "max_severity": 0.53,
+    "intermittent_period_s": 37.66201226646321
+   }
+  ],
+  "noise_scale": 1.17,
+  "ambient_c": 16.6,
+  "initial_coolant_c": 82.8,
+  "dropout_probability": 0.014,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 110,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 279,
+  "group": "multiple",
+  "seed": 297493595,
+  "duration_s": 710,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 168.7,
+    "ramp_s": 101.6,
+    "max_severity": 0.8,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 249.5,
+    "ramp_s": 71.6,
+    "max_severity": 0.81,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.51,
+  "ambient_c": 29.6,
+  "initial_coolant_c": 74.7,
+  "dropout_probability": 0.002,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 117,
+  "ambiguous_windows": 14
+ },
+ {
+  "session_id": 280,
+  "group": "multiple",
+  "seed": 825317273,
+  "duration_s": 446,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 36.5,
+    "ramp_s": 173.2,
+    "max_severity": 0.84,
+    "intermittent_period_s": 29.94872106122834
+   },
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 191.4,
+    "ramp_s": 112.9,
+    "max_severity": 0.91,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.58,
+  "ambient_c": 31.1,
+  "initial_coolant_c": 68.1,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 65,
+  "ambiguous_windows": 13
+ },
+ {
+  "session_id": 281,
+  "group": "multiple",
+  "seed": 774733836,
+  "duration_s": 498,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 166.3,
+    "ramp_s": 153.0,
+    "max_severity": 0.4,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 129.8,
+    "ramp_s": 107.0,
+    "max_severity": 0.86,
+    "intermittent_period_s": 33.88833264234687
+   }
+  ],
+  "noise_scale": 0.51,
+  "ambient_c": 35.7,
+  "initial_coolant_c": 46.3,
+  "dropout_probability": 0.018,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 57,
+  "ambiguous_windows": 31
+ },
+ {
+  "session_id": 282,
+  "group": "multiple",
+  "seed": 417684386,
+  "duration_s": 556,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 126.4,
+    "ramp_s": 54.3,
+    "max_severity": 1.0,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "overheating",
+    "onset_s": 107.7,
+    "ramp_s": 144.2,
+    "max_severity": 0.83,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.62,
+  "ambient_c": 32.1,
+  "initial_coolant_c": 39.4,
+  "dropout_probability": 0.026,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 89,
+  "ambiguous_windows": 11
+ },
+ {
+  "session_id": 283,
+  "group": "multiple",
+  "seed": 1433060852,
+  "duration_s": 421,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 147.9,
+    "ramp_s": 136.3,
+    "max_severity": 0.75,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 141.9,
+    "ramp_s": 58.3,
+    "max_severity": 0.83,
+    "intermittent_period_s": 20.848277647943405
+   }
+  ],
+  "noise_scale": 0.98,
+  "ambient_c": 24.9,
+  "initial_coolant_c": 75.4,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 61,
+  "ambiguous_windows": 12
+ },
+ {
+  "session_id": 284,
+  "group": "multiple",
+  "seed": 434411016,
+  "duration_s": 504,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 180.8,
+    "ramp_s": 47.9,
+    "max_severity": 0.68,
+    "intermittent_period_s": 36.11422125145653
+   },
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 158.5,
+    "ramp_s": 71.1,
+    "max_severity": 0.7,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.07,
+  "ambient_c": 22.2,
+  "initial_coolant_c": 31.5,
+  "dropout_probability": 0.007,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 80,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 285,
+  "group": "multiple",
+  "seed": 1136121511,
+  "duration_s": 315,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 113.8,
+    "ramp_s": 70.6,
+    "max_severity": 0.84,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 33.9,
+    "ramp_s": 57.4,
+    "max_severity": 0.41,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.85,
+  "ambient_c": 26.2,
+  "initial_coolant_c": 44.8,
+  "dropout_probability": 0.009,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 43,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 286,
+  "group": "multiple",
+  "seed": 1063582953,
+  "duration_s": 335,
+  "pattern": "heavy_traffic",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 138.0,
+    "ramp_s": 75.9,
+    "max_severity": 0.48,
+    "intermittent_period_s": 18.597257604221063
+   },
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 74.6,
+    "ramp_s": 118.6,
+    "max_severity": 0.72,
+    "intermittent_period_s": 22.9581890971439
+   }
+  ],
+  "noise_scale": 0.91,
+  "ambient_c": 15.1,
+  "initial_coolant_c": 55.5,
+  "dropout_probability": 0.026,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 37,
+  "ambiguous_windows": 19
+ },
+ {
+  "session_id": 287,
+  "group": "multiple",
+  "seed": 1593582704,
+  "duration_s": 456,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "overheating",
+    "onset_s": 174.1,
+    "ramp_s": 153.7,
+    "max_severity": 1.0,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 39.4,
+    "ramp_s": 121.5,
+    "max_severity": 0.74,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.9,
+  "ambient_c": 25.0,
+  "initial_coolant_c": 59.4,
+  "dropout_probability": 0.021,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 64,
+  "ambiguous_windows": 16
+ },
+ {
+  "session_id": 288,
+  "group": "multiple",
+  "seed": 1495335365,
+  "duration_s": 805,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 144.6,
+    "ramp_s": 124.9,
+    "max_severity": 0.59,
+    "intermittent_period_s": 33.71650843300961
+   },
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 323.3,
+    "ramp_s": 105.0,
+    "max_severity": 0.86,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.56,
+  "ambient_c": 21.2,
+  "initial_coolant_c": 53.5,
+  "dropout_probability": 0.014,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 132,
+  "ambiguous_windows": 18
+ },
+ {
+  "session_id": 289,
+  "group": "multiple",
+  "seed": 1765625738,
+  "duration_s": 551,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 88.9,
+    "ramp_s": 34.1,
+    "max_severity": 0.94,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "charging_failure",
+    "onset_s": 189.6,
+    "ramp_s": 94.3,
+    "max_severity": 1.0,
+    "intermittent_period_s": 17.553723449585533
+   }
+  ],
+  "noise_scale": 1.69,
+  "ambient_c": 31.3,
+  "initial_coolant_c": 39.3,
+  "dropout_probability": 0.024,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 90,
+  "ambiguous_windows": 9
+ },
+ {
+  "session_id": 290,
+  "group": "multiple",
+  "seed": 1627516264,
+  "duration_s": 421,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 149.1,
+    "ramp_s": 109.6,
+    "max_severity": 0.5,
+    "intermittent_period_s": 37.24486883523467
+   },
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 62.7,
+    "ramp_s": 145.2,
+    "max_severity": 0.52,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.76,
+  "ambient_c": 27.5,
+  "initial_coolant_c": 33.5,
+  "dropout_probability": 0.006,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 44,
+  "ambiguous_windows": 29
+ },
+ {
+  "session_id": 291,
+  "group": "multiple",
+  "seed": 225656811,
+  "duration_s": 729,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 325.6,
+    "ramp_s": 159.8,
+    "max_severity": 0.75,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 235.1,
+    "ramp_s": 58.9,
+    "max_severity": 0.66,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.89,
+  "ambient_c": 38.6,
+  "initial_coolant_c": 71.1,
+  "dropout_probability": 0.017,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 117,
+  "ambiguous_windows": 17
+ },
+ {
+  "session_id": 292,
+  "group": "multiple",
+  "seed": 2127915272,
+  "duration_s": 892,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 120.0,
+    "ramp_s": 137.4,
+    "max_severity": 0.6,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 369.2,
+    "ramp_s": 44.6,
+    "max_severity": 0.41,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.78,
+  "ambient_c": 34.5,
+  "initial_coolant_c": 54.4,
+  "dropout_probability": 0.004,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 147,
+  "ambiguous_windows": 20
+ },
+ {
+  "session_id": 293,
+  "group": "multiple",
+  "seed": 1491587500,
+  "duration_s": 661,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 251.6,
+    "ramp_s": 177.7,
+    "max_severity": 0.84,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "charging_failure",
+    "onset_s": 148.1,
+    "ramp_s": 70.1,
+    "max_severity": 0.75,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.81,
+  "ambient_c": 21.5,
+  "initial_coolant_c": 47.6,
+  "dropout_probability": 0.029,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 102,
+  "ambiguous_windows": 19
+ },
+ {
+  "session_id": 294,
+  "group": "multiple",
+  "seed": 262163181,
+  "duration_s": 560,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "cooling_degradation",
+    "onset_s": 56.5,
+    "ramp_s": 133.8,
+    "max_severity": 0.95,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "charging_failure",
+    "onset_s": 115.4,
+    "ramp_s": 135.7,
+    "max_severity": 0.66,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.97,
+  "ambient_c": 31.2,
+  "initial_coolant_c": 64.0,
+  "dropout_probability": 0.014,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 81,
+  "ambiguous_windows": 20
+ },
+ {
+  "session_id": 295,
+  "group": "multiple",
+  "seed": 1556235718,
+  "duration_s": 685,
+  "pattern": "highway",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 248.3,
+    "ramp_s": 152.4,
+    "max_severity": 0.52,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 83.6,
+    "ramp_s": 138.3,
+    "max_severity": 0.63,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.53,
+  "ambient_c": 33.6,
+  "initial_coolant_c": 55.1,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 95,
+  "ambiguous_windows": 31
+ },
+ {
+  "session_id": 296,
+  "group": "multiple",
+  "seed": 1136404942,
+  "duration_s": 302,
+  "pattern": "mixed",
+  "faults": [
+   {
+    "kind": "charging_failure",
+    "onset_s": 95.9,
+    "ramp_s": 154.8,
+    "max_severity": 0.49,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 77.1,
+    "ramp_s": 168.8,
+    "max_severity": 0.59,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.65,
+  "ambient_c": 39.4,
+  "initial_coolant_c": 54.3,
+  "dropout_probability": 0.001,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 26,
+  "ambiguous_windows": 23
+ },
+ {
+  "session_id": 297,
+  "group": "multiple",
+  "seed": 2016537874,
+  "duration_s": 631,
+  "pattern": "urban",
+  "faults": [
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 108.4,
+    "ramp_s": 124.1,
+    "max_severity": 0.42,
+    "intermittent_period_s": null
+   },
+   {
+    "kind": "charging_failure",
+    "onset_s": 112.6,
+    "ramp_s": 94.4,
+    "max_severity": 0.77,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.82,
+  "ambient_c": 37.2,
+  "initial_coolant_c": 57.0,
+  "dropout_probability": 0.025,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 97,
+  "ambiguous_windows": 18
+ },
+ {
+  "session_id": 298,
+  "group": "multiple",
+  "seed": 1698564267,
+  "duration_s": 831,
+  "pattern": "idle",
+  "faults": [
+   {
+    "kind": "overheating",
+    "onset_s": 135.3,
+    "ramp_s": 76.5,
+    "max_severity": 0.57,
+    "intermittent_period_s": 18.173673502109438
+   },
+   {
+    "kind": "fuel_delivery",
+    "onset_s": 144.6,
+    "ramp_s": 71.4,
+    "max_severity": 0.94,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 0.63,
+  "ambient_c": 30.0,
+  "initial_coolant_c": 59.4,
+  "dropout_probability": 0.003,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 147,
+  "ambiguous_windows": 8
+ },
+ {
+  "session_id": 299,
+  "group": "multiple",
+  "seed": 1623975591,
+  "duration_s": 334,
+  "pattern": "rapid_acceleration",
+  "faults": [
+   {
+    "kind": "coolant_sensor_failure",
+    "onset_s": 72.8,
+    "ramp_s": 94.9,
+    "max_severity": 0.6,
+    "intermittent_period_s": 22.91065722058539
+   },
+   {
+    "kind": "low_oil_pressure",
+    "onset_s": 111.1,
+    "ramp_s": 179.4,
+    "max_severity": 0.73,
+    "intermittent_period_s": null
+   }
+  ],
+  "noise_scale": 1.44,
+  "ambient_c": 25.3,
+  "initial_coolant_c": 80.6,
+  "dropout_probability": 0.017,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 33,
+  "ambiguous_windows": 22
+ },
+ {
+  "session_id": 300,
+  "group": "degraded_data",
+  "seed": 1205778325,
+  "duration_s": 442,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.02,
+  "ambient_c": 22.7,
+  "initial_coolant_c": 30.1,
+  "dropout_probability": 0.02,
+  "unsupported_sensors": [
+   "oil_pressure_kpa",
+   "oil_temp_c"
+  ],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 77,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 301,
+  "group": "degraded_data",
+  "seed": 1551652213,
+  "duration_s": 892,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.7,
+  "ambient_c": 33.9,
+  "initial_coolant_c": 67.8,
+  "dropout_probability": 0.027,
+  "unsupported_sensors": [],
+  "connection_loss": true,
+  "split": "train",
+  "windows": 167,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 302,
+  "group": "degraded_data",
+  "seed": 635342603,
+  "duration_s": 647,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.43,
+  "ambient_c": 16.7,
+  "initial_coolant_c": 73.4,
+  "dropout_probability": 0.005,
+  "unsupported_sensors": [],
+  "connection_loss": true,
+  "split": "train",
+  "windows": 118,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 303,
+  "group": "degraded_data",
+  "seed": 314034243,
+  "duration_s": 887,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.9,
+  "ambient_c": 39.2,
+  "initial_coolant_c": 87.5,
+  "dropout_probability": 0.009,
+  "unsupported_sensors": [],
+  "connection_loss": true,
+  "split": "test",
+  "windows": 166,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 304,
+  "group": "degraded_data",
+  "seed": 624610482,
+  "duration_s": 820,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 0.73,
+  "ambient_c": 33.9,
+  "initial_coolant_c": 54.6,
+  "dropout_probability": 0.112,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 153,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 305,
+  "group": "degraded_data",
+  "seed": 1798296894,
+  "duration_s": 351,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.16,
+  "ambient_c": 26.8,
+  "initial_coolant_c": 91.5,
+  "dropout_probability": 0.076,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 59,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 306,
+  "group": "degraded_data",
+  "seed": 1744305659,
+  "duration_s": 746,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.63,
+  "ambient_c": 31.1,
+  "initial_coolant_c": 42.7,
+  "dropout_probability": 0.137,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 138,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 307,
+  "group": "degraded_data",
+  "seed": 1524993943,
+  "duration_s": 815,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.74,
+  "ambient_c": 29.3,
+  "initial_coolant_c": 53.0,
+  "dropout_probability": 0.015,
+  "unsupported_sensors": [],
+  "connection_loss": true,
+  "split": "test",
+  "windows": 152,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 308,
+  "group": "degraded_data",
+  "seed": 1976188127,
+  "duration_s": 578,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 0.94,
+  "ambient_c": 25.3,
+  "initial_coolant_c": 66.4,
+  "dropout_probability": 0.07,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 104,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 309,
+  "group": "degraded_data",
+  "seed": 1028297708,
+  "duration_s": 882,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 0.76,
+  "ambient_c": 26.9,
+  "initial_coolant_c": 78.3,
+  "dropout_probability": 0.107,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 165,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 310,
+  "group": "degraded_data",
+  "seed": 491255089,
+  "duration_s": 543,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 0.94,
+  "ambient_c": 39.4,
+  "initial_coolant_c": 84.4,
+  "dropout_probability": 0.007,
+  "unsupported_sensors": [
+   "oil_pressure_kpa",
+   "oil_temp_c"
+  ],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 97,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 311,
+  "group": "degraded_data",
+  "seed": 2021729810,
+  "duration_s": 369,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 0.53,
+  "ambient_c": 35.5,
+  "initial_coolant_c": 87.7,
+  "dropout_probability": 0.057,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 62,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 312,
+  "group": "degraded_data",
+  "seed": 848664664,
+  "duration_s": 513,
+  "pattern": "idle",
+  "faults": [],
+  "noise_scale": 1.23,
+  "ambient_c": 25.4,
+  "initial_coolant_c": 46.2,
+  "dropout_probability": 0.093,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 91,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 313,
+  "group": "degraded_data",
+  "seed": 1712730670,
+  "duration_s": 370,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.71,
+  "ambient_c": 22.7,
+  "initial_coolant_c": 85.0,
+  "dropout_probability": 0.015,
+  "unsupported_sensors": [
+   "oil_pressure_kpa",
+   "oil_temp_c"
+  ],
+  "connection_loss": false,
+  "split": "validation",
+  "windows": 63,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 314,
+  "group": "degraded_data",
+  "seed": 2090230383,
+  "duration_s": 813,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.91,
+  "ambient_c": 36.4,
+  "initial_coolant_c": 47.5,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": true,
+  "split": "train",
+  "windows": 151,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 315,
+  "group": "degraded_data",
+  "seed": 1689673330,
+  "duration_s": 458,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 0.9,
+  "ambient_c": 31.8,
+  "initial_coolant_c": 44.5,
+  "dropout_probability": 0.001,
+  "unsupported_sensors": [
+   "oil_pressure_kpa",
+   "oil_temp_c"
+  ],
+  "connection_loss": false,
+  "split": "test",
+  "windows": 80,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 316,
+  "group": "degraded_data",
+  "seed": 225371345,
+  "duration_s": 571,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 0.71,
+  "ambient_c": 19.4,
+  "initial_coolant_c": 56.5,
+  "dropout_probability": 0.073,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 103,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 317,
+  "group": "degraded_data",
+  "seed": 1581051410,
+  "duration_s": 491,
+  "pattern": "rapid_acceleration",
+  "faults": [],
+  "noise_scale": 1.51,
+  "ambient_c": 34.3,
+  "initial_coolant_c": 58.0,
+  "dropout_probability": 0.002,
+  "unsupported_sensors": [
+   "oil_pressure_kpa",
+   "oil_temp_c"
+  ],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 87,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 318,
+  "group": "degraded_data",
+  "seed": 1350709804,
+  "duration_s": 371,
+  "pattern": "mixed",
+  "faults": [],
+  "noise_scale": 1.37,
+  "ambient_c": 30.3,
+  "initial_coolant_c": 59.0,
+  "dropout_probability": 0.017,
+  "unsupported_sensors": [
+   "oil_pressure_kpa",
+   "oil_temp_c"
+  ],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 63,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 319,
+  "group": "degraded_data",
+  "seed": 809454258,
+  "duration_s": 303,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 0.71,
+  "ambient_c": 37.1,
+  "initial_coolant_c": 91.9,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [],
+  "connection_loss": true,
+  "split": "train",
+  "windows": 49,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 320,
+  "group": "degraded_data",
+  "seed": 1573432301,
+  "duration_s": 317,
+  "pattern": "heavy_traffic",
+  "faults": [],
+  "noise_scale": 1.08,
+  "ambient_c": 30.9,
+  "initial_coolant_c": 40.4,
+  "dropout_probability": 0.072,
+  "unsupported_sensors": [],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 52,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 321,
+  "group": "degraded_data",
+  "seed": 1036872134,
+  "duration_s": 303,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.64,
+  "ambient_c": 39.2,
+  "initial_coolant_c": 54.7,
+  "dropout_probability": 0.021,
+  "unsupported_sensors": [],
+  "connection_loss": true,
+  "split": "train",
+  "windows": 49,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 322,
+  "group": "degraded_data",
+  "seed": 309896582,
+  "duration_s": 773,
+  "pattern": "urban",
+  "faults": [],
+  "noise_scale": 1.71,
+  "ambient_c": 18.8,
+  "initial_coolant_c": 86.1,
+  "dropout_probability": 0.01,
+  "unsupported_sensors": [
+   "oil_pressure_kpa",
+   "oil_temp_c"
+  ],
+  "connection_loss": false,
+  "split": "train",
+  "windows": 143,
+  "ambiguous_windows": 0
+ },
+ {
+  "session_id": 323,
+  "group": "degraded_data",
+  "seed": 522958677,
+  "duration_s": 877,
+  "pattern": "highway",
+  "faults": [],
+  "noise_scale": 1.88,
+  "ambient_c": 19.5,
+  "initial_coolant_c": 60.5,
+  "dropout_probability": 0.019,
+  "unsupported_sensors": [],
+  "connection_loss": true,
+  "split": "test",
+  "windows": 164,
+  "ambiguous_windows": 0
+ }
+]

@@ -7,9 +7,12 @@ from PySide6.QtGui import QCloseEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QStackedWidget, QVBoxLayout, QWidget
 
 from smartdrive import APP_NAME, __version__
+from smartdrive.config.constants import Severity
+from smartdrive.models.diagnostic import Finding
 from smartdrive.ui.context import UiContext
 from smartdrive.ui.navigation import NavItem, Sidebar
 from smartdrive.ui.pages.about import AboutPage
+from smartdrive.ui.pages.ai_diagnostics import AiDiagnosticsPage
 from smartdrive.ui.pages.base import Page
 from smartdrive.ui.pages.dashboard import DashboardPage
 from smartdrive.ui.pages.garage import GaragePage
@@ -27,12 +30,12 @@ PAGES: tuple[NavItem, ...] = (
     NavItem("monitoring", "Live Monitoring", "activity"),
     NavItem("garage", "Vehicle Garage", "car"),
     NavItem("simulation", "Simulation Lab", "flask"),
+    NavItem("diagnostics", "AI Diagnostics", "cpu"),
     NavItem("settings", "Settings", "settings"),
     NavItem("about", "About", "info"),
 )
 
 UPCOMING: tuple[NavItem, ...] = (
-    NavItem("diagnostics", "AI Diagnostics", "cpu", "Phase 3"),
     NavItem("maintenance", "Predictive Maintenance", "wrench", "Phase 4"),
     NavItem("obd", "OBD-II Diagnostics", "plug", "Phase 4"),
     NavItem("trips", "Trip Analytics", "route", "Phase 4"),
@@ -75,20 +78,24 @@ class MainWindow(QMainWindow):
         self.pages: dict[str, Page] = {}
         dashboard = DashboardPage(ctx)
         dashboard.navigate.connect(self.show_page)
-        for page in (
+        pages = (
             dashboard,
             LiveMonitoringPage(ctx),
             GaragePage(ctx),
             SimulationLabPage(ctx),
+            AiDiagnosticsPage(ctx),
             SettingsPage(ctx),
             AboutPage(ctx),
-        ):
+        )
+        for page in pages:
             self.pages[page.key] = page
             self.stack.addWidget(page)
 
         self.toasts = ToastHost(self)
         ctx.notifier.message.connect(self._notify)
         ctx.monitoring.error_occurred.connect(lambda text: self._notify(text, StatusLevel.CRITICAL))
+        ctx.diagnostics.error_occurred.connect(lambda text: self._notify(text, StatusLevel.WARNING))
+        ctx.diagnostics.alerts_raised.connect(self._announce_alerts)
         self.sidebar.page_requested.connect(self.show_page)
         self.sidebar.collapsed_changed.connect(self._remember_sidebar)
         ctx.theme.theme_changed.connect(self.apply_palette)
@@ -137,6 +144,18 @@ class MainWindow(QMainWindow):
 
     def _notify(self, text: str, level: object) -> None:
         self.toasts.notify(text, level if isinstance(level, StatusLevel) else StatusLevel.INFO)
+
+    def _announce_alerts(self, findings: object) -> None:
+        if not isinstance(findings, tuple):
+            return
+        for finding in findings:
+            if isinstance(finding, Finding):
+                level = (
+                    StatusLevel.CRITICAL
+                    if finding.severity is Severity.CRITICAL
+                    else StatusLevel.WARNING
+                )
+                self._notify(f"{finding.severity.value.title()}: {finding.title}", level)
 
     def _remember_sidebar(self, collapsed: bool) -> None:
         self.ctx.app.settings.appearance.sidebar_collapsed = collapsed

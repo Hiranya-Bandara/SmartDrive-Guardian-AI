@@ -143,12 +143,54 @@ class SettingsPage(Page):
         self.reset_button = IconPushButton("Reset preferences", "refresh", variant="ghost")
         database.body.addWidget(self.reset_button)
         grid.addWidget(database, 1, 1)
+
+        diagnostics = Card("AI diagnostics")
+        form = _form()
+        self.diagnostics_check = QCheckBox("Run diagnostics while monitoring")
+        self.ml_check = QCheckBox("Use machine-learning models (rules always run)")
+        self.inference_spin = QSpinBox()
+        self.inference_spin.setRange(1, 10)
+        self.inference_spin.setSuffix(" s")
+        self.sensitivity_combo = QComboBox()
+        for value, text in (
+            ("low", "Low (fewer alarms)"),
+            ("standard", "Standard"),
+            ("high", "High (more alarms)"),
+        ):
+            self.sensitivity_combo.addItem(text, value)
+        self.persistence_spin = QSpinBox()
+        self.persistence_spin.setRange(1, 20)
+        self.persistence_spin.setSuffix(" analyses")
+        self.cooldown_spin = QSpinBox()
+        self.cooldown_spin.setRange(5, 3600)
+        self.cooldown_spin.setSuffix(" s")
+        form.addRow("", self.diagnostics_check)
+        form.addRow("", self.ml_check)
+        form.addRow("Analyse every", self.inference_spin)
+        form.addRow("Anomaly sensitivity", self.sensitivity_combo)
+        form.addRow("Anomaly must persist for", self.persistence_spin)
+        form.addRow("Alert cooldown", self.cooldown_spin)
+        diagnostics.body.addLayout(form)
+        diagnostics.body.addWidget(
+            label(
+                "Rule thresholds are conservative simulation defaults, not manufacturer "
+                "specifications. They are stored in settings.json under diagnostics.thresholds.",
+                "muted",
+                wrap=True,
+            )
+        )
+        grid.addWidget(diagnostics, 2, 0, 1, 2)
         grid.setColumnStretch(0, 1)
         grid.setColumnStretch(1, 1)
         self.content.addLayout(grid)
         self.content.addStretch(1)
 
-        for combo in (self.theme_combo, self.units_combo, self.log_level_combo):
+        for combo in (
+            self.theme_combo,
+            self.units_combo,
+            self.log_level_combo,
+            self.sensitivity_combo,
+        ):
             combo.currentIndexChanged.connect(lambda _i: self._save())
         for spin in (
             self.refresh_spin,
@@ -156,9 +198,18 @@ class SettingsPage(Page):
             self.stale_spin,
             self.retention_spin,
             self.backups_spin,
+            self.inference_spin,
+            self.persistence_spin,
+            self.cooldown_spin,
         ):
             spin.valueChanged.connect(lambda _v: self._save())
-        for check in (self.animations_check, self.keep_forever_check, self.redact_check):
+        for check in (
+            self.animations_check,
+            self.keep_forever_check,
+            self.redact_check,
+            self.diagnostics_check,
+            self.ml_check,
+        ):
             check.toggled.connect(lambda _c: self._save())
         self.backup_button.clicked.connect(lambda: self.backup())
         self.backup_as_button.clicked.connect(self._backup_as)
@@ -186,6 +237,15 @@ class SettingsPage(Page):
         self.backups_spin.setValue(s.retention.keep_backups)
         self.redact_check.setChecked(s.privacy.redact_identifiers_in_logs)
         self.log_level_combo.setCurrentText(s.logging.level)
+        d = s.diagnostics
+        self.diagnostics_check.setChecked(d.enabled)
+        self.ml_check.setChecked(d.machine_learning_enabled)
+        self.inference_spin.setValue(round(d.inference_interval_s))
+        self.sensitivity_combo.setCurrentIndex(
+            self.sensitivity_combo.findData(d.anomaly_sensitivity)
+        )
+        self.persistence_spin.setValue(d.anomaly_persistence_windows)
+        self.cooldown_spin.setValue(s.alerts.cooldown_seconds)
         self._loading = False
 
     def _save(self) -> None:
@@ -210,6 +270,13 @@ class SettingsPage(Page):
             s.retention.keep_backups = self.backups_spin.value()
             s.privacy.redact_identifiers_in_logs = self.redact_check.isChecked()
             s.logging.level = self.log_level_combo.currentText()  # type: ignore[assignment]
+            d = s.diagnostics
+            d.enabled = self.diagnostics_check.isChecked()
+            d.machine_learning_enabled = self.ml_check.isChecked()
+            d.inference_interval_s = float(self.inference_spin.value())
+            d.anomaly_sensitivity = str(self.sensitivity_combo.currentData())  # type: ignore[assignment]
+            d.anomaly_persistence_windows = self.persistence_spin.value()
+            s.alerts.cooldown_seconds = self.cooldown_spin.value()
         except ValidationError as exc:
             self.ctx.notifier.notify(
                 f"Invalid setting: {exc.errors()[0]['msg']}", StatusLevel.WARNING

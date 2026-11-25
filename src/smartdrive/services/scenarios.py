@@ -31,6 +31,7 @@ class ScenarioId(StrEnum):
     MISSING_SENSORS = "missing_sensor_values"
     CONNECTION_LOSS = "intermittent_connection_loss"
     MULTIPLE = "multiple_abnormalities"
+    GENERATED = "generated_session"
 
 
 class DrivingPattern(StrEnum):
@@ -63,19 +64,34 @@ FAULT_CATEGORY: Final[Mapping[FaultKind, FaultCategory]] = {
 
 @dataclass(frozen=True, slots=True)
 class FaultSpec:
-    """A fault that starts at ``onset_s`` and reaches full severity over ``ramp_s``."""
+    """A fault that starts at ``onset_s`` and grows to ``max_severity`` over ``ramp_s``.
+
+    With ``intermittent_period_s`` set, the fault is present only during alternating
+    half-periods (for example a loose connection), while its underlying ramp continues.
+    """
 
     kind: FaultKind
     onset_s: float
     ramp_s: float
+    max_severity: float = 1.0
+    intermittent_period_s: float | None = None
+
+    def __post_init__(self) -> None:
+        if not 0.0 < self.max_severity <= 1.0:
+            raise ValueError("max_severity must be in (0, 1]")
+        if self.intermittent_period_s is not None and self.intermittent_period_s <= 0:
+            raise ValueError("intermittent_period_s must be positive")
 
     def severity(self, elapsed_s: float, ramp_override_s: float | None = None) -> float:
         ramp = self.ramp_s if ramp_override_s is None else ramp_override_s
         if elapsed_s < self.onset_s:
             return 0.0
-        if ramp <= 0:
-            return 1.0
-        return min(1.0, (elapsed_s - self.onset_s) / ramp)
+        if self.intermittent_period_s is not None:
+            phase = (elapsed_s - self.onset_s) % (2 * self.intermittent_period_s)
+            if phase >= self.intermittent_period_s:
+                return 0.0
+        level = 1.0 if ramp <= 0 else min(1.0, (elapsed_s - self.onset_s) / ramp)
+        return level * self.max_severity
 
 
 @dataclass(frozen=True, slots=True)
