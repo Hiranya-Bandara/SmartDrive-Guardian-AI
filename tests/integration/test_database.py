@@ -30,6 +30,12 @@ EXPECTED_TABLES = {
     "maintenance_records",
     "maintenance_schedules",
     "model_metadata",
+    "notifications",
+    "obd_connections",
+    "dtc_scans",
+    "trip_events",
+    "trip_summaries",
+    "vehicle_thresholds",
     "telemetry_readings",
     "vehicles",
 }

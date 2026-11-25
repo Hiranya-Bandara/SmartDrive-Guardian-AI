@@ -4,8 +4,9 @@ This file is the authoritative progress tracker. A task is ticked only after the
 functionality has been verified (tests executed, behaviour observed). The full requirements are in
 [docs/SPECIFICATION.md](docs/SPECIFICATION.md).
 
-**Progress: 21 / 38 tasks complete** · Current phase: **Phase 3 complete (verified in the
-sandbox) — awaiting owner's Windows run** · Next phase: Phase 4
+**Progress: 28 / 38 tasks complete** · Current phase: **Phase 4 complete at the software level
+(verified in the sandbox) — awaiting owner's Windows run; physical OBD-II hardware not yet
+tested** · Next phase: Phase 5
 
 Verification sources: *sandbox* = executed in the isolated Linux build environment (GUI
 headless via Qt `offscreen`); *owner* = reported by the repository owner from their Windows machine.
@@ -65,8 +66,9 @@ headless with pytest-qt; screenshots in `docs/screenshots`) and by the *owner* o
 ## Phase 3 — Advanced AI Engine (target: days 12–18)
 
 All seven tasks were verified in the *sandbox*. The models were trained and evaluated with
-`scripts/train_models.py`; retraining reproduced bit-identical model files. A Windows run by
-the owner is still pending. **All data is synthetic; nothing here is real-world validation.**
+`scripts/train_models.py`; retraining reproduced bit-identical model files. The owner
+confirmed Phase 3 on Windows (and applied a local Qt signal-lifecycle fix, carried into
+Phase 4). **All data is synthetic; nothing here is real-world validation.**
 
 - [x] Prepare and validate datasets. Dataset `sdg-ds-1.1.0`: 324 independent simulated
   sessions, 33,194 labelled windows. Sessions vary seed, driving pattern, length, noise,
@@ -97,14 +99,35 @@ migration 0002 (diagnostic history), alert deduplication and cooldown, and model
 
 ## Phase 4 — Vehicle Integration (target: days 19–25)
 
-- [ ] Implement read-only OBD-II connectivity.
-- [ ] Implement diagnostic trouble code reader.
-- [ ] Handle hardware failures and unsupported sensors.
-- [ ] Implement trip recording and replay.
-- [ ] Implement maintenance centre.
-- [ ] Implement PDF and CSV reports.
-- [ ] Implement desktop and voice notifications. (Phase 3 delivered in-app alert toasts and
-  persisted, deduplicated diagnostic alerts; the full Alert Centre is Phase 4.)
+All seven tasks were implemented and verified in the *sandbox* (automated tests, headless GUI,
+generated sample reports). **Hardware status: tested only against the byte-level mock adapter;
+no physical adapter or vehicle has been tested** — see
+[docs/hardware-verification-checklist.md](docs/hardware-verification-checklist.md), all items
+PENDING. A Windows run by the owner is pending.
+
+- [x] Implement read-only OBD-II connectivity. In-house ELM327 client with a closed command
+  allowlist (prohibited commands tested), serial/Bluetooth-Classic ports, discovery without
+  auto-connect, adapter vs ECU states, supported-PID discovery, 19 parameters, Vehicle
+  Connection page. *(Physical hardware: unverified.)*
+- [x] Implement diagnostic trouble code reader. Stored, pending, permanent codes, MIL, freeze
+  frame, scan history, sourced generic descriptions, unknown/manufacturer-specific states,
+  Diagnostic Codes page, export; no clearing.
+- [x] Handle hardware failures and unsupported sensors. Typed errors for every listed failure,
+  per-parameter cycle status, bounded back-off reconnection, interrupted trips, stale data,
+  cancellable reads and clean shutdown; ML abstains on incompatible live input.
+- [x] Implement trip recording and replay. Summaries with estimated distance, timelines,
+  filters, charts, export, safe deletion; replay 0.5–4× with seek, never persisted.
+- [x] Implement maintenance centre. Records, user schedules (date, mileage, combined),
+  reminder states, odometer freshness, per-currency costs, observations.
+- [x] Implement PDF and CSV reports. Seven PDF types, eight CSV datasets, injection
+  protection, privacy options, background generation, export history, samples.
+- [x] Implement desktop and voice notifications. Notification centre with deduplication,
+  cooldown, retention, acknowledgement separate from condition state; desktop, sound and
+  offline voice (fake speech backend in tests; *not yet exercised on Windows*).
+
+Also delivered: database revision 0003 with automatic pre-upgrade backup, dashboard
+integration, settings, background job runner, GUI-thread garbage collection, and fixes for a
+migration data-loss defect and a worker-thread deadlock found during development.
 
 ## Phase 5 — Professional Release (target: days 26–30)
 

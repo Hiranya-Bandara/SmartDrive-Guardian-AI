@@ -1,4 +1,4 @@
-"""Common interface for telemetry sources (simulation now; live OBD-II and replay later)."""
+"""Common interface for telemetry sources: simulation, live OBD-II and trip replay."""
 
 from __future__ import annotations
 
@@ -45,6 +45,11 @@ class TelemetrySource(ABC):
     @abstractmethod
     def read(self, interval_s: float) -> TelemetryFrame:
         """Return the next frame. ``interval_s`` is the wall-clock time since the last read."""
+
+    def read_frames(self, interval_s: float) -> list[TelemetryFrame]:
+        """Frames produced during ``interval_s``. Sources that can produce several per tick
+        (replay at high speed) override this so no recorded sample is skipped."""
+        return [self.read(interval_s)]
 
     @abstractmethod
     def close(self) -> None: ...

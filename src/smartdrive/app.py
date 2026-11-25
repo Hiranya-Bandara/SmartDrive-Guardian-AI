@@ -53,6 +53,7 @@ def bootstrap(
         },
     )
     database = Database(paths.database_file)
+    backup_before_upgrade(database, paths.backup_dir)
     database.upgrade()
     context = ApplicationContext(
         paths=paths, settings_store=store, settings=settings, database=database
@@ -60,6 +61,18 @@ def bootstrap(
     if apply_retention:
         enforce_retention(context)
     return context
+
+
+def backup_before_upgrade(database: Database, backup_dir: Path) -> Path | None:
+    """Copy an existing database before its schema is upgraded, so an upgrade can be undone."""
+    current = database.current_revision()
+    if current is None or current == database.head_revision():
+        return None
+    stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
+    target = backup_dir / f"smartdrive-pre-upgrade-{current}-{stamp}.db"
+    path = database.backup(target)
+    logger.info("Backed up the database before upgrading it", extra={"revision": current})
+    return path
 
 
 def enforce_retention(context: ApplicationContext) -> int:

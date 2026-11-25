@@ -13,22 +13,70 @@ Launch it with `smartdrive gui` (or `smartdrive-gui`, which opens without a cons
    locally, masked on screen and in logs, and can be erased with **Remove identifiers**.
 2. **Set active.** The first vehicle you add becomes active automatically. You can also switch
    vehicles from the selector in the top bar.
-3. **Start monitoring** (Dashboard, Live Monitoring, Simulation Lab or AI Diagnostics, or press
-   Ctrl+M). Telemetry currently comes from the simulator, which is labelled *Simulation*
-   wherever it appears. With **Record session** ticked, the readings are saved to the vehicle's
-   history.
+3. **Choose a source and start monitoring** (Dashboard, Live Monitoring, Vehicle Connection,
+   Simulation Lab or AI Diagnostics, or press Ctrl+M). The source is either the **Simulator**
+   or **Live vehicle (OBD-II)**; live monitoring needs an adapter connected on the Vehicle
+   Connection page first (see [hardware.md](hardware.md)). Every page labels the data as
+   simulated, live or replayed. With **Record session** ticked, the readings are saved as a
+   trip.
+
+Do not use the application while driving.
 
 ## Pages
 
-| Page | What it is for |
-|---|---|
-| Dashboard | Gauges, speed, fuel, load, voltage, two-minute trends, the AI diagnostics summary and recent alerts |
-| Live Monitoring | Charts for any of the 11 sensors, a minimum/maximum/average table, refresh interval and time range |
-| Vehicle Garage | Vehicles, images, identifiers, and recorded sessions with charts |
-| Simulation Lab | Choose one of 15 scenarios, seed, speed, noise and fault development time; manual driver; sensor overrides; live ground truth |
-| AI Diagnostics | The hybrid assessment, model output, explanations, health score and diagnostic history |
-| Settings | Theme, units, monitoring, retention, privacy, AI diagnostics, backup and restore |
-| About | Version, environment, installed models, feature availability and licences |
+| Page | Shortcut | What it is for |
+|---|---|---|
+| Dashboard | Ctrl+1 | Gauges, trends, AI summary, recent alerts, and a summary of connection, codes, trips, maintenance and notifications |
+| Live Monitoring | Ctrl+2 | Charts for any sensor, a minimum/maximum/average table, refresh interval and time range |
+| AI Diagnostics | Ctrl+5 | The hybrid assessment, model output, explanations, health score and diagnostic history |
+| Vehicle Connection | Ctrl+8 | Choose a serial port, connect read-only to an OBD-II adapter, see supported parameters, link quality and diagnostics, and set vehicle-specific rule thresholds |
+| Diagnostic Codes | Ctrl+9 | Scan stored, pending and permanent trouble codes; history, details and export. There is no clear-codes function. |
+| Vehicle Garage | Ctrl+3 | Vehicles, images and identifiers |
+| Trip History | Ctrl+Shift+T | Recorded trips with filters, statistics, timeline, charts, export, deletion and replay |
+| Maintenance | Ctrl+Shift+M | Service records, your schedules and reminders, odometer, costs and AI-related observations |
+| Simulation Lab | Ctrl+4 | 15 scenarios, seed, speed, noise, fault development; manual driver; sensor overrides |
+| Reports | Ctrl+Shift+R | PDF reports and CSV exports, export history |
+| Alert Centre | Ctrl+0 | Notifications and diagnostic alerts, filters, acknowledge and mark as read |
+| Settings | Ctrl+6 | Appearance, monitoring, data and privacy, AI diagnostics, vehicle connection, notifications and voice, trips/maintenance/reports, backup |
+| About | Ctrl+7 | Version, environment, models, licences |
+
+## Trips and replay
+
+A trip is saved when you monitor with **Record session** ticked. When it ends, SmartDrive
+computes its statistics in the background: duration, completeness, average and maximum speed
+and engine speed, coolant range, an **estimated distance** (speed integrated over time; gaps
+longer than 5 s or without speed are not bridged, and the share of time that contributed is
+shown) and the number of warning and critical events. No GPS position, route, fuel use or
+odometer value is derived. A trip whose connection failed is marked *interrupted*.
+
+**Replay** plays a trip's recorded samples at 0.5×, 1×, 2× or 4×, with pause, stop and seeking.
+Gauges, charts and AI Diagnostics follow the replay, which is labelled as recorded data. The
+analysis during a replay is recalculated now and is shown separately from the findings recorded
+at the time of the trip; it is never saved, and a replay never contacts an adapter.
+
+## Maintenance
+
+- **Records:** what was done, when, at which odometer reading, by whom and at what cost
+  (currency per record, default LKR). Notes stay private.
+- **Schedules:** your own intervals by time, distance or both ("whichever comes first"). "Fill
+  in example interval" offers illustrative values that are clearly marked as examples, not
+  manufacturer schedules. Each schedule shows *Not scheduled*, *Up to date*, *Upcoming*,
+  *Due*, *Overdue* or *Insufficient mileage information*.
+- **Odometer:** distance reminders use the reading you record with its date. An old reading
+  (default more than 60 days) is not treated as current.
+- **Costs** are totalled per currency, per month, year and category. Different currencies are
+  never added together.
+- **AI-related observations** are cautious prompts based on repeated findings, anomalies,
+  health-score trends and stored codes. They never predict when something will fail.
+
+## Notifications
+
+Notifications appear as in-app toasts and in the **Alert Centre**, optionally as Windows
+desktop notifications, a sound, and offline voice announcements (Settings → Notifications and
+voice). A repeated notification within its cooldown updates the existing entry instead of
+creating a new one. Acknowledging or reading a notification never clears the vehicle condition
+behind it; diagnostic alerts show separately whether the condition is still active. Voice and
+desktop notifications supplement the screen; they are not a safety warning system.
 
 ## Using AI Diagnostics
 
@@ -96,11 +144,20 @@ models with `python scripts\train_models.py` (see `docs/ml/README.md`).
 Rule thresholds are stored in `settings.json` under `diagnostics.thresholds`. They are
 conservative simulation defaults, not manufacturer specifications.
 
+## Live vehicle data and AI
+
+On live data only the transparent rules run by default. The experimental models can be switched
+on (Settings → AI diagnostics → Also on live vehicle data), but they run only if the vehicle
+provides every sensor they were trained with; generic OBD-II never provides oil pressure, so on
+real vehicles they report *incompatible*. See [hardware.md](hardware.md#machine-learning-on-live-data).
+
 ## Keyboard shortcuts
 
 | Shortcut | Action |
 |---|---|
-| Ctrl+1 … Ctrl+7 | Open Dashboard, Live Monitoring, Garage, Simulation Lab, AI Diagnostics, Settings, About |
+| Ctrl+1 … Ctrl+7 | Dashboard, Live Monitoring, Garage, Simulation Lab, AI Diagnostics, Settings, About (unchanged from Phase 3) |
+| Ctrl+8, Ctrl+9, Ctrl+0 | Vehicle Connection, Diagnostic Codes, Alert Centre |
+| Ctrl+Shift+T / M / R | Trip History, Maintenance, Reports |
 | Ctrl+M | Start or stop monitoring |
 | Ctrl+P | Pause or resume |
 | Ctrl+B | Collapse or expand the sidebar |

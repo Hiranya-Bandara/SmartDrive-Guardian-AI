@@ -7,41 +7,55 @@ from PySide6.QtGui import QCloseEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QStackedWidget, QVBoxLayout, QWidget
 
 from smartdrive import APP_NAME, __version__
-from smartdrive.config.constants import Severity
-from smartdrive.models.diagnostic import Finding
+from smartdrive.config.constants import NotificationSeverity
+from smartdrive.models.notification import Notification
 from smartdrive.ui.context import UiContext
 from smartdrive.ui.navigation import NavItem, Sidebar
 from smartdrive.ui.pages.about import AboutPage
 from smartdrive.ui.pages.ai_diagnostics import AiDiagnosticsPage
+from smartdrive.ui.pages.alerts import AlertsPage
 from smartdrive.ui.pages.base import Page
 from smartdrive.ui.pages.dashboard import DashboardPage
+from smartdrive.ui.pages.diagnostic_codes import DiagnosticCodesPage
 from smartdrive.ui.pages.garage import GaragePage
 from smartdrive.ui.pages.live_monitoring import LiveMonitoringPage
+from smartdrive.ui.pages.maintenance import MaintenancePage
+from smartdrive.ui.pages.reports import ReportsPage
 from smartdrive.ui.pages.settings_page import SettingsPage
 from smartdrive.ui.pages.simulation_lab import SimulationLabPage
+from smartdrive.ui.pages.trip_history import TripHistoryPage
+from smartdrive.ui.pages.vehicle_connection import VehicleConnectionPage
 from smartdrive.ui.themes.palette import ThemePalette
 from smartdrive.ui.top_bar import TopBar
 from smartdrive.ui.widgets.monitoring_controls import toggle_monitoring, toggle_pause
 from smartdrive.ui.widgets.notifications import ToastHost
 from smartdrive.ui.widgets.status import StatusLevel
 
+# Sidebar order groups related pages. Shortcuts Ctrl+1…Ctrl+7 keep their Phase 2/3 meaning.
 PAGES: tuple[NavItem, ...] = (
-    NavItem("dashboard", "Dashboard", "dashboard"),
-    NavItem("monitoring", "Live Monitoring", "activity"),
-    NavItem("garage", "Vehicle Garage", "car"),
-    NavItem("simulation", "Simulation Lab", "flask"),
-    NavItem("diagnostics", "AI Diagnostics", "cpu"),
-    NavItem("settings", "Settings", "settings"),
-    NavItem("about", "About", "info"),
+    NavItem("dashboard", "Dashboard", "dashboard", shortcut="Ctrl+1"),
+    NavItem("monitoring", "Live Monitoring", "activity", group="Monitor", shortcut="Ctrl+2"),
+    NavItem("diagnostics", "AI Diagnostics", "cpu", group="Monitor", shortcut="Ctrl+5"),
+    NavItem("connection", "Vehicle Connection", "plug", group="Monitor", shortcut="Ctrl+8"),
+    NavItem("codes", "Diagnostic Codes", "alert", group="Monitor", shortcut="Ctrl+9"),
+    NavItem("garage", "Vehicle Garage", "car", group="Vehicle", shortcut="Ctrl+3"),
+    NavItem("trips", "Trip History", "route", group="Vehicle", shortcut="Ctrl+Shift+T"),
+    NavItem("maintenance", "Maintenance", "wrench", group="Vehicle", shortcut="Ctrl+Shift+M"),
+    NavItem("simulation", "Simulation Lab", "flask", group="Tools", shortcut="Ctrl+4"),
+    NavItem("reports", "Reports", "file", group="Tools", shortcut="Ctrl+Shift+R"),
+    NavItem("alerts", "Alert Centre", "bell", group="Tools", shortcut="Ctrl+0"),
+    NavItem("settings", "Settings", "settings", group="System", shortcut="Ctrl+6"),
+    NavItem("about", "About", "info", group="System", shortcut="Ctrl+7"),
 )
 
-UPCOMING: tuple[NavItem, ...] = (
-    NavItem("maintenance", "Predictive Maintenance", "wrench", "Phase 4"),
-    NavItem("obd", "OBD-II Diagnostics", "plug", "Phase 4"),
-    NavItem("trips", "Trip Analytics", "route", "Phase 4"),
-    NavItem("alerts", "Alert Centre", "bell", "Phase 4"),
-    NavItem("reports", "Reports", "file", "Phase 4"),
-)
+UPCOMING: tuple[NavItem, ...] = ()
+
+TOAST_LEVEL = {
+    NotificationSeverity.INFORMATION: StatusLevel.INFO,
+    NotificationSeverity.SUCCESS: StatusLevel.NORMAL,
+    NotificationSeverity.WARNING: StatusLevel.WARNING,
+    NotificationSeverity.CRITICAL: StatusLevel.CRITICAL,
+}
 
 MIN_WIDTH = 1180
 MIN_HEIGHT = 700
@@ -78,30 +92,45 @@ class MainWindow(QMainWindow):
         self.pages: dict[str, Page] = {}
         dashboard = DashboardPage(ctx)
         dashboard.navigate.connect(self.show_page)
-        pages = (
-            dashboard,
-            LiveMonitoringPage(ctx),
-            GaragePage(ctx),
-            SimulationLabPage(ctx),
-            AiDiagnosticsPage(ctx),
-            SettingsPage(ctx),
-            AboutPage(ctx),
-        )
-        for page in pages:
+        alerts = AlertsPage(ctx)
+        alerts.navigate.connect(self.show_page)
+        built: dict[str, Page] = {
+            page.key: page
+            for page in (
+                dashboard,
+                LiveMonitoringPage(ctx),
+                AiDiagnosticsPage(ctx),
+                VehicleConnectionPage(ctx),
+                DiagnosticCodesPage(ctx),
+                GaragePage(ctx),
+                TripHistoryPage(ctx),
+                MaintenancePage(ctx),
+                SimulationLabPage(ctx),
+                ReportsPage(ctx),
+                alerts,
+                SettingsPage(ctx),
+                AboutPage(ctx),
+            )
+        }
+        for item in PAGES:
+            page = built[item.key]
             self.pages[page.key] = page
             self.stack.addWidget(page)
 
         self.toasts = ToastHost(self)
         ctx.notifier.message.connect(self._notify)
-        ctx.monitoring.error_occurred.connect(lambda text: self._notify(text, StatusLevel.CRITICAL))
-        ctx.diagnostics.error_occurred.connect(lambda text: self._notify(text, StatusLevel.WARNING))
-        ctx.diagnostics.alerts_raised.connect(self._announce_alerts)
+        ctx.monitoring.error_occurred.connect(self._notify_monitoring_error)
+        ctx.diagnostics.error_occurred.connect(self._notify_diagnostics_error)
+        ctx.notifications.delivered.connect(self._show_notification)
+        ctx.notifications.changed.connect(self._refresh_unread)
+        ctx.trips.error.connect(self._notify_trip_error)
         self.sidebar.page_requested.connect(self.show_page)
         self.sidebar.collapsed_changed.connect(self._remember_sidebar)
         ctx.theme.theme_changed.connect(self.apply_palette)
         ctx.state.settings_changed.connect(self._on_settings_changed)
         self._install_shortcuts()
         self.apply_palette(ctx.theme.palette)
+        self._refresh_unread()
         self.show_page("dashboard")
         self.stack.setFocus()
 
@@ -129,8 +158,10 @@ class MainWindow(QMainWindow):
         self.toasts.apply_palette(palette)
 
     def _install_shortcuts(self) -> None:
-        for index, item in enumerate(PAGES, start=1):
-            shortcut = QShortcut(QKeySequence(f"Ctrl+{index}"), self)
+        for item in PAGES:
+            if not item.shortcut:
+                continue
+            shortcut = QShortcut(QKeySequence(item.shortcut), self)
             shortcut.activated.connect(lambda key=item.key: self.show_page(key))
         bindings = (
             ("Ctrl+B", self.sidebar.toggle),
@@ -142,20 +173,37 @@ class MainWindow(QMainWindow):
             shortcut.setContext(Qt.ShortcutContext.WindowShortcut)
             shortcut.activated.connect(handler)
 
+    def _notify_monitoring_error(self, text: str) -> None:
+        self._notify(text, StatusLevel.CRITICAL)
+
+    def _notify_diagnostics_error(self, text: str) -> None:
+        self._notify(text, StatusLevel.WARNING)
+
     def _notify(self, text: str, level: object) -> None:
         self.toasts.notify(text, level if isinstance(level, StatusLevel) else StatusLevel.INFO)
 
-    def _announce_alerts(self, findings: object) -> None:
-        if not isinstance(findings, tuple):
+    def _notify_trip_error(self, text: str) -> None:
+        self._notify(text, StatusLevel.WARNING)
+
+    def _show_notification(self, notification: object) -> None:
+        if not isinstance(notification, Notification):
             return
-        for finding in findings:
-            if isinstance(finding, Finding):
-                level = (
-                    StatusLevel.CRITICAL
-                    if finding.severity is Severity.CRITICAL
-                    else StatusLevel.WARNING
-                )
-                self._notify(f"{finding.severity.value.title()}: {finding.title}", level)
+        level = TOAST_LEVEL[notification.severity]
+        prefix = {StatusLevel.CRITICAL: "Critical: ", StatusLevel.WARNING: "Warning: "}.get(
+            level, ""
+        )
+        self._notify(f"{prefix}{notification.title}", level)
+
+    def _refresh_unread(self) -> None:
+        count = self.ctx.notifications.unread_count()
+        button = self.sidebar.buttons.get("alerts")
+        if button is None:
+            return
+        title = "Alert Centre" + (f" ({count})" if count else "")
+        button.setText(title)
+        tooltip = f"Alert Centre — {count} unread" if count else "Alert Centre (Ctrl+0)"
+        button.setToolTip(tooltip)
+        button.setAccessibleName(tooltip)
 
     def _remember_sidebar(self, collapsed: bool) -> None:
         self.ctx.app.settings.appearance.sidebar_collapsed = collapsed

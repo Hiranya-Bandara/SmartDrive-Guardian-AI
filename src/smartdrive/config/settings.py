@@ -42,6 +42,8 @@ class MonitoringSettings(_Section):
     refresh_interval_ms: int = Field(default=1000, ge=100, le=10_000)
     chart_history_seconds: int = Field(default=300, ge=30, le=3600)
     stale_after_seconds: float = Field(default=5.0, ge=1.0, le=60.0)
+    default_mode: Literal["simulation", "live"] = "simulation"
+    """Preselected source on the monitoring controls. Never connects to hardware by itself."""
 
 
 class AlertSettings(_Section):
@@ -49,13 +51,50 @@ class AlertSettings(_Section):
     notification_sounds: bool = False
     voice_notifications: bool = False
     cooldown_seconds: int = Field(default=60, ge=5, le=3600)
+    notification_cooldown_seconds: int = Field(default=300, ge=10, le=86_400)
+    notification_retention_days: int = Field(default=90, ge=1, le=3650)
+    voice_id: str | None = Field(default=None, max_length=300)
+    voice_rate: int = Field(default=175, ge=80, le=300)
+    voice_volume: float = Field(default=0.9, ge=0.0, le=1.0)
+    voice_cooldown_seconds: int = Field(default=300, ge=30, le=86_400)
+    voice_warnings: bool = True
+    voice_critical: bool = True
+    voice_maintenance: bool = False
 
 
 class ObdSettings(_Section):
     port: str | None = Field(default=None, max_length=64)
+    """Preferred port, preselected on the Vehicle Connection page. Never opened automatically."""
     baudrate: int | None = Field(default=None, ge=9600, le=2_000_000)
     connection_timeout_seconds: float = Field(default=10.0, ge=1.0, le=120.0)
+    query_timeout_seconds: float = Field(default=1.5, ge=0.2, le=10.0)
+    poll_interval_ms: int = Field(default=1000, ge=250, le=10_000)
     max_reconnect_attempts: int = Field(default=3, ge=0, le=10)
+    reconnect_initial_delay_seconds: float = Field(default=2.0, ge=0.5, le=60.0)
+    read_freeze_frame: bool = True
+    show_mock_adapter: bool = False
+    """Developer option: list the mock adapter. Its data is recorded as simulated."""
+    mock_profile: Literal[
+        "healthy", "stored_codes", "partial_sensors", "no_ecu", "legacy_protocol"
+    ] = "healthy"
+
+
+class TripSettings(_Section):
+    record_by_default: bool = True
+    name_prefix: str = Field(default="Trip", max_length=40)
+
+
+class ReportSettings(_Section):
+    output_directory: str | None = Field(default=None, max_length=1024)
+    include_identifiers: bool = False
+    """Registration number and VIN are left out of reports unless this is enabled."""
+    include_notes: bool = False
+
+
+class MaintenanceSettings(_Section):
+    reminders_enabled: bool = True
+    currency: str = Field(default="LKR", pattern=r"^[A-Z]{3}$")
+    odometer_stale_days: int = Field(default=60, ge=1, le=3650)
 
 
 class DataRetentionSettings(_Section):
@@ -100,6 +139,9 @@ class DiagnosticSettings(_Section):
     anomaly_sensitivity: Literal["low", "standard", "high"] = "standard"
     anomaly_persistence_windows: int = Field(default=3, ge=1, le=20)
     history_interval_s: float = Field(default=10.0, ge=2.0, le=300.0)
+    live_ml_enabled: bool = False
+    """Experimental models on live vehicle data. Off by default: they were trained on synthetic
+    data only, and they abstain anyway when the vehicle lacks sensors they were trained with."""
     thresholds: DiagnosticThresholds = Field(default_factory=DiagnosticThresholds)
 
 
@@ -118,6 +160,9 @@ class AppSettings(_Section):
     privacy: PrivacySettings = Field(default_factory=PrivacySettings)
     logging: LoggingSettings = Field(default_factory=LoggingSettings)
     diagnostics: DiagnosticSettings = Field(default_factory=DiagnosticSettings)
+    trips: TripSettings = Field(default_factory=TripSettings)
+    reports: ReportSettings = Field(default_factory=ReportSettings)
+    maintenance: MaintenanceSettings = Field(default_factory=MaintenanceSettings)
 
 
 class SettingsStore:

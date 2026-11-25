@@ -161,10 +161,10 @@ class LiveMonitoringPage(Page):
         self.sensor_list.itemChanged.connect(lambda _i: self._layout_charts())
         self.refresh_combo.currentIndexChanged.connect(self._on_refresh_changed)
         self.range_combo.currentIndexChanged.connect(lambda _i: self._mark_dirty())
-        ctx.monitoring.frame_received.connect(lambda _f: self._mark_dirty())
+        ctx.monitoring.frame_received.connect(self._mark_dirty)
         ctx.monitoring.state_changed.connect(self._on_state_changed)
-        ctx.monitoring.connection_changed.connect(lambda _c: self._mark_dirty())
-        ctx.state.settings_changed.connect(lambda _s: self._apply_settings())
+        ctx.monitoring.connection_changed.connect(self._mark_dirty)
+        ctx.state.settings_changed.connect(self._apply_settings)
         self._timer = QTimer(self)
         self._timer.setInterval(CHART_REFRESH_MS)
         self._timer.timeout.connect(self._refresh)
@@ -212,7 +212,7 @@ class LiveMonitoringPage(Page):
 
     # -- settings -----------------------------------------------------------------------------
 
-    def _apply_settings(self) -> None:
+    def _apply_settings(self, *_args: object) -> None:
         settings = self.ctx.app.settings
         self.ctx.monitoring.resize_history()
         self.refresh_combo.blockSignals(True)
@@ -259,7 +259,7 @@ class LiveMonitoringPage(Page):
         self.banner.setVisible(self.ctx.monitoring.data_source is DataSource.SIMULATION)
         self._mark_dirty()
 
-    def _mark_dirty(self) -> None:
+    def _mark_dirty(self, *_args: object) -> None:
         self._dirty = True
 
     def _refresh(self) -> None:

@@ -1,0 +1,2 @@
+﻿trip_id,vehicle_id,vehicle_name,name,data_source,status,started_at_utc,ended_at_utc,sample_count,recorded_duration_s,data_completeness,avg_speed_kph,max_speed_kph,avg_rpm,max_rpm,min_coolant_c,max_coolant_c,distance_km,distance_coverage,diagnostic_event_count,warning_count,critical_count,anomaly_count,dtc_count,distance_is_estimate
+1,1,Sample vehicle (fictional),Sample simulated drive (engine overheating scenario),simulation,completed,2026-11-20T08:30:00Z,2026-11-20T08:36:59Z,420,419.0,1.0,45.3,79.2,1958.0,3014.0,79.0,120.9,5.277,1.0,4,3,1,0,,true

@@ -124,6 +124,12 @@ class DiagnosticRepository:
         )
         return self._session.scalars(stmt).first()
 
+    def open_alerts(self, vehicle_id: int | None) -> list[AlertRecord]:
+        stmt = select(AlertRecord).where(
+            AlertRecord.vehicle_id == vehicle_id, AlertRecord.resolved_at.is_(None)
+        )
+        return list(self._session.scalars(stmt))
+
     def add_alert(self, **values: Any) -> AlertRecord:
         record = AlertRecord(**values)
         self._session.add(record)

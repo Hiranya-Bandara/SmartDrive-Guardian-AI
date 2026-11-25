@@ -5,7 +5,7 @@ from datetime import datetime
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from smartdrive.config.constants import DataSource
+from smartdrive.config.constants import DataSource, SessionStatus
 from smartdrive.database.models import (
     DrivingSessionRecord,
     TelemetryReadingRecord,
@@ -29,6 +29,7 @@ class DrivingSessionRepository:
         random_seed: int | None = None,
         replay_of_session_id: int | None = None,
         started_at: datetime | None = None,
+        name: str | None = None,
     ) -> DrivingSession:
         if self._session.get(VehicleRecord, vehicle_id) is None:
             raise RecordNotFoundError(f"Vehicle {vehicle_id} does not exist.")
@@ -43,6 +44,8 @@ class DrivingSessionRepository:
             random_seed=random_seed,
             replay_of_session_id=replay_of_session_id,
             started_at=started_at or utc_now(),
+            name=(name or "").strip()[:80] or None,
+            status=SessionStatus.RECORDING,
         )
         self._session.add(record)
         self._session.flush()
@@ -63,6 +66,7 @@ class DrivingSessionRepository:
         record.ended_at = end_time
         record.distance_km = distance_km
         record.distance_estimated = distance_estimated
+        record.status = SessionStatus.COMPLETED
         self._session.flush()
         return DrivingSession.model_validate(record)
 
@@ -95,6 +99,7 @@ class DrivingSessionRepository:
                 )
             )
             record.ended_at = max(last, record.started_at) if last else record.started_at
+            record.status = SessionStatus.INTERRUPTED
         self._session.flush()
         return len(open_records)
 

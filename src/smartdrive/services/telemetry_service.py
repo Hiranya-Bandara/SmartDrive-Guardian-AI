@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Final
 
 from smartdrive.config.constants import DataSource
@@ -62,10 +63,17 @@ class TelemetryService:
         *,
         scenario: str | None = None,
         random_seed: int | None = None,
+        name: str | None = None,
+        started_at: datetime | None = None,
     ) -> DrivingSession:
         with self._db.session() as session:
             return DrivingSessionRepository(session).start(
-                vehicle_id, data_source, scenario=scenario, random_seed=random_seed
+                vehicle_id,
+                data_source,
+                scenario=scenario,
+                random_seed=random_seed,
+                name=name,
+                started_at=started_at,
             )
 
     def append(self, session_id: int, samples: Sequence[TelemetrySample]) -> int:

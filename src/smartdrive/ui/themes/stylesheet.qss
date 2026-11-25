@@ -31,7 +31,8 @@ QToolTip {
 }
 #BrandTitle { font-size: 12pt; font-weight: 700; }
 #BrandSubtitle, #SidebarSection { color: $text_secondary; font-size: 8pt; }
-#SidebarSection { font-weight: 600; padding: 12px 14px 4px 14px; }
+#SidebarSection { font-weight: 600; padding: 6px 14px 2px 14px; }
+#SidebarNav, #SidebarScroll, #SidebarScroll > QWidget > QWidget { background: transparent; }
 
 QToolButton[role="nav"] {
     border: none;

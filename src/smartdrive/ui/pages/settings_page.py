@@ -10,10 +10,12 @@ from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
+    QDoubleSpinBox,
     QFileDialog,
     QFormLayout,
     QGridLayout,
     QHBoxLayout,
+    QLineEdit,
     QSpinBox,
 )
 
@@ -166,6 +168,12 @@ class SettingsPage(Page):
         self.cooldown_spin.setSuffix(" s")
         form.addRow("", self.diagnostics_check)
         form.addRow("", self.ml_check)
+        self.live_ml_check = QCheckBox("Also on live vehicle data (experimental)")
+        self.live_ml_check.setToolTip(
+            "The models were trained on simulated data only and abstain when the vehicle lacks "
+            "the sensors they need. Rules always run."
+        )
+        form.addRow("", self.live_ml_check)
         form.addRow("Analyse every", self.inference_spin)
         form.addRow("Anomaly sensitivity", self.sensitivity_combo)
         form.addRow("Anomaly must persist for", self.persistence_spin)
@@ -180,6 +188,142 @@ class SettingsPage(Page):
             )
         )
         grid.addWidget(diagnostics, 2, 0, 1, 2)
+
+        connection = Card("Vehicle connection")
+        form = _form()
+        self.default_mode_combo = QComboBox()
+        self.default_mode_combo.addItem("Simulator", "simulation")
+        self.default_mode_combo.addItem("Live vehicle (OBD-II)", "live")
+        self.connect_timeout_spin = QSpinBox()
+        self.connect_timeout_spin.setRange(1, 120)
+        self.connect_timeout_spin.setSuffix(" s")
+        self.query_timeout_spin = QDoubleSpinBox()
+        self.query_timeout_spin.setRange(0.2, 10.0)
+        self.query_timeout_spin.setSingleStep(0.1)
+        self.query_timeout_spin.setSuffix(" s")
+        self.poll_spin = QSpinBox()
+        self.poll_spin.setRange(250, 10_000)
+        self.poll_spin.setSingleStep(250)
+        self.poll_spin.setSuffix(" ms")
+        self.reconnect_spin = QSpinBox()
+        self.reconnect_spin.setRange(0, 10)
+        self.reconnect_spin.setSpecialValueText("Do not reconnect")
+        self.reconnect_spin.setSuffix(" attempts")
+        self.reconnect_delay_spin = QDoubleSpinBox()
+        self.reconnect_delay_spin.setRange(0.5, 60.0)
+        self.reconnect_delay_spin.setSuffix(" s (doubles each attempt)")
+        self.freeze_frame_check = QCheckBox("Read freeze-frame data when scanning codes")
+        self.mock_check = QCheckBox("Show the mock adapter (developer testing; data is simulated)")
+        self.mock_profile_combo = QComboBox()
+        for value, text in (
+            ("healthy", "Healthy vehicle"),
+            ("stored_codes", "Stored and pending codes"),
+            ("partial_sensors", "Partial sensor support"),
+            ("no_ecu", "Ignition off (no ECU reply)"),
+            ("legacy_protocol", "Older protocol"),
+        ):
+            self.mock_profile_combo.addItem(text, value)
+        form.addRow("Default monitoring source", self.default_mode_combo)
+        form.addRow("Connection timeout", self.connect_timeout_spin)
+        form.addRow("Response timeout", self.query_timeout_spin)
+        form.addRow("Poll the vehicle every", self.poll_spin)
+        form.addRow("After a lost connection", self.reconnect_spin)
+        form.addRow("First retry after", self.reconnect_delay_spin)
+        form.addRow("", self.freeze_frame_check)
+        form.addRow("", self.mock_check)
+        form.addRow("Mock adapter behaviour", self.mock_profile_combo)
+        connection.body.addLayout(form)
+        connection.body.addWidget(
+            label(
+                "SmartDrive never connects to an adapter on its own: choose the port and press "
+                "Connect on the Vehicle Connection page. Changes apply to the next connection.",
+                "muted",
+                wrap=True,
+            )
+        )
+        grid.addWidget(connection, 3, 0)
+
+        notifications = Card("Notifications and voice")
+        form = _form()
+        self.desktop_check = QCheckBox("Desktop notifications (where the system supports them)")
+        self.sound_check = QCheckBox("Play a sound for warnings and critical findings")
+        self.notify_cooldown_spin = QSpinBox()
+        self.notify_cooldown_spin.setRange(10, 86_400)
+        self.notify_cooldown_spin.setSuffix(" s")
+        self.notify_retention_spin = QSpinBox()
+        self.notify_retention_spin.setRange(1, 3650)
+        self.notify_retention_spin.setSuffix(" days")
+        self.voice_check = QCheckBox("Offline voice announcements")
+        self.voice_warning_check = QCheckBox("Announce warnings")
+        self.voice_critical_check = QCheckBox("Announce critical findings")
+        self.voice_maintenance_check = QCheckBox("Announce maintenance reminders")
+        self.voice_combo = QComboBox()
+        self.voice_combo.setAccessibleName("Voice")
+        self.voice_rate_spin = QSpinBox()
+        self.voice_rate_spin.setRange(80, 300)
+        self.voice_rate_spin.setSuffix(" words/min")
+        self.voice_volume_spin = QSpinBox()
+        self.voice_volume_spin.setRange(0, 100)
+        self.voice_volume_spin.setSuffix(" %")
+        self.voice_cooldown_spin = QSpinBox()
+        self.voice_cooldown_spin.setRange(30, 86_400)
+        self.voice_cooldown_spin.setSuffix(" s")
+        self.test_voice_button = IconPushButton("Test voice", "play")
+        self.voice_status = label("", "muted", wrap=True)
+        form.addRow("", self.desktop_check)
+        form.addRow("", self.sound_check)
+        form.addRow("Repeat a notification after", self.notify_cooldown_spin)
+        form.addRow("Keep read notifications", self.notify_retention_spin)
+        form.addRow("", self.voice_check)
+        form.addRow("", self.voice_warning_check)
+        form.addRow("", self.voice_critical_check)
+        form.addRow("", self.voice_maintenance_check)
+        form.addRow("Voice", self.voice_combo)
+        form.addRow("Speech rate", self.voice_rate_spin)
+        form.addRow("Volume", self.voice_volume_spin)
+        form.addRow("Repeat the same announcement after", self.voice_cooldown_spin)
+        form.addRow(self.test_voice_button, self.voice_status)
+        notifications.body.addLayout(form)
+        notifications.body.addWidget(
+            label(
+                "Voice and desktop notifications supplement the screen; they are not a safety "
+                "warning system and delivery is not guaranteed. Announcements never include "
+                "vehicle identifiers.",
+                "muted",
+                wrap=True,
+            )
+        )
+        grid.addWidget(notifications, 3, 1)
+
+        records = Card("Trips, maintenance and reports")
+        form = _form()
+        self.record_default_check = QCheckBox("Record sessions by default")
+        self.trip_prefix_edit = QLineEdit()
+        self.trip_prefix_edit.setMaxLength(40)
+        self.trip_prefix_edit.setAccessibleName("Trip name prefix")
+        self.trip_prefix_edit.setPlaceholderText("Trip")
+        self.currency_edit = QComboBox()
+        self.currency_edit.setEditable(True)
+        self.currency_edit.setAccessibleName("Default currency")
+        for code in ("LKR", "USD", "EUR", "GBP", "INR", "AUD", "JPY"):
+            self.currency_edit.addItem(code)
+        self.reminders_check = QCheckBox(
+            "Maintenance reminders (each schedule sets how early it reminds you)"
+        )
+        self.odometer_stale_spin = QSpinBox()
+        self.odometer_stale_spin.setRange(1, 3650)
+        self.odometer_stale_spin.setSuffix(" days")
+        self.identifiers_check = QCheckBox("Include registration number and VIN in reports")
+        self.notes_check = QCheckBox("Include the vehicle's garage notes in reports")
+        form.addRow("", self.record_default_check)
+        form.addRow("New trips are named", self.trip_prefix_edit)
+        form.addRow("Default currency", self.currency_edit)
+        form.addRow("", self.reminders_check)
+        form.addRow("Odometer reading is out of date after", self.odometer_stale_spin)
+        form.addRow("", self.identifiers_check)
+        form.addRow("", self.notes_check)
+        records.body.addLayout(form)
+        grid.addWidget(records, 4, 0, 1, 2)
         grid.setColumnStretch(0, 1)
         grid.setColumnStretch(1, 1)
         self.content.addLayout(grid)
@@ -190,8 +334,16 @@ class SettingsPage(Page):
             self.units_combo,
             self.log_level_combo,
             self.sensitivity_combo,
+            self.default_mode_combo,
+            self.mock_profile_combo,
+            self.voice_combo,
         ):
-            combo.currentIndexChanged.connect(lambda _i: self._save())
+            combo.currentIndexChanged.connect(self._on_changed)
+        self.currency_edit.activated.connect(self._on_changed)
+        line_edit = self.currency_edit.lineEdit()
+        if line_edit is not None:
+            line_edit.editingFinished.connect(self._save)
+        self.trip_prefix_edit.editingFinished.connect(self._save)
         for spin in (
             self.refresh_spin,
             self.history_spin,
@@ -201,27 +353,52 @@ class SettingsPage(Page):
             self.inference_spin,
             self.persistence_spin,
             self.cooldown_spin,
+            self.connect_timeout_spin,
+            self.query_timeout_spin,
+            self.poll_spin,
+            self.reconnect_spin,
+            self.reconnect_delay_spin,
+            self.notify_cooldown_spin,
+            self.notify_retention_spin,
+            self.voice_rate_spin,
+            self.voice_volume_spin,
+            self.voice_cooldown_spin,
+            self.odometer_stale_spin,
         ):
-            spin.valueChanged.connect(lambda _v: self._save())
+            spin.valueChanged.connect(self._on_changed)
         for check in (
             self.animations_check,
             self.keep_forever_check,
             self.redact_check,
             self.diagnostics_check,
             self.ml_check,
+            self.live_ml_check,
+            self.freeze_frame_check,
+            self.mock_check,
+            self.desktop_check,
+            self.sound_check,
+            self.voice_check,
+            self.voice_warning_check,
+            self.voice_critical_check,
+            self.voice_maintenance_check,
+            self.record_default_check,
+            self.reminders_check,
+            self.identifiers_check,
+            self.notes_check,
         ):
-            check.toggled.connect(lambda _c: self._save())
-        self.backup_button.clicked.connect(lambda: self.backup())
+            check.toggled.connect(self._on_changed)
+        self.test_voice_button.clicked.connect(self._test_voice)
+        ctx.notifications.voice_ready.connect(self._on_voice_ready)
+        ctx.notifications.voice_failed.connect(self._on_voice_failed)
+        self.backup_button.clicked.connect(self._backup_default)
         self.backup_as_button.clicked.connect(self._backup_as)
         self.restore_button.clicked.connect(self._restore_dialog)
-        self.open_folder_button.clicked.connect(
-            lambda: QDesktopServices.openUrl(QUrl.fromLocalFile(str(ctx.app.paths.data_dir)))
-        )
+        self.open_folder_button.clicked.connect(self._open_data_folder)
         self.reset_button.clicked.connect(self.reset_preferences)
-        ctx.state.settings_changed.connect(lambda _s: self.load())
+        ctx.state.settings_changed.connect(self.load)
         self.load()
 
-    def load(self) -> None:
+    def load(self, *_args: object) -> None:
         self._loading = True
         s = self.ctx.app.settings
         self.theme_combo.setCurrentIndex(self.theme_combo.findData(s.appearance.theme))
@@ -246,6 +423,51 @@ class SettingsPage(Page):
         )
         self.persistence_spin.setValue(d.anomaly_persistence_windows)
         self.cooldown_spin.setValue(s.alerts.cooldown_seconds)
+        self.live_ml_check.setChecked(d.live_ml_enabled)
+        o = s.obd
+        self.default_mode_combo.setCurrentIndex(
+            self.default_mode_combo.findData(s.monitoring.default_mode)
+        )
+        self.connect_timeout_spin.setValue(round(o.connection_timeout_seconds))
+        self.query_timeout_spin.setValue(o.query_timeout_seconds)
+        self.poll_spin.setValue(o.poll_interval_ms)
+        self.reconnect_spin.setValue(o.max_reconnect_attempts)
+        self.reconnect_delay_spin.setValue(o.reconnect_initial_delay_seconds)
+        self.freeze_frame_check.setChecked(o.read_freeze_frame)
+        self.mock_check.setChecked(o.show_mock_adapter)
+        self.mock_profile_combo.setCurrentIndex(self.mock_profile_combo.findData(o.mock_profile))
+        self.mock_profile_combo.setEnabled(o.show_mock_adapter)
+        a = s.alerts
+        self.desktop_check.setChecked(a.desktop_notifications)
+        self.sound_check.setChecked(a.notification_sounds)
+        self.notify_cooldown_spin.setValue(a.notification_cooldown_seconds)
+        self.notify_retention_spin.setValue(a.notification_retention_days)
+        self.voice_check.setChecked(a.voice_notifications)
+        self.voice_warning_check.setChecked(a.voice_warnings)
+        self.voice_critical_check.setChecked(a.voice_critical)
+        self.voice_maintenance_check.setChecked(a.voice_maintenance)
+        self.voice_rate_spin.setValue(a.voice_rate)
+        self.voice_volume_spin.setValue(round(a.voice_volume * 100))
+        self.voice_cooldown_spin.setValue(a.voice_cooldown_seconds)
+        self._load_voices()
+        for widget in (
+            self.voice_warning_check,
+            self.voice_critical_check,
+            self.voice_maintenance_check,
+            self.voice_combo,
+            self.voice_rate_spin,
+            self.voice_volume_spin,
+            self.voice_cooldown_spin,
+        ):
+            widget.setEnabled(a.voice_notifications)
+        self.record_default_check.setChecked(s.trips.record_by_default)
+        self.trip_prefix_edit.setText(s.trips.name_prefix)
+        m = s.maintenance
+        self.currency_edit.setCurrentText(m.currency)
+        self.reminders_check.setChecked(m.reminders_enabled)
+        self.odometer_stale_spin.setValue(m.odometer_stale_days)
+        self.identifiers_check.setChecked(s.reports.include_identifiers)
+        self.notes_check.setChecked(s.reports.include_notes)
         self._loading = False
 
     def _save(self) -> None:
@@ -277,6 +499,41 @@ class SettingsPage(Page):
             d.anomaly_sensitivity = str(self.sensitivity_combo.currentData())  # type: ignore[assignment]
             d.anomaly_persistence_windows = self.persistence_spin.value()
             s.alerts.cooldown_seconds = self.cooldown_spin.value()
+            d.live_ml_enabled = self.live_ml_check.isChecked()
+            mode = str(self.default_mode_combo.currentData())
+            s.monitoring.default_mode = mode  # type: ignore[assignment]
+            o = s.obd
+            o.connection_timeout_seconds = float(self.connect_timeout_spin.value())
+            o.query_timeout_seconds = self.query_timeout_spin.value()
+            o.poll_interval_ms = self.poll_spin.value()
+            o.max_reconnect_attempts = self.reconnect_spin.value()
+            o.reconnect_initial_delay_seconds = self.reconnect_delay_spin.value()
+            o.read_freeze_frame = self.freeze_frame_check.isChecked()
+            o.show_mock_adapter = self.mock_check.isChecked()
+            o.mock_profile = str(self.mock_profile_combo.currentData())  # type: ignore[assignment]
+            a = s.alerts
+            a.desktop_notifications = self.desktop_check.isChecked()
+            a.notification_sounds = self.sound_check.isChecked()
+            a.notification_cooldown_seconds = self.notify_cooldown_spin.value()
+            a.notification_retention_days = self.notify_retention_spin.value()
+            a.voice_notifications = self.voice_check.isChecked()
+            a.voice_warnings = self.voice_warning_check.isChecked()
+            a.voice_critical = self.voice_critical_check.isChecked()
+            a.voice_maintenance = self.voice_maintenance_check.isChecked()
+            a.voice_id = self.voice_combo.currentData() or None
+            a.voice_rate = self.voice_rate_spin.value()
+            a.voice_volume = self.voice_volume_spin.value() / 100.0
+            a.voice_cooldown_seconds = self.voice_cooldown_spin.value()
+            s.trips.record_by_default = self.record_default_check.isChecked()
+            s.trips.name_prefix = self.trip_prefix_edit.text().strip() or "Trip"
+            m = s.maintenance
+            m.currency = self.currency_edit.currentText().strip().upper()
+            m.reminders_enabled = self.reminders_check.isChecked()
+            m.odometer_stale_days = self.odometer_stale_spin.value()
+            s.reports.include_identifiers = self.identifiers_check.isChecked()
+            s.reports.include_notes = self.notes_check.isChecked()
+            if mode != self.ctx.monitoring.preferred_mode and not self.ctx.monitoring.is_active:
+                self.ctx.monitoring.set_preferred_mode(mode)
         except ValidationError as exc:
             self.ctx.notifier.notify(
                 f"Invalid setting: {exc.errors()[0]['msg']}", StatusLevel.WARNING
@@ -286,6 +543,47 @@ class SettingsPage(Page):
         self.ctx.monitoring.set_interval(s.monitoring.refresh_interval_ms)
         self.ctx.theme.set_preference(s.appearance.theme)
         self._persist()
+
+    def _on_changed(self, *_: object) -> None:
+        self._save()
+
+    def _backup_default(self) -> None:
+        self.backup()
+
+    def _open_data_folder(self) -> None:
+        QDesktopServices.openUrl(QUrl.fromLocalFile(str(self.ctx.app.paths.data_dir)))
+
+    def _load_voices(self) -> None:
+        notifications = self.ctx.notifications
+        wanted = self.ctx.app.settings.alerts.voice_id
+        self.voice_combo.blockSignals(True)
+        self.voice_combo.clear()
+        self.voice_combo.addItem("System default", None)
+        for voice in notifications.voices:
+            self.voice_combo.addItem(voice.name, voice.voice_id)
+        index = self.voice_combo.findData(wanted)
+        self.voice_combo.setCurrentIndex(max(0, index))
+        self.voice_combo.blockSignals(False)
+        if notifications.voice_available is None:
+            self.voice_status.setText("Checking for an offline speech engine…")
+        elif notifications.voice_available:
+            self.voice_status.setText(f"{len(notifications.voices)} offline voice(s) available.")
+        else:
+            self.voice_status.setText(notifications.voice_unavailable_reason)
+        self.test_voice_button.setEnabled(bool(notifications.voice_available))
+
+    def _on_voice_ready(self, _available: bool, _reason: str) -> None:
+        was_loading = self._loading
+        self._loading = True
+        self._load_voices()
+        self._loading = was_loading
+
+    def _on_voice_failed(self, message: str) -> None:
+        self.voice_status.setText(message)
+
+    def _test_voice(self) -> None:
+        self.voice_status.setText("Speaking…")
+        self.ctx.notifications.test_voice()
 
     def _persist(self) -> None:
         try:

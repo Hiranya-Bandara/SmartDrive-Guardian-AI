@@ -21,7 +21,8 @@ classifiers = [
     "Typing :: Typed",
 ]
 # Runtime dependencies are added phase by phase, only when code uses them.
-# Phase 3 adds the ML stack, Phase 4 python-OBD/ReportLab. PySide6-Essentials (not the full
+# Phase 3 adds the ML stack; Phase 4 adds PySerial (read-only ELM327 client written in-house,
+# chosen over GPL-2.0-only python-OBD), ReportLab and pyttsx3. PySide6-Essentials (not the full
 # PySide6 meta-package) provides QtWidgets/QtSvg without the large add-on modules.
 dependencies = [
     "platformdirs>=4.3,<5",
@@ -35,6 +36,9 @@ dependencies = [
     # them (enforced by the model registry); retrain with scripts/train_models.py when bumping.
     "scikit-learn>=1.9,<1.10",
     "joblib>=1.4,<2",
+    "pyserial>=3.5,<4",
+    "reportlab>=4.4,<6",
+    "pyttsx3>=2.98,<3",
 ]
 
 [project.optional-dependencies]
@@ -49,6 +53,7 @@ dev = [
     "pytest-qt>=4.4",
     "ruff>=0.9",
     "mypy>=1.14",
+    "types-pyserial>=3.5",
     "pip-audit>=2.7",
 ]
 
@@ -72,6 +77,7 @@ smartdrive = [
     "database/migrations/versions/*.py",
     "ui/themes/*.qss",
     "ai/artifacts/manifest.json",
+    "ai/artifacts/evaluation_metrics.json",
     "ai/artifacts/*.joblib",
 ]
 
@@ -105,7 +111,10 @@ plugins = ["pydantic.mypy"]
 warn_unreachable = true
 
 [[tool.mypy.overrides]]
-module = ["pyqtgraph", "pyqtgraph.*", "sklearn", "sklearn.*", "joblib", "joblib.*"]
+module = [
+    "pyqtgraph", "pyqtgraph.*", "sklearn", "sklearn.*", "joblib", "joblib.*",
+    "pyttsx3", "pyttsx3.*", "comtypes", "comtypes.*", "reportlab", "reportlab.*",
+]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

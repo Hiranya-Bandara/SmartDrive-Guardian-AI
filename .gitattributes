@@ -8,3 +8,6 @@
 *.png binary
 *.ico binary
 *.joblib binary
+
+# Exported CSV samples keep RFC 4180 CRLF line endings byte for byte.
+docs/samples/*.csv -text
