@@ -1,0 +1,399 @@
+{
+  "environment": {
+    "app_version": "2.0.0",
+    "measured_at": "2026-11-25T17:40:43+00:00",
+    "os": "Linux-6.18.44-fc-v880-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "logical_cpus": 2,
+    "ram_gib": 7.8,
+    "qt_platform": "offscreen",
+    "scikit_learn": "1.9.1",
+    "models": {
+      "fault_classifier": "1.1.0",
+      "anomaly_detector": "1.1.0"
+    },
+    "frozen": false
+  },
+  "startup": {
+    "first_launch_new_data_folder": {
+      "imports_s": 2.295,
+      "bootstrap_s": 0.169,
+      "window_s": 1.18,
+      "to_window_s": 3.644,
+      "rss_mb": 440.566,
+      "shutdown_s": 0.218,
+      "process_wall_s": 4.446
+    },
+    "repeat_launches": {
+      "imports_s": {
+        "n": 5,
+        "median": 2.263,
+        "p95": 2.505,
+        "max": 2.505,
+        "mean": 2.282
+      },
+      "bootstrap_s": {
+        "n": 5,
+        "median": 0.041,
+        "p95": 0.041,
+        "max": 0.041,
+        "mean": 0.041
+      },
+      "window_s": {
+        "n": 5,
+        "median": 1.113,
+        "p95": 1.231,
+        "max": 1.231,
+        "mean": 1.112
+      },
+      "to_window_s": {
+        "n": 5,
+        "median": 3.388,
+        "p95": 3.64,
+        "max": 3.64,
+        "mean": 3.435
+      },
+      "rss_mb": {
+        "n": 5,
+        "median": 435.332,
+        "p95": 435.516,
+        "max": 435.516,
+        "mean": 435.327
+      },
+      "shutdown_s": {
+        "n": 5,
+        "median": 0.174,
+        "p95": 0.23,
+        "max": 0.23,
+        "mean": 0.18
+      },
+      "process_wall_s": {
+        "n": 5,
+        "median": 4.031,
+        "p95": 4.309,
+        "max": 4.309,
+        "mean": 4.111
+      }
+    },
+    "method": "Separate Python process per launch: imports, bootstrap (settings, logging, migrations), main window construction with all pages, first paint. 'First launch' uses a new data folder (database created and migrated); OS file caches are not cleared, so it is not a true cold-boot figure. Repeat launches reuse the folder."
+  },
+  "components": {
+    "model_loading_ms": 134.0,
+    "telemetry_window_build_ms": {
+      "n": 200,
+      "median": 0.109,
+      "p95": 0.136,
+      "max": 0.171,
+      "mean": 0.114
+    },
+    "inference_latency_ms": {
+      "n": 170,
+      "median": 47.951,
+      "p95": 77.363,
+      "max": 123.915,
+      "mean": 52.49
+    },
+    "inference_note": "One full assessment per 60-second window: rules, Random Forest classifier, Isolation Forest, tree-path explanations and health score. Simulated data.",
+    "database_write_samples_per_s": {
+      "n": 20,
+      "median": 66045.444,
+      "p95": 85500.12,
+      "max": 86662.709,
+      "mean": 61569.626
+    },
+    "database_rows": {
+      "trips": 20,
+      "telemetry_samples": 40000
+    },
+    "trip_list_query_ms": {
+      "n": 30,
+      "median": 3.574,
+      "p95": 3.845,
+      "max": 7.662,
+      "mean": 3.731
+    },
+    "trip_detail_query_ms": {
+      "n": 30,
+      "median": 0.872,
+      "p95": 1.151,
+      "max": 1.732,
+      "mean": 0.909
+    },
+    "trip_samples_load_ms": {
+      "n": 10,
+      "median": 30.419,
+      "p95": 120.094,
+      "max": 120.094,
+      "mean": 53.709
+    },
+    "replay_prepare_ms": {
+      "n": 20,
+      "median": 0.276,
+      "p95": 0.325,
+      "max": 0.384,
+      "mean": 0.284
+    },
+    "replay_seek_ms": {
+      "n": 200,
+      "median": 0.0,
+      "p95": 0.0,
+      "max": 0.009,
+      "mean": 0.0
+    },
+    "replay_trip_samples": 2000,
+    "reports": {
+      "pdf_trip_ms": {
+        "n": 5,
+        "median": 70.117,
+        "p95": 102.96,
+        "max": 102.96,
+        "mean": 76.765
+      },
+      "pdf_vehicle_overview_ms": {
+        "n": 5,
+        "median": 51.862,
+        "p95": 61.996,
+        "max": 61.996,
+        "mean": 53.842
+      },
+      "pdf_model_evaluation_ms": {
+        "n": 5,
+        "median": 18.881,
+        "p95": 19.175,
+        "max": 19.175,
+        "mean": 18.844
+      },
+      "csv_telemetry_2000_rows_ms": {
+        "n": 5,
+        "median": 61.298,
+        "p95": 139.794,
+        "max": 139.794,
+        "mean": 72.279
+      }
+    }
+  },
+  "sustained": {
+    "duration_s": 1200.0,
+    "settings": "1 Hz refresh (real time), inference every 2 s, trip recording on, simulated",
+    "frames_received": 1204,
+    "rss_after_start_mb": 387.1,
+    "rss_mb": {
+      "n": 20,
+      "median": 394.1,
+      "p95": 394.3,
+      "max": 394.3,
+      "mean": 393.995
+    },
+    "rss_growth_mb_per_hour_after_first_minute": 3.0,
+    "cpu_percent_of_one_core": 12.4,
+    "event_loop_lateness_ms": {
+      "n": 23953,
+      "median": 1.336,
+      "p95": 4.102,
+      "max": 153.274,
+      "mean": 1.599
+    },
+    "buffer_points_max": 1140,
+    "python_threads": [
+      3
+    ],
+    "os_threads": [
+      7,
+      9
+    ],
+    "qtimers": [
+      9
+    ],
+    "stop_monitoring_s": 0.073,
+    "shutdown_with_replay_and_job_s": 0.362,
+    "timeline": [
+      {
+        "t_s": 0.1,
+        "rss_mb": 392.8,
+        "buffer_points": 0,
+        "python_threads": 3,
+        "os_threads": 9,
+        "qtimers": 9,
+        "notifications_in_db": 0
+      },
+      {
+        "t_s": 60.1,
+        "rss_mb": 393.4,
+        "buffer_points": 60,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 0
+      },
+      {
+        "t_s": 120.1,
+        "rss_mb": 393.5,
+        "buffer_points": 120,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 1
+      },
+      {
+        "t_s": 180.1,
+        "rss_mb": 393.7,
+        "buffer_points": 180,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 5
+      },
+      {
+        "t_s": 240.1,
+        "rss_mb": 393.9,
+        "buffer_points": 240,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 6
+      },
+      {
+        "t_s": 300.1,
+        "rss_mb": 394.0,
+        "buffer_points": 300,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 6
+      },
+      {
+        "t_s": 360.1,
+        "rss_mb": 394.0,
+        "buffer_points": 360,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 6
+      },
+      {
+        "t_s": 420.1,
+        "rss_mb": 394.1,
+        "buffer_points": 420,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 7
+      },
+      {
+        "t_s": 480.1,
+        "rss_mb": 394.1,
+        "buffer_points": 480,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 7
+      },
+      {
+        "t_s": 540.2,
+        "rss_mb": 394.1,
+        "buffer_points": 540,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 8
+      },
+      {
+        "t_s": 600.1,
+        "rss_mb": 394.1,
+        "buffer_points": 600,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 8
+      },
+      {
+        "t_s": 660.1,
+        "rss_mb": 394.1,
+        "buffer_points": 660,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 8
+      },
+      {
+        "t_s": 720.1,
+        "rss_mb": 394.2,
+        "buffer_points": 720,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 9
+      },
+      {
+        "t_s": 780.2,
+        "rss_mb": 394.2,
+        "buffer_points": 780,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 9
+      },
+      {
+        "t_s": 840.1,
+        "rss_mb": 394.2,
+        "buffer_points": 840,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 9
+      },
+      {
+        "t_s": 900.1,
+        "rss_mb": 394.3,
+        "buffer_points": 900,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 9
+      },
+      {
+        "t_s": 960.2,
+        "rss_mb": 394.3,
+        "buffer_points": 960,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 10
+      },
+      {
+        "t_s": 1020.1,
+        "rss_mb": 394.3,
+        "buffer_points": 1020,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 10
+      },
+      {
+        "t_s": 1080.1,
+        "rss_mb": 394.3,
+        "buffer_points": 1080,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 10
+      },
+      {
+        "t_s": 1140.1,
+        "rss_mb": 394.3,
+        "buffer_points": 1140,
+        "python_threads": 3,
+        "os_threads": 7,
+        "qtimers": 9,
+        "notifications_in_db": 11
+      }
+    ]
+  },
+  "distribution": {
+    "status": "measured",
+    "platform_of_build": "Linux",
+    "files": 989,
+    "mib": 485.3
+  }
+}

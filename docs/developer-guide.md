@@ -1,6 +1,8 @@
 # Developer guide
 
-All commands are for **Windows PowerShell**, run from the project root `E:\SmartDrive-Guardian-AI`.
+All commands are for **Windows PowerShell**, run from the project root (for example
+`E:\3rd Year\SmartDrive-Guardian-AI-Phase1\SmartDrive-Guardian-AI`; quote paths that contain
+spaces).
 
 ## Prerequisites
 
@@ -154,3 +156,20 @@ AI tests use a tiny dataset and small forests, so they run in seconds:
 python -m pytest tests\unit\test_diagnostics_core.py tests\integration\test_ai_pipeline.py tests\integration\test_diagnostic_persistence.py tests\ui\test_ai_diagnostics.py
 ```
 
+## Packaging and releases
+
+* Build, smoke-test and package for Windows: [build-guide.md](build-guide.md)
+  (`scripts\build-windows.ps1`, `build-installer.ps1`, `test-installer.ps1`,
+  `generate-checksums.ps1`, `verify-release.ps1`). Install the release tools first:
+  `python -m pip install -r requirements-release.txt` (or `setup-dev.ps1 -Release`).
+* Packaging design and resource loading rules: [packaging.md](packaging.md). Read bundled files
+  only through `smartdrive.resources.resource_path()`; never write next to the code.
+* `smartdrive self-test --report result.json` checks an installation end to end in a temporary
+  folder; add a check there when a feature needs a bundled resource or a native library.
+* Performance: `python scripts\benchmark.py --sustained-minutes 20 --output docs\performance\results-windows.json`
+  ([performance.md](performance.md)).
+* Brand assets are generated: edit the SVG masters in `src\smartdrive\branding` and run
+  `python scripts\build_brand_assets.py`.
+* SBOM and notices: `python scripts\release_metadata.py sbom|notices|build-info ...`. Regenerate
+  `THIRD_PARTY_NOTICES.md` after dependency changes.
+* Release procedure and gates: [release-checklist.md](release-checklist.md).

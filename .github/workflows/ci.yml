@@ -1,5 +1,8 @@
 name: CI
 
+# Source-level quality gate. Windows is the supported platform; the Ubuntu job runs the same
+# headless test suite as an additional check and does not imply Linux support.
+
 on:
   push:
     branches: [main, development, "feature/**"]
@@ -12,6 +15,7 @@ permissions:
 
 env:
   QT_QPA_PLATFORM: offscreen
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -21,17 +25,17 @@ jobs:
   quality:
     name: Lint, types and tests (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
           cache: pip
@@ -49,8 +53,10 @@ jobs:
           python -m pip install -r requirements-dev.txt
           python -m pip install --no-deps -e .
 
-      - name: Validate project configuration
-        run: python -m pip check
+      - name: Python and dependency consistency
+        run: |
+          python --version
+          python -m pip check
 
       - name: Ruff lint
         run: python -m ruff check .
@@ -61,39 +67,52 @@ jobs:
       - name: Mypy (strict)
         run: python -m mypy
 
-      - name: Pytest with coverage
-        run: python -m pytest --cov --cov-report=term --cov-report=xml
+      - name: Pytest with coverage (unit, integration, end-to-end, GUI, migrations, mocked OBD)
+        run: python -m pytest --cov --cov-report=term --cov-report=xml --junitxml=test-results.xml
 
-      - name: Application smoke test
-        shell: bash
-        run: |
-          python -m smartdrive --home "${RUNNER_TEMP}/smartdrive-smoke" info
-          python -m smartdrive --home "${RUNNER_TEMP}/smartdrive-smoke" db check
+      - name: Installation self-test (source)
+        run: python -m smartdrive self-test --report self-test.json
 
       - name: Desktop application smoke test
         shell: bash
         run: python -m smartdrive --home "${RUNNER_TEMP}/smartdrive-gui" gui --quit-after-ms 3000
 
-      - name: Upload coverage report
-        if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v4
+      - name: Upload test results and coverage
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: coverage-xml
-          path: coverage.xml
+          name: test-results-${{ matrix.os }}
+          path: |
+            test-results.xml
+            coverage.xml
+            self-test.json
           retention-days: 14
+          if-no-files-found: warn
 
   dependency-audit:
     name: Dependency vulnerability audit
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
-      - name: Audit pinned requirements
+      - name: Install pip-audit (pinned)
         run: |
-          python -m pip install pip-audit
+          python -m pip install "pip-audit==$(grep -i '^pip-audit==' requirements-dev.txt | cut -d= -f3)"
+      - name: Audit runtime, development and release requirements
+        run: |
+          python -m pip_audit --strict -r requirements.txt -f json -o audit-runtime.json
           python -m pip_audit --strict -r requirements-dev.txt
+          python -m pip_audit --strict -r requirements-release.txt
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dependency-audit
+          path: audit-runtime.json
+          retention-days: 30
+          if-no-files-found: warn

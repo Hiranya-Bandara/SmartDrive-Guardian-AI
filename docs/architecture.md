@@ -143,6 +143,24 @@ NotificationController ── queued signals ───────► VoiceWorke
 - **Garbage collection on the GUI thread.** Automatic cyclic GC is disabled while the GUI runs
   and performed by a GUI-thread timer instead (decision 31).
 
+## Professional release (Phase 5)
+
+Diagrams of every part of the system: [architecture-diagrams.md](architecture-diagrams.md).
+
+* **Packaging.** PyInstaller one-folder build from `packaging/smartdrive.spec`; entry point
+  `smartdrive.launcher` (windowed, `freeze_support`, null or parent-console streams, GUI by
+  default). Read-only resources are resolved by `smartdrive.resources` through
+  `importlib.resources`; writable data only in per-user folders. Details:
+  [packaging.md](packaging.md).
+* **Installer.** Inno Setup 6, per-user without elevation, user data kept on upgrade and
+  uninstall.
+* **Self-test.** `smartdrive self-test` runs 13 checks in a temporary data folder with simulated
+  data; the Windows smoke test runs it against the frozen executable.
+* **Release pipeline.** `ci.yml` (quality gate), `windows-build.yml` (build and verify),
+  `release.yml` (tag → draft pre-release behind an approval environment).
+* **Defence in depth for vehicle safety.** The allowlist is checked in `Elm327Client.send` and
+  again on the raw bytes in every transport (`ensure_allowed_frame`).
+
 ## Decision log
 
 | # | Decision | Rationale |
@@ -184,3 +202,11 @@ NotificationController ── queued signals ───────► VoiceWorke
 | 34 | Report findings grouped into episodes; CSV keeps every record | Persisting findings are stored every few seconds; listing each would hide the timeline. |
 | 35 | Maintenance intervals entered by the user; examples labelled as examples | No universal manufacturer intervals exist; inventing them would be misleading. |
 | 36 | Notification severity separate from diagnostic severity | "Trip recorded" (success) or "report failed" (warning) are application events, not vehicle conditions; acknowledging a notification never resolves a condition. |
+| 37 | PyInstaller **one-folder**, not one-file | Several hundred MB of Qt and scientific libraries would be unpacked to a temporary folder on every start; one-folder starts faster, is scanned less by antivirus and keeps Qt DLLs replaceable (LGPL). |
+| 38 | Inno Setup with `PrivilegesRequired=lowest` | Standard users can install and upgrade; no system-wide changes; all-users remains available through the privileges dialog. |
+| 39 | Version written once (`smartdrive.__version__`) | `pyproject.toml`, the Windows version resource, Inno Setup, About page, CLI, PDF metadata, SBOM and build information all read it; tests reject hard-coded versions in packaging files. |
+| 40 | Release tools in a separate lock file constrained by the development lock | Building needs PyInstaller and SBOM tools, users do not; constraining keeps runtime versions identical. |
+| 41 | SBOM and notices generated from the lock file evaluated for Windows x64 | Describes what the Windows build ships rather than the developer's environment; Windows-only packages can be read from wheels when generating elsewhere. |
+| 42 | Allowlist enforced a second time at the transport boundary | The client was the only writer, but nothing stopped a future code path from writing bytes directly; the second check costs microseconds. |
+| 43 | Draft pre-release created by CI, published manually | Publication is an owner decision; the automation cannot publish by itself. |
+| 44 | Unsigned 2.0.0 with published SHA-256 checksums | No certificate is available; checksums plus documentation are the honest alternative, and signing steps are documented for later. |

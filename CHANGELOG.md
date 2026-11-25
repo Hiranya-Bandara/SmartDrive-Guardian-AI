@@ -6,6 +6,72 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-11-25 (release candidate; not yet published)
+
+First complete release of the second-generation SmartDrive Guardian AI: Phases 1–4 below plus
+the release work of Phase 5. Version 2.0.0 is intended to be published as a GitHub
+**pre-release** until it has been verified on Windows (see `docs/release-checklist.md`).
+
+### Added — Phase 5: Professional Release
+
+- **Windows packaging**: PyInstaller one-folder specification (`packaging/smartdrive.spec`)
+  with the Windows version resource generated from `smartdrive.__version__`, windowed launcher
+  (`smartdrive.launcher`) that opens the desktop application by default, supports
+  `freeze_support()` and attaches to a parent console for CLI commands.
+- **Inno Setup 6 installer** (`packaging/installer.iss`): per-user installation without
+  administrator rights, optional all-users installation, Start Menu and optional desktop
+  shortcuts, licence and safety notice pages, Restart Manager, clean upgrades, uninstaller that
+  keeps user data and says where it is.
+- **Build and release scripts** (Windows PowerShell 5.1/7): `build-windows.ps1`,
+  `build-installer.ps1`, `smoke-test.ps1`, `test-installer.ps1`, `generate-checksums.ps1`,
+  `verify-release.ps1`, shared `_common.ps1`; `setup-dev.ps1 -Release`.
+- **Installation self-test** (`smartdrive self-test [--report file.json]`): 13 checks with
+  simulated data in a temporary folder, used by the packaged smoke tests.
+- **Release metadata** (`scripts/release_metadata.py`): CycloneDX 1.6 SBOM of the Windows
+  runtime dependencies (schema-validated), generated `THIRD_PARTY_NOTICES.md` with licence texts,
+  `BUILD_INFORMATION.json`.
+- **GitHub Actions**: CI extended (pinned action SHAs, test results, self-test, audit of all
+  lock files); new `windows-build.yml` (build, smoke test, installer, automated install/upgrade/
+  uninstall test, SBOM, checksums, verification, artifacts) and `release.yml` (tag must match
+  the version; draft pre-release behind the `release` environment).
+- **Branding**: original shield-car-pulse logo (SVG masters, ICO 16–256 px, PNGs, logos for dark
+  and light backgrounds, monochrome mark, social preview, installer wizard images), reproducible
+  with `scripts/build_brand_assets.py`; used for the window and taskbar icon, sidebar, About
+  page, PDF page headers, installer and README. New tagline: "Intelligent Diagnostics. Smarter
+  Maintenance."
+- **First-run welcome guide** (simulation vs live mode, AI limitations, not while driving, data
+  location), reopenable from About; About page with developer, repository, licence, limitations,
+  privacy and model information.
+- **Tests**: end-to-end release scenarios A–H (first installation and restart, AI workflow to
+  report, trips and replay, maintenance, no hardware and failed connection, notifications,
+  database upgrade from 0002 with backup and restore, shutdown during all background work),
+  hardware-safety tests (prohibited requests and frame injection at every layer), release
+  regression tests (lifecycle rule, launcher, resources, version single source, SBOM), COM
+  pairing tests for the voice backend.
+- **Performance suite** (`scripts/benchmark.py`) and measured report (`docs/performance.md`).
+- **Documentation**: `PRIVACY.md`, rewritten `SECURITY.md`, `THIRD_PARTY_NOTICES.md`,
+  `RELEASE_NOTES.md`, security review and threat model, licensing review, installation, build,
+  release verification, release checklist, troubleshooting, packaging, system requirements,
+  known limitations, code signing, architecture diagrams, demo storyboard, portfolio materials.
+
+### Changed — Phase 5
+
+- The OBD-II read-only allowlist is now enforced a second time on the raw bytes at the
+  transport boundary (serial and mock), in addition to the client.
+- Single source for the version: `pyproject.toml` reads `smartdrive.__version__`.
+- Release tools are locked separately in `requirements-release.txt` (constrained by the
+  development lock, so runtime versions are unchanged).
+- Development status classifier: Beta.
+
+### Fixed — Phase 5
+
+- Windows: `comtypes.CoInitialize()` type-check error (owner's local fix kept, now also clean on
+  Linux) and COM now released with `CoUninitialize()` when the speech engine closes or fails to
+  start.
+- The packaged GUI would not start: pyqtgraph imports `PySide6.QtOpenGL` dynamically (found by
+  the frozen smoke test; hidden imports added).
+- Build-environment packages no longer leak into the bundle through optional imports.
+
 ### Added — Phase 4: Vehicle Integration
 
 - **Read-only OBD-II** (`obd/`): in-house ELM327 client over PySerial; a closed allowlist of 65

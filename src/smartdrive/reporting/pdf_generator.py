@@ -12,6 +12,7 @@ from __future__ import annotations
 import os
 import tempfile
 from collections.abc import Sequence
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Final
 from xml.sax.saxutils import escape
@@ -25,6 +26,7 @@ from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
+from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import (
     KeepTogether,
@@ -48,6 +50,7 @@ from smartdrive.reporting.document import (
     Table,
     Text,
 )
+from smartdrive.resources import APP_ICON_PNG, resource_path
 from smartdrive.utils.exceptions import ExportError
 
 PAGE_WIDTH, PAGE_HEIGHT = A4
@@ -59,6 +62,15 @@ RULE: Final = colors.HexColor("#CBD5E1")
 HEADER_FILL: Final = colors.HexColor("#1E293B")
 BAND: Final = colors.HexColor("#F1F5F9")
 ACCENT: Final = colors.HexColor("#0891B2")
+
+
+@lru_cache(maxsize=1)
+def brand_logo() -> ImageReader | None:
+    """The bundled brand mark for page headers; reports still generate if it is missing."""
+    path = resource_path(*APP_ICON_PNG)
+    return ImageReader(str(path)) if path.is_file() else None
+
+
 SERIES_COLOURS: Final = (
     colors.HexColor("#0E7490"),
     colors.HexColor("#B45309"),
@@ -168,18 +180,9 @@ class _NumberedCanvas(Canvas):  # type: ignore[misc]
     def _decorate(self, total: int) -> None:
         doc = self._document
         top = PAGE_HEIGHT - 12 * mm
-        self.setStrokeColor(ACCENT)
-        self.setFillColor(ACCENT)
-        shield = self.beginPath()
-        x, y = MARGIN, top - 1.5 * mm
-        shield.moveTo(x + 2.2 * mm, y + 4.6 * mm)
-        shield.lineTo(x + 4.4 * mm, y + 3.8 * mm)
-        shield.lineTo(x + 4.4 * mm, y + 1.6 * mm)
-        shield.curveTo(x + 4.4 * mm, y, x + 2.2 * mm, y - 0.8 * mm, x + 2.2 * mm, y - 0.8 * mm)
-        shield.curveTo(x + 2.2 * mm, y - 0.8 * mm, x, y, x, y + 1.6 * mm)
-        shield.lineTo(x, y + 3.8 * mm)
-        shield.close()
-        self.drawPath(shield, stroke=0, fill=1)
+        logo = brand_logo()
+        if logo is not None:
+            self.drawImage(logo, MARGIN, top - 1.8 * mm, 5 * mm, 5 * mm, mask="auto")
         self.setFillColor(INK)
         self.setFont("Helvetica-Bold", 9)
         self.drawString(MARGIN + 7 * mm, top, "SmartDrive Guardian AI")
