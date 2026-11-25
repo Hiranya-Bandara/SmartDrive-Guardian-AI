@@ -76,6 +76,15 @@ class TelemetryBuffer:
         start = next((i for i, t in enumerate(times) if t >= cutoff), len(times))
         return times[start:], values[start:]
 
+    def snapshot(self, seconds: float) -> tuple[list[float], dict[str, list[float]]]:
+        """Copy of the last ``seconds`` of every series (for handing to a worker thread)."""
+        times = list(self._times)
+        if not times:
+            return [], {key: [] for key in self._values}
+        cutoff = times[-1] - seconds
+        start = next((i for i, t in enumerate(times) if t >= cutoff), len(times))
+        return times[start:], {key: list(series)[start:] for key, series in self._values.items()}
+
     def statistics(self, key: str, seconds: float | None = None) -> SensorStatistics:
         _, values = self.window(key, seconds)
         valid = [v for v in values if not math.isnan(v)]

@@ -1,0 +1,96 @@
+{
+  "dataset_version": "sdg-ds-1.1.0",
+  "synthetic": true,
+  "source": "SmartDrive Guardian AI vehicle simulator (no real-vehicle data)",
+  "generated_at": "2026-11-25T05:23:37+00:00",
+  "config": {
+    "version": "sdg-ds-1.1.0",
+    "master_seed": 20261124,
+    "healthy_sessions": 120,
+    "sessions_per_fault": 30,
+    "multiple_fault_sessions": 30,
+    "degraded_data_sessions": 24,
+    "min_duration_s": 300,
+    "max_duration_s": 900,
+    "step_s": 1.0,
+    "window_s": 60,
+    "stride_s": 5,
+    "label_threshold": 0.3,
+    "label_lookback_s": 20.0,
+    "split_ratios": [
+      0.7,
+      0.15,
+      0.15
+    ]
+  },
+  "feature_schema_version": "fs-1",
+  "feature_count": 96,
+  "labels": [
+    "cooling",
+    "lubrication",
+    "fuel",
+    "electrical",
+    "sensor"
+  ],
+  "unsupported_categories": {
+    "transmission": "No transmission telemetry (gear, slip, fluid temperature) exists.",
+    "brake": "No brake telemetry exists."
+  },
+  "ambiguous_windows_excluded": 1977,
+  "fingerprint": "0127b6cc6e2046dab27d67aee4dcab4a6dc11bbe26dbb81918b5a15d31267d45",
+  "summary": {
+    "rows": 33194,
+    "train": {
+      "rows": 23656,
+      "sessions": 232,
+      "normal_rows": 13450,
+      "multi_label_rows": 1490,
+      "positives": {
+        "cooling": 2560,
+        "lubrication": 2436,
+        "fuel": 2643,
+        "electrical": 2365,
+        "sensor": 1692
+      }
+    },
+    "validation": {
+      "rows": 4535,
+      "sessions": 46,
+      "normal_rows": 2740,
+      "multi_label_rows": 175,
+      "positives": {
+        "cooling": 268,
+        "lubrication": 435,
+        "fuel": 433,
+        "electrical": 407,
+        "sensor": 427
+      }
+    },
+    "test": {
+      "rows": 5003,
+      "sessions": 46,
+      "normal_rows": 3169,
+      "multi_label_rows": 229,
+      "positives": {
+        "cooling": 487,
+        "lubrication": 298,
+        "fuel": 477,
+        "electrical": 304,
+        "sensor": 497
+      }
+    },
+    "missing_value_fraction": {
+      "overall": 0.0031,
+      "most_missing_features": {
+        "oil_pressure_per_krpm": 0.0184,
+        "coolant_minus_oil": 0.0184,
+        "oil_pressure_kpa__max": 0.0184,
+        "oil_pressure_kpa__slope_per_min": 0.0184,
+        "oil_pressure_kpa__mean": 0.0184,
+        "oil_pressure_kpa__recent_mean": 0.0184,
+        "oil_pressure_kpa__std": 0.0184,
+        "oil_pressure_kpa__min": 0.0184
+      }
+    }
+  }
+}

@@ -14,7 +14,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
 from smartdrive.config.constants import ThemePreference, UnitSystem
 from smartdrive.utils.exceptions import ConfigurationError
@@ -67,6 +67,42 @@ class PrivacySettings(_Section):
     redact_identifiers_in_logs: bool = True
 
 
+class DiagnosticThresholds(_Section):
+    """Conservative simulation defaults. They are not manufacturer specifications and should be
+    adjusted per vehicle by a qualified person."""
+
+    coolant_warning_c: float = Field(default=105.0, ge=80, le=130)
+    coolant_critical_c: float = Field(default=115.0, ge=85, le=140)
+    coolant_rise_per_min: float = Field(default=1.5, ge=0.2, le=10)
+    voltage_low_warning_v: float = Field(default=12.8, ge=11, le=14)
+    voltage_low_critical_v: float = Field(default=12.0, ge=10, le=13.5)
+    voltage_high_warning_v: float = Field(default=15.0, ge=14.5, le=16.5)
+    oil_pressure_warning_kpa: float = Field(default=100.0, ge=40, le=300)
+    oil_pressure_critical_kpa: float = Field(default=60.0, ge=20, le=250)
+    rpm_jitter_warning: float = Field(default=110.0, ge=30, le=1000)
+    fuel_level_drop_pct: float = Field(default=5.0, ge=1, le=50)
+
+    @model_validator(mode="after")
+    def _ordered(self) -> DiagnosticThresholds:
+        if self.coolant_critical_c <= self.coolant_warning_c:
+            raise ValueError("Critical coolant temperature must exceed the warning level.")
+        if self.voltage_low_critical_v >= self.voltage_low_warning_v:
+            raise ValueError("Critical low voltage must be below the warning level.")
+        if self.oil_pressure_critical_kpa >= self.oil_pressure_warning_kpa:
+            raise ValueError("Critical oil pressure must be below the warning level.")
+        return self
+
+
+class DiagnosticSettings(_Section):
+    enabled: bool = True
+    machine_learning_enabled: bool = True
+    inference_interval_s: float = Field(default=2.0, ge=1.0, le=10.0)
+    anomaly_sensitivity: Literal["low", "standard", "high"] = "standard"
+    anomaly_persistence_windows: int = Field(default=3, ge=1, le=20)
+    history_interval_s: float = Field(default=10.0, ge=2.0, le=300.0)
+    thresholds: DiagnosticThresholds = Field(default_factory=DiagnosticThresholds)
+
+
 class LoggingSettings(_Section):
     level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
 
@@ -81,6 +117,7 @@ class AppSettings(_Section):
     retention: DataRetentionSettings = Field(default_factory=DataRetentionSettings)
     privacy: PrivacySettings = Field(default_factory=PrivacySettings)
     logging: LoggingSettings = Field(default_factory=LoggingSettings)
+    diagnostics: DiagnosticSettings = Field(default_factory=DiagnosticSettings)
 
 
 class SettingsStore:
