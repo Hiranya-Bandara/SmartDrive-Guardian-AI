@@ -27,11 +27,15 @@ FEATURES: tuple[tuple[str, str, StatusLevel], ...] = (
     ("Vehicle garage", "Available", StatusLevel.NORMAL),
     ("Simulation laboratory", "Available", StatusLevel.NORMAL),
     ("AI diagnostics and experimental health score", "Available", StatusLevel.NORMAL),
-    ("OBD-II live vehicle connection", "Phase 4", StatusLevel.OFFLINE),
-    ("Trip analytics and replay", "Phase 4", StatusLevel.OFFLINE),
-    ("Maintenance centre", "Phase 4", StatusLevel.OFFLINE),
-    ("Alert centre and notifications", "Phase 4", StatusLevel.OFFLINE),
-    ("PDF and CSV reports", "Phase 4", StatusLevel.OFFLINE),
+    (
+        "Read-only OBD-II connection and trouble codes",
+        "Available — physical adapters not yet verified",
+        StatusLevel.WARNING,
+    ),
+    ("Trip history and replay", "Available", StatusLevel.NORMAL),
+    ("Maintenance centre", "Available", StatusLevel.NORMAL),
+    ("Alert centre, desktop and voice notifications", "Available", StatusLevel.NORMAL),
+    ("PDF and CSV reports", "Available", StatusLevel.NORMAL),
 )
 
 THIRD_PARTY = (
@@ -45,6 +49,12 @@ THIRD_PARTY = (
     ("Alembic", "MIT"),
     ("Pydantic", "MIT"),
     ("platformdirs", "MIT"),
+    ("pySerial", "BSD-3-Clause"),
+    ("ReportLab", "BSD"),
+    ("Pillow", "MIT-CMU"),
+    ("pyttsx3", "MPL-2.0"),
+    ("comtypes", "MIT (Windows)"),
+    ("pywin32", "PSF (Windows)"),
 )
 
 

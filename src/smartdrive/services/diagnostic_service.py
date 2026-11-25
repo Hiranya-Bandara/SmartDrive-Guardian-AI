@@ -26,7 +26,12 @@ from smartdrive.database.repositories.diagnostic_repository import (
     DiagnosticRepository,
     HealthPoint,
 )
-from smartdrive.models.diagnostic import SEVERITY_RANK, DiagnosticAssessment, Finding
+from smartdrive.models.diagnostic import (
+    SEVERITY_RANK,
+    DiagnosticAssessment,
+    DiagnosticStatus,
+    Finding,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -87,7 +92,19 @@ class DiagnosticService:
                 state.last_saved_at = assessment.timestamp
                 state.last_signature = signature
             new_alerts, updated = self._alerts(repo, assessment, alert_cooldown_s)
+            self._resolve_cleared(repo, assessment)
         return RecordOutcome(assessment_id, tuple(new_alerts), updated)
+
+    @staticmethod
+    def _resolve_cleared(repo: DiagnosticRepository, a: DiagnosticAssessment) -> None:
+        """Mark alerts resolved when their finding is absent from an analysis that could have
+        detected it. Stale or insufficient data never resolves an alert."""
+        if a.status in (DiagnosticStatus.STALE, DiagnosticStatus.INSUFFICIENT_DATA):
+            return
+        present = {f"v{a.vehicle_id}:{f.key}" for f in a.findings if f.severity in ALERT_SEVERITIES}
+        for alert in repo.open_alerts(a.vehicle_id):
+            if alert.dedup_key not in present:
+                alert.resolved_at = a.timestamp
 
     def _save(self, repo: DiagnosticRepository, a: DiagnosticAssessment, vehicle_id: int) -> int:
         assessment_id = repo.add_assessment(
@@ -153,6 +170,7 @@ class DiagnosticService:
             if existing is not None and a.timestamp - existing.last_occurrence_at <= cooldown:
                 existing.occurrence_count += 1
                 existing.last_occurrence_at = a.timestamp
+                existing.resolved_at = None
                 if SEVERITY_RANK[finding.severity] > SEVERITY_RANK[existing.severity]:
                     existing.severity = finding.severity
                     existing.title = finding.title[:160]
@@ -172,6 +190,13 @@ class DiagnosticService:
                 source=finding.source,
                 dedup_key=key,
                 occurrence_count=1,
+                evidence={
+                    "finding_key": finding.key,
+                    "evidence": finding.evidence,
+                    "probability": finding.probability,
+                    "corroborated_by": [s.value for s in finding.corroborated_by],
+                    "model_version": finding.model_version,
+                },
             )
             new.append(finding)
         return new, updated

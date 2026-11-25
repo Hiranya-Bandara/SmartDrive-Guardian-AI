@@ -146,6 +146,25 @@ The score is labelled experimental everywhere, and a high score never implies th
 safe. It uses no maintenance history or trouble codes, because those are not implemented yet
 (Phase 4).
 
+## Live vehicle data (Phase 4)
+
+The models were not retrained in Phase 4. On telemetry from a real vehicle:
+
+| Condition | Classifier and anomaly detector | Rules |
+|---|---|---|
+| Live ML switched off (default) | `DISABLED` ("turned off for live vehicle data") | Run |
+| Live ML on, a sensor the models were trained with is unavailable | `INCOMPATIBLE` — not run | Run |
+| Live ML on, every trained sensor available, data sufficient and in range | Run, with the usual abstention (insufficient, stale, out of range) | Run |
+
+Generic OBD-II has no oil-pressure parameter, so on real vehicles the second row applies: the
+models do not produce predictions, explanations or health-score deductions. The capability
+check (`obd.capabilities`) lists the sensors a vehicle cannot provide, and the engine refuses
+to predict from a different input distribution rather than substituting values. Data from the
+mock adapter is labelled simulated and is subject to the same check.
+
+No real-world validation has been performed; the numbers in this folder describe synthetic
+data only. Replays analyse recorded data again but never write diagnostic history.
+
 ## Model management (`ai/model_registry.py`)
 
 - Artefacts live in `src/smartdrive/ai/artifacts/` and ship inside the package.

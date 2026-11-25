@@ -30,6 +30,8 @@ from smartdrive.ai.features import FEATURE_NAMES, FEATURE_SCHEMA_VERSION
 logger = logging.getLogger(__name__)
 
 MANIFEST_NAME: Final = "manifest.json"
+EVALUATION_FILE: Final = "evaluation_metrics.json"
+"""Copy of docs/ml/metrics.json written by the training script (read by the model report)."""
 CLASSIFIER_NAME: Final = "fault_classifier"
 ANOMALY_NAME: Final = "anomaly_detector"
 

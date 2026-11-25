@@ -7,11 +7,12 @@ from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from smartdrive.ai.model_registry import CLASSIFIER_NAME
-from smartdrive.config.constants import DataSource, Severity, UnitSystem
+from smartdrive.config.constants import DataSource, DtcStatus, Severity, UnitSystem
 from smartdrive.core.sensors import SENSOR_BY_KEY
 from smartdrive.core.units import MISSING_TEXT
 from smartdrive.models.alert import Alert
 from smartdrive.models.diagnostic import SEVERITY_RANK, DiagnosticStatus
+from smartdrive.models.maintenance import ScheduleState
 from smartdrive.models.vehicle import Vehicle
 from smartdrive.services.data_source import TelemetryFrame
 from smartdrive.ui.context import UiContext
@@ -36,6 +37,7 @@ from smartdrive.ui.widgets.monitoring_controls import MonitoringControls
 from smartdrive.ui.widgets.notifications import Banner
 from smartdrive.ui.widgets.states import StatefulStack
 from smartdrive.ui.widgets.status import StatusIndicator, StatusLevel
+from smartdrive.utils.exceptions import SmartDriveError
 
 TREND_WINDOW_S = 120.0
 REFRESH_MS = 250
@@ -49,6 +51,16 @@ SEVERITY_LEVEL = {
 }
 
 SIMULATION_NOTICE = "Simulated telemetry. Values are synthetic and do not describe a real vehicle."
+LIVE_NOTICE = (
+    "Live vehicle telemetry (read-only OBD-II). Sensors the vehicle does not report are shown "
+    "as unavailable. No warning does not mean the vehicle is safe. Do not use while driving."
+)
+REPLAY_NOTICE = "Replay of recorded telemetry. Values are from a past trip, not the vehicle now."
+SOURCE_NOTICES = {
+    DataSource.SIMULATION: (SIMULATION_NOTICE, StatusLevel.SIMULATION),
+    DataSource.LIVE: (LIVE_NOTICE, StatusLevel.INFO),
+    DataSource.REPLAY: (REPLAY_NOTICE, StatusLevel.INFO),
+}
 
 
 def coolant_bands(system: UnitSystem) -> tuple[GaugeBand, ...]:
@@ -165,6 +177,121 @@ class AlertsCard(Card):
         self.stack.show_content()
 
 
+class VehicleRecordsSummary(Card):
+    """Connection, trouble codes, trips, maintenance and notifications at a glance."""
+
+    navigate = Signal(str)
+
+    def __init__(self, ctx: UiContext) -> None:
+        super().__init__("Vehicle records")
+        self.ctx = ctx
+        grid = QGridLayout()
+        grid.setHorizontalSpacing(18)
+        grid.setVerticalSpacing(4)
+        self.values: dict[str, QLabel] = {}
+        self.buttons: dict[str, IconPushButton] = {}
+        for column, (key, title, page, icon_name) in enumerate(
+            (
+                ("connection", "OBD-II connection", "connection", "plug"),
+                ("codes", "Trouble codes", "codes", "alert"),
+                ("trips", "Recent trips", "trips", "route"),
+                ("maintenance", "Maintenance", "maintenance", "wrench"),
+                ("notifications", "Notifications", "alerts", "bell"),
+            )
+        ):
+            grid.addWidget(label(title, "card-title"), 0, column)
+            value = label("", wrap=True)
+            value.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+            self.values[key] = value
+            grid.addWidget(value, 1, column)
+            button = IconPushButton("Open", icon_name, variant="ghost")
+            button.setAccessibleName(f"Open {title}")
+            button.setProperty("target", page)
+            button.clicked.connect(self._on_open)
+            self.buttons[key] = button
+            grid.addWidget(button, 2, column, Qt.AlignmentFlag.AlignLeft)
+            grid.setColumnStretch(column, 1)
+        self.body.addLayout(grid)
+        connection = ctx.connection
+        connection.status_changed.connect(self.refresh_connection)
+        connection.report_changed.connect(self.refresh_connection)
+        connection.scan_completed.connect(self.refresh_records)
+        ctx.trips.trips_changed.connect(self.refresh_records)
+        ctx.notifications.changed.connect(self.refresh_notifications)
+        ctx.state.active_vehicle_changed.connect(self.refresh_records)
+        self.refresh_connection()
+        self.refresh_records()
+        self.refresh_notifications()
+
+    def _on_open(self) -> None:
+        sender = self.sender()
+        target = sender.property("target") if sender is not None else None
+        if isinstance(target, str):
+            self.navigate.emit(target)
+
+    def refresh_connection(self, *_: object) -> None:
+        c = self.ctx.connection
+        report = c.report
+        text = c.status.label
+        if report is not None and report.capabilities is not None:
+            text += f"\n{report.capabilities.sensor_count} standard parameters supported"
+            if report.is_mock:
+                text += "\nMock adapter: simulated data"
+        elif report is None:
+            text += "\nNo adapter connected"
+        self.values["connection"].setText(text)
+
+    def refresh_records(self, *_: object) -> None:
+        vehicle = self.ctx.state.active_vehicle
+        if vehicle is None:
+            for key in ("codes", "trips", "maintenance"):
+                self.values[key].setText("No active vehicle")
+            return
+        try:
+            stored = self.ctx.obd_history.active_code_count(vehicle.id)
+            pending = self.ctx.obd_history.active_code_count(vehicle.id, DtcStatus.PENDING)
+            scans = self.ctx.obd_history.scans(vehicle.id, limit=1)
+            trips = self.ctx.trips.trips.list_trips(vehicle_id=vehicle.id, limit=3)
+            settings = self.ctx.app.settings.maintenance
+            statuses = self.ctx.maintenance.statuses(
+                vehicle.id, odometer_stale_days=settings.odometer_stale_days
+            )
+        except SmartDriveError as exc:
+            self.values["codes"].setText(exc.user_message)
+            return
+        if scans:
+            mock = " (mock adapter)" if scans[0].is_mock else ""
+            self.values["codes"].setText(
+                f"{stored} stored · {pending} pending\nLast scan "
+                f"{scans[0].scanned_at.astimezone():%Y-%m-%d %H:%M}{mock}"
+            )
+        else:
+            self.values["codes"].setText("Not scanned yet")
+        if trips:
+            self.values["trips"].setText(
+                "\n".join(
+                    f"{t.session.started_at.astimezone():%m-%d %H:%M} · "
+                    f"{t.session.name or f'Trip #{t.session.id}'}"
+                    for t in trips
+                )
+            )
+        else:
+            self.values["trips"].setText("No recorded trips")
+        overdue = sum(s.state in (ScheduleState.OVERDUE, ScheduleState.DUE) for s in statuses)
+        upcoming = sum(s.state is ScheduleState.UPCOMING for s in statuses)
+        self.values["maintenance"].setText(
+            f"{overdue} overdue or due · {upcoming} upcoming"
+            if statuses
+            else "No schedules configured"
+        )
+
+    def refresh_notifications(self) -> None:
+        count = self.ctx.notifications.unread_count()
+        self.values["notifications"].setText(
+            f"{count} unread" if count else "No unread notifications"
+        )
+
+
 class DiagnosticsSummary(Card):
     """Compact view of the latest hybrid assessment, with an explicit state when there is none."""
 
@@ -203,12 +330,12 @@ class DiagnosticsSummary(Card):
         findings.addWidget(self.details_button, 0, Qt.AlignmentFlag.AlignRight)
         row.addLayout(findings, 3)
         self.body.addLayout(row)
-        ctx.diagnostics.assessment_changed.connect(lambda _a: self.refresh_view())
+        ctx.diagnostics.assessment_changed.connect(self.refresh_view)
         ctx.diagnostics.models_changed.connect(self.refresh_view)
-        ctx.monitoring.state_changed.connect(lambda _s: self.refresh_view())
+        ctx.monitoring.state_changed.connect(self.refresh_view)
         self.refresh_view()
 
-    def refresh_view(self) -> None:
+    def refresh_view(self, *_args: object) -> None:
         ctx = self.ctx
         latest = ctx.diagnostics.latest
         self.health.set_health(latest.health if latest else None)
@@ -277,7 +404,7 @@ class DashboardPage(Page):
         top = QHBoxLayout()
         top.setSpacing(16)
         self.vehicle_card = VehicleSummary(ctx)
-        self.vehicle_card.open_garage.connect(lambda: self.navigate.emit("garage"))
+        self.vehicle_card.open_garage.connect(self._open_garage)
         top.addWidget(self.vehicle_card, 3)
 
         control_card = Card("Monitoring")
@@ -342,8 +469,11 @@ class DashboardPage(Page):
         self.content.addWidget(cluster)
 
         self.diagnostics_card = DiagnosticsSummary(ctx)
-        self.diagnostics_card.open_details.connect(lambda: self.navigate.emit("diagnostics"))
+        self.diagnostics_card.open_details.connect(self._open_diagnostics)
         self.content.addWidget(self.diagnostics_card)
+        self.records_card = VehicleRecordsSummary(ctx)
+        self.records_card.navigate.connect(self.navigate)
+        self.content.addWidget(self.records_card)
 
         bottom = QHBoxLayout()
         bottom.setSpacing(16)
@@ -366,9 +496,9 @@ class DashboardPage(Page):
         monitoring.frame_received.connect(self._on_frame)
         monitoring.state_changed.connect(self._refresh_status)
         monitoring.connection_changed.connect(self._refresh_status)
-        ctx.state.active_vehicle_changed.connect(lambda _v: self._refresh_vehicle())
-        ctx.state.settings_changed.connect(lambda _s: self._apply_units())
-        ctx.diagnostics.alerts_raised.connect(lambda _a: self._refresh_alerts())
+        ctx.state.active_vehicle_changed.connect(self._refresh_vehicle)
+        ctx.state.settings_changed.connect(self._apply_units)
+        ctx.diagnostics.alerts_raised.connect(self._refresh_alerts)
         self._timer = QTimer(self)
         self._timer.setInterval(REFRESH_MS)
         self._timer.timeout.connect(self._refresh_live)
@@ -387,17 +517,17 @@ class DashboardPage(Page):
         if isinstance(frame, TelemetryFrame):
             self._dirty = True
 
-    def _refresh_vehicle(self) -> None:
+    def _refresh_vehicle(self, *_args: object) -> None:
         vehicle = self.ctx.state.active_vehicle
         self.vehicle_card.show_vehicle(vehicle, self.ctx.theme.palette)
         self._refresh_alerts()
 
-    def _refresh_alerts(self) -> None:
+    def _refresh_alerts(self, *_args: object) -> None:
         vehicle = self.ctx.state.active_vehicle
         alerts = self.ctx.telemetry.recent_alerts(vehicle_id=vehicle.id if vehicle else None)
         self.alerts_card.show_alerts(alerts)
 
-    def _apply_units(self) -> None:
+    def _apply_units(self, *_args: object) -> None:
         system = self.ctx.app.settings.units.system
         coolant = SENSOR_BY_KEY["coolant_temp_c"]
         low, high = coolant.display_range(system)
@@ -413,12 +543,21 @@ class DashboardPage(Page):
         self._refresh_vehicle()
         self._render_values()
 
+    def _open_garage(self) -> None:
+        self.navigate.emit("garage")
+
+    def _open_diagnostics(self) -> None:
+        self.navigate.emit("diagnostics")
+
     def _refresh_status(self, *_: object) -> None:
         monitoring = self.ctx.monitoring
         self.mode_pill.set_status(*mode_status(monitoring.state, monitoring.data_source))
         self.connection_pill.set_status(*CONNECTION_TEXT[monitoring.connection])
-        is_sim = monitoring.data_source is DataSource.SIMULATION
-        self.banner.setVisible(is_sim)
+        source = monitoring.data_source
+        notice = SOURCE_NOTICES.get(source) if source is not None else None
+        if notice is not None:
+            self.banner.set_message(*notice)
+        self.banner.setVisible(notice is not None)
         if monitoring.state is MonitoringState.STOPPED:
             self._render_values()
 

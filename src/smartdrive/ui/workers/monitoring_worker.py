@@ -105,10 +105,11 @@ class MonitoringWorker(QObject):
         self._last_tick = now
         interval_s = min(max(elapsed, nominal * 0.5), nominal * 5.0)
         try:
-            frame = self._source.read(interval_s)
+            frames = self._source.read_frames(interval_s)
         except Exception as exc:
             logger.exception("Telemetry read failed")
             self.failed.emit(f"Telemetry read failed: {exc}")
             self.stop()
             return
-        self.frame_ready.emit(frame)
+        for frame in frames:
+            self.frame_ready.emit(frame)

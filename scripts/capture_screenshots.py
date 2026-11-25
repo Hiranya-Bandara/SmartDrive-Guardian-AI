@@ -12,15 +12,26 @@ from __future__ import annotations
 import argparse
 import tempfile
 from collections.abc import Callable
+from datetime import date, timedelta
+from decimal import Decimal
 from pathlib import Path
 
 from PySide6.QtCore import QEventLoop, QTimer
 from PySide6.QtWidgets import QApplication, QScrollArea, QWidget
 
 from smartdrive.app import bootstrap, shutdown
-from smartdrive.config.constants import FuelType, ThemePreference, TransmissionType
+from smartdrive.config.constants import (
+    FuelType,
+    MaintenanceCategory,
+    MaintenanceStatus,
+    ThemePreference,
+    TransmissionType,
+)
 from smartdrive.models.diagnostic import ModelRunStatus
+from smartdrive.models.maintenance import MaintenanceRecordInput, ScheduleInput
 from smartdrive.models.vehicle import VehicleProfile
+from smartdrive.obd.mock import MOCK_PORT
+from smartdrive.services.maintenance_service import EXAMPLE_INTERVALS
 from smartdrive.services.scenarios import ScenarioId
 from smartdrive.services.simulator import SimulationConfig
 from smartdrive.ui.application import GuiApplication, ensure_qapplication
@@ -105,6 +116,7 @@ def capture(output: Path, width: int, height: int) -> list[Path]:
         window.show_page("garage")
         wait(700)
         written.append(_grab(window, output / "garage.png"))
+        written += _phase4_pages(gui, vehicle.id, output, Path(home))
         for key in ("settings", "about"):
             window.show_page(key)
             wait(400)
@@ -123,6 +135,123 @@ def capture(output: Path, width: int, height: int) -> list[Path]:
         gui.shutdown()
         shutdown(ctx)
     QApplication.processEvents()
+    return written
+
+
+def _phase4_pages(gui: GuiApplication, vehicle_id: int, output: Path, home: Path) -> list[Path]:
+    """Vehicle integration pages. Connected states use the MOCK adapter (labelled simulated)."""
+    ui, window = gui.ui, gui.window
+    written: list[Path] = []
+    _wait_until(lambda: not ui.tasks.busy, 20_000, "the trip summary")
+    window.show_page("connection")
+    wait(600)
+    written.append(_grab(window, output / "connection-no-adapter.png"))
+    settings = ui.app.settings
+    settings.obd.show_mock_adapter = True
+    settings.obd.mock_profile = "stored_codes"
+    settings.obd.poll_interval_ms = 500
+    page = window.pages["connection"]
+    page.refresh_ports()  # type: ignore[attr-defined]
+    _wait_until(lambda: bool(ui.connection.ports), 10_000, "the port list")
+    ui.connection.connect_adapter(MOCK_PORT, vehicle_id=vehicle_id)
+    _wait_until(lambda: ui.connection.ecu_connected, 15_000, "the mock ECU")
+    ui.monitoring.set_preferred_mode("live")
+    ui.monitoring.start_live(ui.connection)
+    wait(3000)
+    written.append(_grab(window, output / "connection-mock-adapter.png"))
+    ui.connection.scan_codes()
+    _wait_until(lambda: ui.connection.last_scan is not None, 15_000, "the code scan")
+    window.show_page("codes")
+    wait(600)
+    codes = window.pages["codes"]
+    codes.code_table.selectRow(0)  # type: ignore[attr-defined]
+    wait(300)
+    written.append(_grab(window, output / "codes-mock-adapter.png"))
+    ui.monitoring.stop()
+    ui.connection.disconnect_adapter()
+    _wait_until(lambda: ui.connection.report is None, 10_000, "the disconnection")
+    ui.monitoring.set_preferred_mode("simulation")
+
+    trips = window.pages["trips"]
+    window.show_page("trips")
+    wait(400)
+    trips.table.selectRow(0)  # type: ignore[attr-defined]
+    trips.replay_selected()  # type: ignore[attr-defined]
+    _wait_until(lambda: ui.monitoring.replay_session_id is not None, 15_000, "the replay")
+    ui.monitoring.set_replay_speed(4.0)
+    wait(5000)
+    written.append(_grab(window, output / "trips-replay.png"))
+    ui.monitoring.stop()
+
+    maintenance = ui.maintenance
+    maintenance.record_odometer(vehicle_id, 86_400)
+    days, km = EXAMPLE_INTERVALS[MaintenanceCategory.ENGINE_OIL]
+    oil = maintenance.add_schedule(
+        vehicle_id,
+        ScheduleInput(
+            category=MaintenanceCategory.ENGINE_OIL,
+            task_name="Engine oil replacement",
+            interval_days=days,
+            interval_km=km,
+            interval_source="example",
+        ),
+    )
+    maintenance.add_schedule(
+        vehicle_id,
+        ScheduleInput(
+            category=MaintenanceCategory.BRAKE_INSPECTION,
+            task_name="Brake inspection",
+            interval_days=365,
+            last_done_date=date.today() - timedelta(days=380),
+        ),
+    )
+    for when, odo, title, category, cost in (
+        (
+            date.today() - timedelta(days=200),
+            77_100.0,
+            "Engine oil and filter",
+            MaintenanceCategory.ENGINE_OIL,
+            "18500.00",
+        ),
+        (
+            date.today() - timedelta(days=90),
+            83_000.0,
+            "Battery test",
+            MaintenanceCategory.BATTERY,
+            "1500.00",
+        ),
+    ):
+        maintenance.add_record(
+            vehicle_id,
+            MaintenanceRecordInput(
+                category=category,
+                title=title,
+                status=MaintenanceStatus.COMPLETED,
+                service_date=when,
+                mileage_km=odo,
+                provider="Example Motors",
+                cost=Decimal(cost),
+                currency="LKR",
+                schedule_id=oil.id if category is MaintenanceCategory.ENGINE_OIL else None,
+            ),
+        )
+    window.show_page("maintenance")
+    wait(600)
+    written.append(_grab(window, output / "maintenance.png"))
+
+    reports = window.pages["reports"]
+    window.show_page("reports")
+    target = home / "overview.pdf"
+    request = reports.build_request()  # type: ignore[attr-defined]
+    ui.reports.generate_pdf(request, target)
+    reports._load_history()  # type: ignore[attr-defined]
+    wait(500)
+    written.append(_grab(window, output / "reports.png"))
+    ui.notifications.check_maintenance()
+    _wait_until(lambda: not ui.tasks.busy, 10_000, "the maintenance check")
+    window.show_page("alerts")
+    wait(600)
+    written.append(_grab(window, output / "alerts.png"))
     return written
 
 

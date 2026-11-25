@@ -41,6 +41,10 @@ class InferenceRequest:
     vehicle: VehicleContext | None
     settings: DiagnosticSettings
     alert_cooldown_s: float
+    persist: bool = True
+    """False for replayed telemetry: replays never write diagnostic history or alerts."""
+    ml_block_reason: str | None = None
+    unavailable_sensors: frozenset[str] = frozenset()
 
 
 @dataclass(frozen=True, slots=True)
@@ -90,7 +94,9 @@ class InferenceWorker(QObject):
         try:
             engine = self._engine_for(request)
             window = TelemetryWindow.from_series(request.times, request.series)
-            recent_alerts = self._service.recent_alert_count(request.vehicle_id)
+            recent_alerts = (
+                self._service.recent_alert_count(request.vehicle_id) if request.persist else 0
+            )
             assessment = engine.assess(
                 window,
                 data_source=request.data_source,
@@ -100,6 +106,8 @@ class InferenceWorker(QObject):
                 vehicle_id=request.vehicle_id,
                 session_id=request.session_id,
                 recent_alerts=recent_alerts,
+                ml_block_reason=request.ml_block_reason,
+                unavailable_sensors=request.unavailable_sensors,
             )
         except Exception as exc:
             logger.exception("Diagnostic analysis failed")
@@ -107,7 +115,7 @@ class InferenceWorker(QObject):
             return
         outcome: RecordOutcome | None = None
         persistence_error: str | None = None
-        if request.vehicle_id is not None:
+        if request.vehicle_id is not None and request.persist:
             try:
                 outcome = self._service.record(
                     assessment,

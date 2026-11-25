@@ -4,8 +4,10 @@
 
 | Layer | Package | Responsibility | May depend on |
 |---|---|---|---|
-| Presentation | `ui/` | Widgets, pages, themes, Qt workers | services, models, config |
-| Services | `services/` | Data sources and simulator, vehicles, telemetry sessions, backup, hybrid diagnostic engine, diagnostic persistence and alerts | core, ai, repositories, models |
+| Presentation | `ui/` | Widgets, pages, dialogs, themes, controllers and Qt workers | services, models, config, obd (connection controller only) |
+| Services | `services/` | Data sources (simulator, replay), vehicles, telemetry sessions, trips, maintenance, notifications and voice queue, trouble-code history and reference, reports, thresholds, backup, hybrid diagnostic engine | core, ai, obd, reporting, repositories, models |
+| Hardware | `obd/` | Read-only ELM327 client, command allowlist, transports (serial, mock), PID decoding, DTC parsing, capabilities, connection session | models, config, utils |
+| Reporting | `reporting/` | Format-neutral report documents, PDF rendering (ReportLab), safe CSV writing | models, core, config |
 | Core | `core/` | Sensor metadata, units, validation pipeline, bounded buffers, telemetry windows, rule engine, health score, recommendations | models, config |
 | AI | `ai/` | Dataset generation and validation, features, training, classifier, anomaly detector, explanations, evaluation, trusted model registry | models, core |
 | Persistence | `database/` | Engine, schema, migrations, repositories | models, config, utils |
@@ -16,7 +18,9 @@ Two rules keep the layers apart:
 
 - Repositories return **domain models**, never ORM objects, so no layer above `database/` holds a
   SQLAlchemy session or a lazily loaded record.
-- `ui/` must never import `database/`, `ai/training` or the OBD-II adapter directly.
+- `ui/` must never import `database/` or `ai/training`. Only the vehicle connection controller
+  and its worker touch `obd/`; every byte to an adapter goes through `obd.elm327` and the
+  allowlist in `obd.commands`.
 
 ## Startup sequence (`smartdrive.app.bootstrap`)
 
@@ -25,8 +29,9 @@ Two rules keep the layers apart:
 2. Load the preferences. A missing file gets defaults that are written to disk; a corrupt file is
    quarantined and replaced with defaults.
 3. Configure logging from the preferences (level, redaction).
-4. Open SQLite (foreign keys ON, WAL journal, `synchronous=NORMAL`, busy timeout) and run Alembic
-   to `head`.
+4. Open SQLite (foreign keys ON, WAL journal, `synchronous=NORMAL`, busy timeout). If the schema
+   is older than the application, copy the database to a pre-upgrade backup, then run Alembic to
+   `head` with foreign keys off (see [database.md](database.md#upgrading-an-existing-database)).
 5. Apply the telemetry retention policy.
 
 Shutdown checkpoints the WAL into the main database file, disposes the engine and flushes and
@@ -107,6 +112,37 @@ Pages: AI Diagnostics, Dashboard summary, alerts toast
 - Full methodology: [docs/ml/README.md](ml/README.md); results:
   [docs/ml/evaluation_report.md](ml/evaluation_report.md).
 
+## Vehicle integration (Phase 4)
+
+```text
+GUI thread                                         Worker threads
+──────────                                         ──────────────
+VehicleConnectionController ── queued signals ──► ObdWorker (QThread, owns the serial port)
+  status, report, quality, scans ◄──────────────    ObdSession → Elm327Client → allowlist → Transport
+  live frame producer ──► MonitoringController       polling QTimer, bounded reconnect QTimer
+MonitoringController ─► buffer ─► pages, DiagnosticsController (unchanged pipeline)
+  sources: SimulationSource | adapter frames | ReplaySource (all via MonitoringWorker or push)
+TripController ── jobs ──────────────────────────► TaskRunner (QThread, bounded FIFO)
+ReportsPage, exports ── jobs ────────────────────►   trip summaries, replay loading, PDF/CSV,
+NotificationController ── jobs ──────────────────►   maintenance checks, retention
+NotificationController ── queued signals ───────► VoiceWorker (QThread, speech engine)
+  in-app toasts, Alert Centre, system tray
+```
+
+- **One telemetry pipeline, three sources.** Simulation and replay are polled by the existing
+  `MonitoringWorker`; live frames are pushed by the connection controller, because the OBD
+  worker thread owns the serial port. Starting, stopping, seeking or switching source clears
+  the buffer and resets diagnostic state, so a window never mixes sources or spans a seek.
+- **Provenance.** Mock-adapter data is labelled simulated; replays never write diagnostic
+  history or trips, and never contact an adapter.
+- **Bounded everything.** Reconnection attempts (back-off), the job queue (16), the
+  announcement queue (8, deduplicated, cooldown), buffers and chart points are all limited.
+- **Shutdown order:** monitoring (ends any recording) → inference → adapter (cancels pending
+  reads, closes the port) → voice → job thread (a running job finishes; queued jobs are dropped
+  and trip summaries are recomputed at the next start).
+- **Garbage collection on the GUI thread.** Automatic cyclic GC is disabled while the GUI runs
+  and performed by a GUI-thread timer instead (decision 31).
+
 ## Decision log
 
 | # | Decision | Rationale |
@@ -137,3 +173,14 @@ Pages: AI Diagnostics, Dashboard summary, alerts toast
 | 24 | Lubrication omitted ("not assessed") when the vehicle reports no oil pressure | The model must not report a confident negative for a fault it cannot observe. |
 | 25 | NumPy `.npz` + JSON for datasets; no pandas | Avoids an unnecessary runtime dependency; the dataset is a numeric matrix with metadata. |
 
+| 26 | In-house read-only ELM327 client on PySerial instead of python-OBD | python-OBD is GPL-2.0-only, which would constrain the MIT-licensed application and its Phase 5 installer, and its API lets callers build arbitrary commands. A small client lets every byte pass one closed allowlist. Trade-off: less field-tested protocol handling; covered by byte-level mock tests, real hardware still to be verified. |
+| 27 | Mode 09 (VIN) is not on the allowlist | The VIN is not needed for diagnostics; not reading it avoids storing an identifier. |
+| 28 | Mock adapter emulates the ELM327 byte protocol and its data is always "simulated" | Exercises the real client, parser and allowlist without hardware, and can never be mistaken for a vehicle. |
+| 29 | ML on live data off by default; models report INCOMPATIBLE when trained sensors are unavailable | Models trained on synthetic data with oil pressure cannot be applied to vehicles without it; abstaining is more honest than predicting from a different input distribution. |
+| 30 | Migrations run with SQLite foreign keys off, then `foreign_key_check` | Batch table rebuilds would otherwise cascade-delete child rows (found in testing: all telemetry lost when upgrading to 0003). |
+| 31 | Cyclic garbage collection only on the GUI thread | A collection triggered on a worker thread can destroy a Qt object there and deadlock with the GUI thread (observed in testing while models loaded). Same approach as PyQtGraph's `GarbageCollector`. |
+| 32 | ReportLab for PDF, standard library `csv` for CSV | ReportLab is BSD-licensed, offline and pure Python; documents are built as format-neutral blocks, so content can be tested without parsing PDFs. |
+| 33 | pyttsx3 for offline speech, on its own thread, behind a `SpeechBackend` protocol | Uses the operating system's synthesiser (SAPI 5 on Windows) without downloads; failure falls back to visual notifications; tests use a fake backend. |
+| 34 | Report findings grouped into episodes; CSV keeps every record | Persisting findings are stored every few seconds; listing each would hide the timeline. |
+| 35 | Maintenance intervals entered by the user; examples labelled as examples | No universal manufacturer intervals exist; inventing them would be misleading. |
+| 36 | Notification severity separate from diagnostic severity | "Trip recorded" (success) or "report failed" (warning) are application events, not vehicle conditions; acknowledging a notification never resolves a condition. |

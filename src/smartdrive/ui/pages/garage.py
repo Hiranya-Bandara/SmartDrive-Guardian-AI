@@ -180,7 +180,7 @@ class GaragePage(Page):
         self.sessions_table.itemSelectionChanged.connect(self._show_session)
         self.history_sensor.currentIndexChanged.connect(lambda _i: self._show_session())
         ctx.state.vehicles_changed.connect(self.reload)
-        ctx.monitoring.recording_changed.connect(lambda _s: self._load_history())
+        ctx.monitoring.recording_changed.connect(self._load_history)
         self.reload()
 
     # -- data ---------------------------------------------------------------------------------
@@ -396,7 +396,7 @@ class GaragePage(Page):
                 )
             )
 
-    def _load_history(self) -> None:
+    def _load_history(self, *_args: object) -> None:
         vehicle = self.selected_vehicle()
         self.history_chart.clear_data()
         if vehicle is None:

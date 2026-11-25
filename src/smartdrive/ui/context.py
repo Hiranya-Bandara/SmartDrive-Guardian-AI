@@ -10,12 +10,20 @@ from PySide6.QtCore import QObject, Signal
 from smartdrive.app import ApplicationContext
 from smartdrive.models.vehicle import Vehicle
 from smartdrive.services.diagnostic_service import DiagnosticService
+from smartdrive.services.maintenance_service import MaintenanceService
+from smartdrive.services.obd_service import ObdHistoryService
+from smartdrive.services.report_service import ReportService
 from smartdrive.services.telemetry_service import TelemetryService
+from smartdrive.services.threshold_service import ThresholdService
 from smartdrive.services.vehicle_service import VehicleService
 from smartdrive.ui.diagnostics_controller import DiagnosticsController
 from smartdrive.ui.monitoring_controller import MonitoringController
+from smartdrive.ui.notification_controller import NotificationController
 from smartdrive.ui.themes.theme_manager import ThemeManager
+from smartdrive.ui.trip_controller import TripController
+from smartdrive.ui.vehicle_connection_controller import VehicleConnectionController
 from smartdrive.ui.widgets.status import StatusLevel
+from smartdrive.ui.workers.task_runner import TaskRunner
 from smartdrive.utils.exceptions import SmartDriveError
 from smartdrive.utils.logger import configure_logging
 
@@ -88,3 +96,11 @@ class UiContext:
     notifier: Notifier
     diagnostics: DiagnosticsController
     diagnostic_history: DiagnosticService
+    connection: VehicleConnectionController
+    obd_history: ObdHistoryService
+    trips: TripController
+    maintenance: MaintenanceService
+    notifications: NotificationController
+    reports: ReportService
+    thresholds: ThresholdService
+    tasks: TaskRunner

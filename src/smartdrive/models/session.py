@@ -7,7 +7,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
-from smartdrive.config.constants import DataSource
+from smartdrive.config.constants import DataSource, SessionStatus
 
 
 class DrivingSession(BaseModel):
@@ -24,6 +24,8 @@ class DrivingSession(BaseModel):
     distance_km: float | None
     distance_estimated: bool
     notes: str
+    name: str | None = None
+    status: SessionStatus = SessionStatus.COMPLETED
 
     @property
     def is_open(self) -> bool:

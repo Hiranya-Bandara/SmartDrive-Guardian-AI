@@ -19,14 +19,27 @@ from smartdrive.app import ApplicationContext, bootstrap, shutdown
 from smartdrive.config.constants import APP_AUTHOR, APP_ID
 from smartdrive.models.vehicle import Vehicle
 from smartdrive.services.diagnostic_service import DiagnosticService
+from smartdrive.services.maintenance_service import MaintenanceService
+from smartdrive.services.notification_service import NotificationService
+from smartdrive.services.obd_service import ObdHistoryService
+from smartdrive.services.report_service import ReportService
 from smartdrive.services.telemetry_service import TelemetryService
+from smartdrive.services.threshold_service import ThresholdService
+from smartdrive.services.trip_service import TripService
 from smartdrive.services.vehicle_service import VehicleService
 from smartdrive.ui.context import AppState, Notifier, UiContext
 from smartdrive.ui.diagnostics_controller import DiagnosticsController
+from smartdrive.ui.gc_guard import MainThreadGarbageCollector
 from smartdrive.ui.main_window import MainWindow
 from smartdrive.ui.monitoring_controller import MonitoringController
+from smartdrive.ui.notification_controller import NotificationController
 from smartdrive.ui.themes.theme_manager import ThemeManager
+from smartdrive.ui.trip_controller import TripController
+from smartdrive.ui.vehicle_connection_controller import VehicleConnectionController
 from smartdrive.ui.widgets.status import StatusLevel
+from smartdrive.ui.workers.obd_worker import SessionFactory
+from smartdrive.ui.workers.task_runner import TaskRunner
+from smartdrive.ui.workers.voice_worker import VoiceWorker
 from smartdrive.utils.exceptions import SmartDriveError
 
 logger = logging.getLogger(__name__)
@@ -63,8 +76,13 @@ class GuiApplication:
         *,
         install_excepthook: bool = True,
         registry: ModelRegistry | None = None,
+        obd_session_factory: SessionFactory | None = None,
+        voice_worker: VoiceWorker | None = None,
     ) -> None:
         self.app_context = app_context
+        # Before any worker thread exists: cyclic garbage is collected on this thread only.
+        self.gc_guard = MainThreadGarbageCollector()
+        self.gc_guard.start()
         vehicles = VehicleService(
             app_context.database, app_context.paths.data_dir / "vehicle_images"
         )
@@ -77,17 +95,36 @@ class GuiApplication:
         theme = ThemeManager(app_context.settings.appearance.theme)
         theme.apply()
         state = AppState(app_context, vehicles)
-        monitoring = MonitoringController(app_context.settings, telemetry)
-        diagnostics = DiagnosticsController(
-            app_context.settings, app_context.database, monitoring, registry=registry
+        settings = app_context.settings
+        database = app_context.database
+        tasks = TaskRunner()
+        monitoring = MonitoringController(settings, telemetry)
+        diagnostics = DiagnosticsController(settings, database, monitoring, registry=registry)
+        obd_history = ObdHistoryService(database)
+        orphaned = obd_history.close_orphaned_connections()
+        if orphaned:
+            logger.info("Closed connection records left open", extra={"connections": orphaned})
+        connection = VehicleConnectionController(
+            settings, obd_history, session_factory=obd_session_factory
         )
-        diagnostics.set_vehicle(state.active_vehicle)
-        state.active_vehicle_changed.connect(
-            lambda vehicle: diagnostics.set_vehicle(
-                vehicle if isinstance(vehicle, Vehicle) else None
-            )
+        trip_service = TripService(database, telemetry)
+        trips = TripController(trip_service, telemetry, monitoring, connection, tasks)
+        maintenance = MaintenanceService(database)
+        notification_service = NotificationService(database)
+        notifications = NotificationController(
+            settings, notification_service, maintenance, tasks, voice_worker=voice_worker
         )
-        state.settings_changed.connect(lambda _s: diagnostics.apply_settings())
+        notifications.attach(diagnostics, connection, monitoring)
+        reports = ReportService(
+            database,
+            telemetry=telemetry,
+            trips=trip_service,
+            obd=obd_history,
+            maintenance=maintenance,
+            notifications=notification_service,
+            registry=registry,
+        )
+        thresholds = ThresholdService(database)
         self.ui = UiContext(
             app=app_context,
             state=state,
@@ -97,9 +134,29 @@ class GuiApplication:
             telemetry=telemetry,
             notifier=Notifier(),
             diagnostics=diagnostics,
-            diagnostic_history=DiagnosticService(app_context.database),
+            diagnostic_history=DiagnosticService(database),
+            connection=connection,
+            obd_history=obd_history,
+            trips=trips,
+            maintenance=maintenance,
+            notifications=notifications,
+            reports=reports,
+            thresholds=thresholds,
+            tasks=tasks,
         )
-        self.window = MainWindow(self.ui)
+        self._on_vehicle_changed(state.active_vehicle)
+        state.active_vehicle_changed.connect(self._on_vehicle_changed)
+        state.settings_changed.connect(diagnostics.apply_settings)
+        state.settings_changed.connect(notifications.apply_settings)
+        trips.summarise_unfinished()
+        notifications.purge_old()
+        try:
+            self.window = MainWindow(self.ui)
+        except Exception:
+            # Stop the worker threads already started before reporting the failure.
+            self._stop_controllers()
+            self.gc_guard.stop()
+            raise
         self._closed = False
         self._previous_hook = sys.excepthook
         self._hook_installed = install_excepthook
@@ -112,12 +169,34 @@ class GuiApplication:
         self._closed = True
         if self._hook_installed:
             sys.excepthook = self._previous_hook
-        self.ui.monitoring.shutdown()
-        self.ui.diagnostics.shutdown()
+        self._stop_controllers()
         self.ui.theme.dispose()
         self.window.close()
         self.window.deleteLater()
         QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+        self.gc_guard.stop()
+
+    def _stop_controllers(self) -> None:
+        # Order matters: stop the stream (which ends any recording), then inference, then the
+        # adapter link, then speech, and finally the job thread, which lets a running job finish.
+        self.ui.monitoring.shutdown()
+        self.ui.diagnostics.shutdown()
+        self.ui.connection.shutdown()
+        self.ui.notifications.shutdown()
+        self.ui.tasks.shutdown()
+
+    def _on_vehicle_changed(self, vehicle: object) -> None:
+        ui = self.ui
+        active = vehicle if isinstance(vehicle, Vehicle) else None
+        ui.diagnostics.vehicle_thresholds = {}
+        if active is not None:
+            try:
+                ui.diagnostics.vehicle_thresholds, _note = ui.thresholds.get(active.id)
+            except SmartDriveError:
+                logger.warning("Could not read vehicle-specific thresholds", exc_info=True)
+        ui.diagnostics.on_active_vehicle_changed(active)
+        ui.connection.set_vehicle(active.id if active is not None else None)
+        ui.notifications.set_vehicle(active)
 
     def _handle_exception(
         self,

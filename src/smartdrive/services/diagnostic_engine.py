@@ -32,6 +32,7 @@ from smartdrive.config.settings import DiagnosticSettings
 from smartdrive.core.health_score import compute_health_score
 from smartdrive.core.recommendations import recommend
 from smartdrive.core.rule_engine import RuleEngine, VehicleContext
+from smartdrive.core.sensors import SENSOR_BY_KEY
 from smartdrive.core.telemetry_window import DataQuality, TelemetryWindow
 from smartdrive.models.diagnostic import (
     AnomalyResult,
@@ -45,6 +46,7 @@ from smartdrive.models.diagnostic import (
     ModelRunStatus,
     max_severity,
 )
+from smartdrive.models.telemetry import SENSOR_FIELDS
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +81,7 @@ class DiagnosticEngine:
             settings.anomaly_persistence_windows,
         )
         self._model_streak: dict[FaultCategory, int] = {}
+        self._block: tuple[ModelRunStatus, str] | None = None
 
     def reset(self) -> None:
         self.rules.reset()
@@ -107,8 +110,19 @@ class DiagnosticEngine:
         vehicle_id: int | None = None,
         session_id: int | None = None,
         recent_alerts: int = 0,
+        ml_block_reason: str | None = None,
+        unavailable_sensors: frozenset[str] = frozenset(),
     ) -> DiagnosticAssessment:
+        """Assess one window.
+
+        ``ml_block_reason`` turns the models off for this stream (for example live vehicle data
+        when experimental live inference is disabled). ``unavailable_sensors`` lists sensors the
+        data source cannot provide at all; the models were trained with every monitored sensor,
+        so they report ``INCOMPATIBLE`` instead of predicting from a different input
+        distribution. Rules always run on whatever sensors are present.
+        """
         started = time.perf_counter()
+        self._block = _model_block(ml_block_reason, unavailable_sensors)
         quality = window.quality()
         common: dict[str, Any] = {
             "timestamp": timestamp,
@@ -169,6 +183,8 @@ class DiagnosticEngine:
     def _classify(self, features: np.ndarray, quality: DataQuality) -> ClassifierResult:
         if not self.settings.machine_learning_enabled:
             return ClassifierResult(ModelRunStatus.DISABLED, "Machine learning is turned off.")
+        if self._block is not None:
+            return ClassifierResult(self._block[0], self._block[1])
         model = self.models.classifier if self.models else None
         if model is None:
             return ClassifierResult(
@@ -185,6 +201,9 @@ class DiagnosticEngine:
     def _anomaly(self, features: np.ndarray, quality: DataQuality) -> AnomalyResult:
         if not self.settings.machine_learning_enabled:
             return AnomalyResult(ModelRunStatus.DISABLED, "Machine learning is turned off.")
+        if self._block is not None:
+            self.anomaly.reset()
+            return AnomalyResult(self._block[0], self._block[1])
         try:
             return self.anomaly.evaluate(features, quality)
         except Exception as exc:
@@ -281,3 +300,19 @@ class DiagnosticEngine:
         except Exception:
             logger.exception("Explanation failed")
             return {}
+
+
+def _model_block(
+    reason: str | None, unavailable_sensors: frozenset[str]
+) -> tuple[ModelRunStatus, str] | None:
+    if reason:
+        return ModelRunStatus.DISABLED, reason
+    missing = [name for name in SENSOR_FIELDS if name in unavailable_sensors]
+    if missing:
+        labels = ", ".join(SENSOR_BY_KEY[name].label.lower() for name in missing)
+        return (
+            ModelRunStatus.INCOMPATIBLE,
+            "The models were trained with every monitored sensor, but this data source cannot "
+            f"provide: {labels}. They are not run, rather than predicting from incomplete input.",
+        )
+    return None

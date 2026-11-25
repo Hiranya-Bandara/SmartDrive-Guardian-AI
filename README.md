@@ -7,10 +7,13 @@ hybrid rule-based and machine-learning diagnostics, anomaly detection and mainte
 It works fully offline, works without vehicle hardware through a built-in simulator, and can
 optionally read live data from compatible ELM327 OBD-II adapters in a strictly read-only mode.
 
-> **Project status: version 2.0.0 is in development. Phases 1 (Foundation), 2 (Desktop
-> Application) and 3 (AI Engine) are implemented.** OBD-II, trips, maintenance and reports
-> (Phase 4) are not built yet; their navigation entries are visible but disabled. See
-> [ROADMAP.md](ROADMAP.md) for verified progress.
+> **Project status: version 2.0.0 is in development. Phases 1–4 are implemented** (foundation,
+> desktop application, AI engine, vehicle integration). Phase 5 (release packaging) remains.
+> See [ROADMAP.md](ROADMAP.md) for verified progress.
+>
+> **The OBD-II integration has been tested only against a software mock adapter.** It has not
+> yet been tested with a physical adapter or vehicle; see the
+> [real-hardware checklist](docs/hardware-verification-checklist.md).
 >
 > **All machine-learning models were trained and evaluated on simulated data only.** The
 > results below show how well they recover the simulator's own fault patterns. They are not
@@ -25,6 +28,33 @@ certified vehicle safety system, autonomous driving system or replacement for a 
 mechanic. If no abnormality is detected, that does not prove a vehicle is safe to drive.
 
 ## Features available today
+
+### Vehicle integration (Phase 4)
+
+- **Read-only OBD-II** through ELM327-compatible USB or Bluetooth Classic (serial) adapters, with
+  an in-house client in which every request must pass a closed allowlist. No code clearing, no
+  writes, no actuator or CAN commands, no VIN reading. [Details](docs/hardware.md)
+- **Vehicle Connection page.** Port discovery (never auto-connects), separate adapter and ECU
+  states, supported-parameter discovery, per-parameter status each cycle, measured link
+  quality, connection diagnostics, setup guidance and vehicle-specific rule thresholds.
+- **Robust failure handling.** Timeouts, malformed and empty replies, unsupported PIDs, ignition
+  off, adapter loss with bounded back-off reconnection, stale data — all on a worker thread.
+- **Diagnostic trouble codes.** Stored, pending and permanent codes, MIL state and freeze frame;
+  scan history, filters, details, sourced generic descriptions (manufacturer-specific codes
+  are never given a meaning) and related AI findings.
+- **Three telemetry modes** through one pipeline: simulation, live vehicle and **replay**, each
+  clearly labelled; switching resets windows and diagnostic state.
+- **Trip History.** Statistics with time-aware *estimated* distance, timelines, charts, filters,
+  export, safe deletion, and replay at 0.5–4× with seeking (replays never write history).
+- **Maintenance centre.** Records, your own date/mileage schedules, reminder states including
+  "insufficient mileage information", odometer freshness, costs per currency (never summed
+  across currencies) and cautious AI-related observations.
+- **Reports.** Seven PDF report types (ReportLab) and eight CSV datasets with formula-injection
+  protection, privacy options, export history. [Details](docs/reports.md),
+  [samples](docs/samples/) (simulated data).
+- **Notifications.** In-app toasts, Alert Centre with read/acknowledged/condition states,
+  optional Windows desktop notifications, sounds and **offline voice announcements**, with
+  deduplication and cooldowns.
 
 ### AI diagnostics (Phase 3)
 
@@ -136,12 +166,19 @@ These are real renders of the application, made with `scripts/capture_screenshot
 
 ![Explanations and model output](docs/screenshots/diagnostics-explanations.png)
 
+Vehicle Connection and Diagnostic Codes are shown with the **mock adapter** (simulated data,
+labelled as such on the page); no physical adapter was used.
+
 | | |
 |---|---|
+| ![Vehicle Connection, mock adapter](docs/screenshots/connection-mock-adapter.png) | ![Vehicle Connection, no adapter](docs/screenshots/connection-no-adapter.png) |
+| ![Diagnostic Codes, mock adapter](docs/screenshots/codes-mock-adapter.png) | ![Trip History during a replay](docs/screenshots/trips-replay.png) |
+| ![Maintenance](docs/screenshots/maintenance.png) | ![Alert Centre](docs/screenshots/alerts.png) |
+| ![Reports](docs/screenshots/reports.png) | ![Dashboard](docs/screenshots/dashboard.png) |
 | ![Live monitoring](docs/screenshots/monitoring.png) | ![Simulation laboratory](docs/screenshots/simulation.png) |
 | ![Vehicle garage](docs/screenshots/garage.png) | ![Light theme, collapsed sidebar](docs/screenshots/garage-light-collapsed.png) |
 | ![Settings](docs/screenshots/settings.png) | ![Dashboard, light theme](docs/screenshots/dashboard-light.png) |
-| ![Dashboard with AI summary](docs/screenshots/dashboard.png) | ![About](docs/screenshots/about.png) |
+| ![About](docs/screenshots/about.png) | |
 
 ## Architecture
 
@@ -149,18 +186,21 @@ These are real renders of the application, made with `scripts/capture_screenshot
 flowchart TB
     subgraph GUI thread
       UI["Pages & widgets (PySide6, PyQtGraph)"] --> MC["MonitoringController"]
-      UI --> SVC["Services: vehicles, telemetry, backup"]
+      UI --> SVC["Services: vehicles, trips, maintenance, notifications, reports"]
+      UI --> VC["VehicleConnectionController"]
+      UI --> NC["NotificationController"]
     end
-    MC -- "queued signals" --> MW["MonitoringWorker (QThread)"]
+    MC -- "queued signals" --> MW["MonitoringWorker (QThread): simulator, replay"]
     MC -- "queued signals" --> PW["PersistenceWorker (QThread)"]
+    VC -- "queued signals" --> OW["ObdWorker (QThread): ELM327 client + allowlist"]
+    OW -- "live frames" --> MC
     UI --> DC["DiagnosticsController"]
     DC -- "snapshot, no queue" --> IW["InferenceWorker (QThread)"]
     IW --> ENG["Hybrid engine: rules + Random Forest + Isolation Forest + explanations + health"]
+    UI -- "jobs" --> TR["TaskRunner (QThread): trip summaries, replay loading, PDF/CSV"]
+    NC -- "queued signals" --> VW["VoiceWorker (QThread): offline speech"]
     ENG --> SVC
-    MW --> SRC["TelemetrySource: SimulationSource (OBD-II & replay in Phase 4)"]
-    SRC --> VAL["Shared validation pipeline"]
-    PW --> SVC
-    SVC --> REPO["Repositories"] --> DB[("SQLite via SQLAlchemy + Alembic")]
+    SVC --> DB[("SQLite (Alembic 0003)")]
 ```
 
 Pages never query the database or touch a worker thread directly. Details and the decision log
@@ -176,8 +216,8 @@ are in [docs/architecture.md](docs/architecture.md).
 | Persistence | SQLite, SQLAlchemy 2, Alembic | — |
 | Quality | pytest, pytest-qt, pytest-cov, Ruff, Mypy (strict), pip-audit, GitHub Actions | — |
 | ML | scikit-learn 1.9 (Random Forest, Isolation Forest), NumPy, SciPy, joblib; matplotlib for training reports only | — |
-| Hardware | — | python-OBD, pySerial (Phase 4) |
-| Output | — | ReportLab, pyttsx3 (Phase 4) |
+| Hardware | PySerial 3.5 with an in-house read-only ELM327 client | — |
+| Output | ReportLab (PDF), standard-library `csv`, pyttsx3 (offline speech) | — |
 | Distribution | — | PyInstaller, Inno Setup (Phase 5) |
 
 ## Installation (Windows PowerShell)
@@ -210,7 +250,9 @@ Keyboard shortcuts:
 
 | Shortcut | Action |
 |---|---|
-| Ctrl+1 … Ctrl+7 | Open Dashboard, Live Monitoring, Garage, Simulation Lab, AI Diagnostics, Settings, About |
+| Ctrl+1 … Ctrl+7 | Dashboard, Live Monitoring, Garage, Simulation Lab, AI Diagnostics, Settings, About |
+| Ctrl+8 / Ctrl+9 / Ctrl+0 | Vehicle Connection, Diagnostic Codes, Alert Centre |
+| Ctrl+Shift+T / M / R | Trip History, Maintenance, Reports |
 | Ctrl+M | Start or stop monitoring |
 | Ctrl+P | Pause or resume |
 | Ctrl+B | Collapse or expand the sidebar |
@@ -240,23 +282,31 @@ src/smartdrive/
 ├── core/                       sensors, units, validation, buffers, telemetry window,
 │                               rule engine, health score, recommendations
 ├── models/                     Pydantic/dataclass domain models (vehicle, telemetry, diagnostics)
-├── database/                   engine, ORM schema, repositories, migrations/ (0001, 0002)
-├── services/                   simulator & scenarios, vehicles, telemetry, backup,
-│                               hybrid diagnostic engine, diagnostic persistence & alerts
+├── database/                   engine, ORM schema, repositories, migrations/ (0001–0003)
+├── obd/                        read-only ELM327 client, command allowlist, serial and mock
+│                               transports, PID and DTC decoding, capabilities, sessions
+├── reporting/                  report documents, PDF rendering, safe CSV writing
+├── services/                   simulator & scenarios, replay, vehicles, telemetry, trips,
+│                               maintenance, notifications & voice queue, DTC history and
+│                               reference, reports, thresholds, backup, hybrid diagnostics
 ├── ui/
 │   ├── application.py          Qt lifecycle and service wiring
 │   ├── main_window.py, navigation.py, top_bar.py
-│   ├── monitoring_controller.py, diagnostics_controller.py
-│   ├── pages/                  dashboard, live monitoring, garage, simulation lab,
-│   │                           AI diagnostics, settings, about
-│   ├── widgets/                cards, gauges, charts, health score, findings, bar charts, …
-│   ├── dialogs/                confirmation and vehicle dialogs
-│   ├── workers/                monitoring, persistence and inference workers
+│   ├── monitoring_controller.py, diagnostics_controller.py, vehicle_connection_controller.py,
+│   │   trip_controller.py, notification_controller.py, gc_guard.py
+│   ├── pages/                  dashboard, live monitoring, AI diagnostics, vehicle connection,
+│   │                           diagnostic codes, garage, trip history, maintenance,
+│   │                           simulation lab, reports, alert centre, settings, about
+│   ├── widgets/                cards, gauges, charts, tables, health score, findings, …
+│   ├── dialogs/                confirmation, vehicle, maintenance and file dialogs
+│   ├── workers/                monitoring, persistence, inference, OBD, voice, job runner
 │   └── themes/                 palettes, stylesheet template, theme manager
 └── utils/                      logging, validators, exceptions
 datasets/sdg-ds-1.1.0/          dataset metadata (the .npz itself is regenerated, not committed)
 docs/ml/                        evaluation report, model and dataset cards, metrics, figures
-scripts/                        setup, checks, dependency lock, screenshots, train_models.py
+docs/samples/                   sample PDF and CSV reports (simulated data)
+scripts/                        setup, checks, dependency lock, screenshots, train_models.py,
+                                generate_sample_reports.py
 tests/{unit,integration,ui}/    pytest and pytest-qt suites
 ```
 
@@ -265,12 +315,17 @@ tests/{unit,integration,ui}/    pytest and pytest-qt suites
 - **Synthetic data only.** The models have never seen real vehicle data. Diagnostic
   categories are limited to what the 11 available signals can show; transmission and brake
   faults are not assessed.
-- All telemetry currently comes from the simulator. Simulated faults are illustrative and not
-  calibrated to any real vehicle.
+- Simulated faults are illustrative and not calibrated to any real vehicle.
+- **OBD-II has been tested only against the mock adapter.** Physical adapter and vehicle
+  compatibility is unverified ([checklist](docs/hardware-verification-checklist.md)).
+  Bluetooth LE and Wi-Fi adapters are not supported. Generic OBD-II mostly reaches
+  powertrain modules and has no oil-pressure parameter, so on real vehicles the ML models
+  report "incompatible" and only the rules run.
 - The model misses many developing cooling faults, especially in heavy-traffic and mixed
   driving (see the evaluation report). The rules still apply, but a clean result is never proof
   of safety.
-- No OBD-II hardware support or testing yet (Phase 4).
+- Desktop notifications depend on Windows settings (Focus assist can hide them) and voice
+  depends on the installed SAPI voices; neither has been exercised on Windows by the developer.
 - The GUI has been tested headless on Linux. It has not been run on Windows by the developer.
   The pinned Windows wheels are standard PySide6 builds.
 
@@ -278,6 +333,7 @@ tests/{unit,integration,ui}/    pytest and pytest-qt suites
 
 - [Master specification](docs/SPECIFICATION.md) · [Roadmap](ROADMAP.md) · [Changelog](CHANGELOG.md)
 - [User guide](docs/user-guide.md) · [Architecture](docs/architecture.md) · [Database](docs/database.md) · [Developer guide](docs/developer-guide.md)
+- [Vehicle hardware (OBD-II)](docs/hardware.md) · [Real-hardware checklist](docs/hardware-verification-checklist.md) · [Reports](docs/reports.md) · [Privacy](docs/privacy.md)
 - [Machine learning](docs/ml/README.md) · [Evaluation report](docs/ml/evaluation_report.md) · [Model card](docs/ml/model_card.md) · [Dataset card](docs/ml/dataset_card.md)
 - [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md)
 

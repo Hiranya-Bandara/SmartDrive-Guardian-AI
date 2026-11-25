@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import json
 import platform
+import shutil
 import statistics
 import sys
 import time
@@ -40,6 +41,7 @@ from smartdrive.ai.features import FEATURE_SCHEMA_VERSION
 from smartdrive.ai.model_registry import (
     ANOMALY_NAME,
     CLASSIFIER_NAME,
+    EVALUATION_FILE,
     MANIFEST_NAME,
     ModelRegistry,
     sha256_file,
@@ -284,6 +286,8 @@ def main() -> int:
     )
     for path in written:
         log(f"  wrote {path.relative_to(ROOT) if path.is_relative_to(ROOT) else path}")
+    # The in-app model evaluation report reads this copy (docs/ is not installed with the app).
+    shutil.copyfile(args.reports_dir / "metrics.json", args.artifacts_dir / EVALUATION_FILE)
     log(
         f"Done. Test macro-F1 {metrics['all_rows_model_output']['macro_f1']:.3f} "
         f"(rules {metrics['rule_baseline']['macro_f1']:.3f}); anomaly ROC AUC "

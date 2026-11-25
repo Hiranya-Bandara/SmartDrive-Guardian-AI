@@ -34,8 +34,11 @@ from smartdrive.config.constants import (
     FaultCategory,
     FuelType,
     MaintenanceStatus,
+    NotificationSeverity,
+    SessionStatus,
     Severity,
     TransmissionType,
+    TripEventType,
 )
 from smartdrive.database.types import UtcDateTime, utc_now
 from smartdrive.models.diagnostic import DiagnosticStatus
@@ -93,6 +96,7 @@ class VehicleRecord(TimestampMixin, Base):
     transmission: Mapped[TransmissionType] = mapped_column(_enum(TransmissionType, "transmission"))
     engine_capacity_cc: Mapped[int | None] = mapped_column(Integer)
     mileage_km: Mapped[float] = mapped_column(Float, default=0.0)
+    mileage_updated_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
     registration_number: Mapped[str | None] = mapped_column(String(16))
     vin: Mapped[str | None] = mapped_column(String(17), unique=True)
     purchase_date: Mapped[date | None] = mapped_column(Date)
@@ -128,6 +132,10 @@ class DrivingSessionRecord(Base):
     distance_km: Mapped[float | None] = mapped_column(Float)
     distance_estimated: Mapped[bool] = mapped_column(Boolean, default=True)
     notes: Mapped[str] = mapped_column(Text, default="")
+    name: Mapped[str | None] = mapped_column(String(80))
+    status: Mapped[SessionStatus] = mapped_column(
+        _enum(SessionStatus, "session_status"), default=SessionStatus.RECORDING
+    )
 
     vehicle: Mapped[VehicleRecord] = relationship(back_populates="sessions")
 
@@ -239,6 +247,12 @@ class DiagnosticTroubleCodeRecord(Base):
     status: Mapped[DtcStatus] = mapped_column(_enum(DtcStatus, "dtc_status"))
     first_seen_at: Mapped[datetime] = mapped_column(UtcDateTime(), default=utc_now)
     last_seen_at: Mapped[datetime] = mapped_column(UtcDateTime(), default=utc_now)
+    last_scan_id: Mapped[int | None] = mapped_column(
+        ForeignKey("dtc_scans.id", ondelete="SET NULL")
+    )
+    detection_count: Mapped[int] = mapped_column(Integer, default=1)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    description_source: Mapped[str] = mapped_column(String(120), default="")
 
 
 class AlertRecord(Base):
@@ -267,6 +281,9 @@ class AlertRecord(Base):
     dedup_key: Mapped[str] = mapped_column(String(160))
     occurrence_count: Mapped[int] = mapped_column(Integer, default=1)
     acknowledged_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
+    read_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
+    resolved_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
+    evidence: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
 
 
 class MaintenanceScheduleRecord(TimestampMixin, Base):
@@ -289,6 +306,11 @@ class MaintenanceScheduleRecord(TimestampMixin, Base):
     last_done_date: Mapped[date | None] = mapped_column(Date)
     last_done_mileage_km: Mapped[float | None] = mapped_column(Float)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    category: Mapped[str] = mapped_column(String(40), default="custom")
+    reminder_days_before: Mapped[int] = mapped_column(Integer, default=14)
+    reminder_km_before: Mapped[float] = mapped_column(Float, default=500.0)
+    interval_source: Mapped[str] = mapped_column(String(16), default="user")
+    notes: Mapped[str] = mapped_column(Text, default="")
 
 
 class MaintenanceRecord(TimestampMixin, Base):
@@ -315,6 +337,9 @@ class MaintenanceRecord(TimestampMixin, Base):
     provider: Mapped[str | None] = mapped_column(String(120))
     notes: Mapped[str] = mapped_column(Text, default="")
     completed_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
+    category: Mapped[str] = mapped_column(String(40), default="general_inspection")
+    next_due_date: Mapped[date | None] = mapped_column(Date)
+    next_due_km: Mapped[float | None] = mapped_column(Float)
 
 
 class AppSettingRecord(Base):
@@ -357,3 +382,152 @@ class ExportHistoryRecord(Base):
     export_format: Mapped[ExportFormat] = mapped_column(_enum(ExportFormat, "export_format"))
     file_name: Mapped[str] = mapped_column(String(255))
     created_at: Mapped[datetime] = mapped_column(UtcDateTime(), default=utc_now)
+    report_id: Mapped[str | None] = mapped_column(String(36))
+    status: Mapped[str] = mapped_column(String(16), default="success")
+    file_path: Mapped[str | None] = mapped_column(String(1024))
+    file_size: Mapped[int | None] = mapped_column(Integer)
+    message: Mapped[str] = mapped_column(Text, default="")
+
+
+class ObdConnectionRecord(Base):
+    """One adapter connection, with what the vehicle reported it supports."""
+
+    __tablename__ = "obd_connections"
+    __table_args__ = (
+        CheckConstraint("ended_at IS NULL OR ended_at >= started_at", name="ended_after_start"),
+        Index("ix_obd_connections_vehicle_started", "vehicle_id", "started_at"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    vehicle_id: Mapped[int | None] = mapped_column(ForeignKey("vehicles.id", ondelete="SET NULL"))
+    started_at: Mapped[datetime] = mapped_column(UtcDateTime(), default=utc_now)
+    ended_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
+    port: Mapped[str] = mapped_column(String(64))
+    connection_method: Mapped[str] = mapped_column(String(48))
+    is_mock: Mapped[bool] = mapped_column(Boolean, default=False)
+    baudrate: Mapped[int | None] = mapped_column(Integer)
+    adapter_version: Mapped[str] = mapped_column(String(64), default="")
+    adapter_description: Mapped[str | None] = mapped_column(String(120))
+    ecu_connected: Mapped[bool] = mapped_column(Boolean, default=False)
+    protocol: Mapped[str | None] = mapped_column(String(64))
+    supported_pids: Mapped[list[int]] = mapped_column(JSON, default=list)
+    missing_sensors: Mapped[list[str]] = mapped_column(JSON, default=list)
+    samples_received: Mapped[int] = mapped_column(Integer, default=0)
+    end_reason: Mapped[str | None] = mapped_column(String(200))
+
+
+class DtcScanRecord(Base):
+    """One read-only trouble-code scan. Codes are upserted into ``diagnostic_trouble_codes``."""
+
+    __tablename__ = "dtc_scans"
+    __table_args__ = (Index("ix_dtc_scans_vehicle_scanned", "vehicle_id", "scanned_at"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    vehicle_id: Mapped[int] = mapped_column(ForeignKey("vehicles.id", ondelete="CASCADE"))
+    connection_id: Mapped[int | None] = mapped_column(
+        ForeignKey("obd_connections.id", ondelete="SET NULL")
+    )
+    session_id: Mapped[int | None] = mapped_column(
+        ForeignKey("driving_sessions.id", ondelete="SET NULL")
+    )
+    scanned_at: Mapped[datetime] = mapped_column(UtcDateTime(), default=utc_now)
+    data_source: Mapped[DataSource] = mapped_column(_enum(DataSource, "scan_data_source"))
+    is_mock: Mapped[bool] = mapped_column(Boolean, default=False)
+    protocol: Mapped[str | None] = mapped_column(String(64))
+    mil_on: Mapped[bool | None] = mapped_column(Boolean)
+    reported_count: Mapped[int | None] = mapped_column(Integer)
+    stored_count: Mapped[int] = mapped_column(Integer, default=0)
+    pending_count: Mapped[int] = mapped_column(Integer, default=0)
+    permanent_count: Mapped[int | None] = mapped_column(Integer)
+    codes: Mapped[list[dict[str, str]]] = mapped_column(JSON, default=list)
+    freeze_frame: Mapped[dict[str, Any] | None] = mapped_column(JSON)
+    notes: Mapped[list[str]] = mapped_column(JSON, default=list)
+
+
+class TripSummaryRecord(Base):
+    """Statistics computed when a recorded session ends. Estimated values are flagged."""
+
+    __tablename__ = "trip_summaries"
+    __table_args__ = (
+        CheckConstraint(
+            "data_completeness >= 0 AND data_completeness <= 1", name="completeness_range"
+        ),
+        CheckConstraint("distance_km IS NULL OR distance_km >= 0", name="distance_non_negative"),
+    )
+
+    session_id: Mapped[int] = mapped_column(
+        ForeignKey("driving_sessions.id", ondelete="CASCADE"), primary_key=True
+    )
+    computed_at: Mapped[datetime] = mapped_column(UtcDateTime(), default=utc_now)
+    sample_count: Mapped[int] = mapped_column(Integer, default=0)
+    recorded_duration_s: Mapped[float] = mapped_column(Float, default=0.0)
+    data_completeness: Mapped[float] = mapped_column(Float, default=0.0)
+    avg_speed_kph: Mapped[float | None] = mapped_column(Float)
+    max_speed_kph: Mapped[float | None] = mapped_column(Float)
+    avg_rpm: Mapped[float | None] = mapped_column(Float)
+    max_rpm: Mapped[float | None] = mapped_column(Float)
+    min_coolant_c: Mapped[float | None] = mapped_column(Float)
+    max_coolant_c: Mapped[float | None] = mapped_column(Float)
+    distance_km: Mapped[float | None] = mapped_column(Float)
+    distance_coverage: Mapped[float | None] = mapped_column(Float)
+    diagnostic_event_count: Mapped[int] = mapped_column(Integer, default=0)
+    warning_count: Mapped[int] = mapped_column(Integer, default=0)
+    critical_count: Mapped[int] = mapped_column(Integer, default=0)
+    anomaly_count: Mapped[int] = mapped_column(Integer, default=0)
+    dtc_count: Mapped[int | None] = mapped_column(Integer)
+    model_versions: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+
+
+class TripEventRecord(Base):
+    __tablename__ = "trip_events"
+    __table_args__ = (Index("ix_trip_events_session_time", "session_id", "occurred_at"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    session_id: Mapped[int] = mapped_column(ForeignKey("driving_sessions.id", ondelete="CASCADE"))
+    occurred_at: Mapped[datetime] = mapped_column(UtcDateTime())
+    event_type: Mapped[TripEventType] = mapped_column(_enum(TripEventType, "trip_event_type"))
+    severity: Mapped[Severity] = mapped_column(_enum(Severity, "trip_event_severity"))
+    title: Mapped[str] = mapped_column(String(160))
+    detail: Mapped[str] = mapped_column(Text, default="")
+    source: Mapped[str | None] = mapped_column(String(32))
+    finding_key: Mapped[str | None] = mapped_column(String(80))
+
+
+class NotificationRecord(Base):
+    """Application notification shown in the Alert Centre (and optionally on the desktop)."""
+
+    __tablename__ = "notifications"
+    __table_args__ = (
+        CheckConstraint("occurrence_count >= 1", name="occurrence_positive"),
+        Index("ix_notifications_dedup_key", "dedup_key"),
+        Index("ix_notifications_created", "created_at"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    created_at: Mapped[datetime] = mapped_column(UtcDateTime(), default=utc_now)
+    last_occurrence_at: Mapped[datetime] = mapped_column(UtcDateTime(), default=utc_now)
+    severity: Mapped[NotificationSeverity] = mapped_column(
+        _enum(NotificationSeverity, "notification_severity")
+    )
+    category: Mapped[str] = mapped_column(String(32))
+    title: Mapped[str] = mapped_column(String(160))
+    message: Mapped[str] = mapped_column(Text, default="")
+    vehicle_id: Mapped[int | None] = mapped_column(ForeignKey("vehicles.id", ondelete="CASCADE"))
+    alert_id: Mapped[int | None] = mapped_column(ForeignKey("alerts.id", ondelete="SET NULL"))
+    dedup_key: Mapped[str] = mapped_column(String(160))
+    occurrence_count: Mapped[int] = mapped_column(Integer, default=1)
+    read_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
+    acknowledged_at: Mapped[datetime | None] = mapped_column(UtcDateTime())
+
+
+class VehicleThresholdRecord(Base):
+    """User-entered rule thresholds for one vehicle, overriding the generic defaults."""
+
+    __tablename__ = "vehicle_thresholds"
+
+    vehicle_id: Mapped[int] = mapped_column(
+        ForeignKey("vehicles.id", ondelete="CASCADE"), primary_key=True
+    )
+    values: Mapped[dict[str, float]] = mapped_column(JSON, default=dict)
+    source_note: Mapped[str] = mapped_column(Text, default="")
+    updated_at: Mapped[datetime] = mapped_column(UtcDateTime(), default=utc_now, onupdate=utc_now)
