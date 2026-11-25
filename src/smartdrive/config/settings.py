@@ -28,6 +28,11 @@ class _Section(BaseModel):
     model_config = ConfigDict(extra="ignore", validate_assignment=True, frozen=False)
 
 
+class GeneralSettings(_Section):
+    welcome_seen: bool = False
+    """The first-run guide has been read (it can be reopened from the About page)."""
+
+
 class AppearanceSettings(_Section):
     theme: ThemePreference = ThemePreference.DARK
     sidebar_collapsed: bool = False
@@ -151,6 +156,7 @@ class LoggingSettings(_Section):
 
 class AppSettings(_Section):
     schema_version: int = SETTINGS_SCHEMA_VERSION
+    general: GeneralSettings = Field(default_factory=GeneralSettings)
     appearance: AppearanceSettings = Field(default_factory=AppearanceSettings)
     units: UnitSettings = Field(default_factory=UnitSettings)
     monitoring: MonitoringSettings = Field(default_factory=MonitoringSettings)

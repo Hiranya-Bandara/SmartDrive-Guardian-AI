@@ -11,3 +11,10 @@
 
 # Exported CSV samples keep RFC 4180 CRLF line endings byte for byte.
 docs/samples/*.csv -text
+*.bmp binary
+*.pdf binary
+*.svg text eol=lf
+*.spec text eol=lf
+# Installer text shown by Inno Setup.
+packaging/installer/*.txt text eol=crlf
+packaging/release-assets/*.txt text eol=crlf

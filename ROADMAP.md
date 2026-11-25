@@ -4,9 +4,9 @@ This file is the authoritative progress tracker. A task is ticked only after the
 functionality has been verified (tests executed, behaviour observed). The full requirements are in
 [docs/SPECIFICATION.md](docs/SPECIFICATION.md).
 
-**Progress: 28 / 38 tasks complete** · Current phase: **Phase 4 complete at the software level
-(verified in the sandbox) — awaiting owner's Windows run; physical OBD-II hardware not yet
-tested** · Next phase: Phase 5
+**Progress: 32 / 38 tasks complete** · Current phase: **Phase 5 — release candidate prepared
+and verified in the sandbox; Windows build, installer verification and publication pending** ·
+Physical OBD-II hardware: not tested
 
 Verification sources: *sandbox* = executed in the isolated Linux build environment (GUI
 headless via Qt `offscreen`); *owner* = reported by the repository owner from their Windows machine.
@@ -103,7 +103,10 @@ All seven tasks were implemented and verified in the *sandbox* (automated tests,
 generated sample reports). **Hardware status: tested only against the byte-level mock adapter;
 no physical adapter or vehicle has been tested** — see
 [docs/hardware-verification-checklist.md](docs/hardware-verification-checklist.md), all items
-PENDING. A Windows run by the owner is pending.
+PENDING. *Owner (Windows, after Phase 4):* dependencies installed, Ruff and Ruff format passed,
+one Mypy error in `voice.py` fixed locally (kept in Phase 5), application launched, a connection
+attempt to COM9 ended in a handled serial timeout, nine Bluetooth serial ports were listed (none
+confirmed to be an OBD-II adapter); the exact automated test output was not supplied.
 
 - [x] Implement read-only OBD-II connectivity. In-house ELM327 client with a closed command
   allowlist (prohibited commands tested), serial/Bluetooth-Classic ports, discovery without
@@ -131,15 +134,33 @@ migration data-loss defect and a worker-thread deadlock found during development
 
 ## Phase 5 — Professional Release (target: days 26–30)
 
-- [ ] Perform integration and performance testing.
-- [ ] Review security, privacy and safety.
-- [ ] Configure automated release builds.
-- [ ] Build Windows executable.
-- [ ] Build Windows installer.
-- [ ] Create application branding and icon.
-- [ ] Create actual screenshots and demonstration video.
-- [ ] Finalize documentation.
-- [ ] Publish Version 2.0.0 after approval.
+Implemented in the *sandbox* (Linux, headless Qt). Windows artifacts cannot be built there: the
+Windows build, installer and their verification are configured and scripted but **not yet
+executed**. Details: [docs/release-checklist.md](docs/release-checklist.md).
+
+- [x] Perform integration, regression and performance testing. End-to-end scenarios A–H,
+  hardware-safety and release regression tests, sustained 20-minute monitoring run and
+  component benchmarks ([docs/performance.md](docs/performance.md)) — *sandbox*; Windows
+  re-run ⏳.
+- [x] Review security, privacy and safety. Threat model, findings fixed (transport-level
+  allowlist, COM release), pip-audit of all lock files, SBOM, licensing review
+  ([docs/security-review.md](docs/security-review.md)).
+- [ ] ⏳ Configure automated release builds. `ci.yml`, `windows-build.yml`, `release.yml`
+  written and checked with actionlint; **not yet run on GitHub**.
+- [ ] ⏳ Build Windows executable. PyInstaller spec and scripts complete; spec validated with a
+  Linux build (frozen self-test and GUI pass); Windows build and smoke test pending.
+- [ ] ⏳ Build Windows installer. Inno Setup script and automated install/upgrade/uninstall
+  test written; not yet compiled or tested on Windows.
+- [x] Create application branding and icon. Original logo, ICO 16–256 px, installer artwork,
+  integrated in window, sidebar, About, PDF reports and README.
+- [ ] Create actual screenshots and demonstration video. Screenshots recaptured from the real
+  application (*sandbox*, offscreen); installer screenshot and the video are pending (storyboard
+  and narration in [docs/demo/storyboard.md](docs/demo/storyboard.md)).
+- [x] Finalize documentation. README, user/developer/build/installation guides, privacy,
+  security, licensing, packaging, release verification, known limitations, portfolio.
+- [ ] Publish Version 2.0.0 after approval. Release notes, tag and draft-release workflow
+  prepared; **publication requires the owner's approval** and should be a pre-release until the
+  Windows gates pass.
 
 ---
 
@@ -147,9 +168,11 @@ migration data-loss defect and a worker-thread deadlock found during development
 
 | Decision | Proposal | Status |
 |---|---|---|
-| Open-source licence | MIT (permissive, standard for portfolio projects) | Awaiting approval |
+| Open-source licence | MIT (`LICENSE` present since Phase 1; kept in Phase 5) | Confirmation before publication |
 | Public repository creation | `Hiranya-Bandara/SmartDrive-Guardian-AI`, public | Awaiting approval |
-| Inter font bundling | Use Segoe UI by default; bundle Inter (SIL OFL 1.1) in Phase 2 with its licence file | Proposed |
+| Inter font bundling | Not bundled; the UI uses Segoe UI on Windows | Closed (no font is distributed) |
+| Release designation | Publish 2.0.0 as a GitHub **pre-release** until the Windows gates pass | Proposed |
+| Code signing | Unsigned for 2.0.0; see `docs/code-signing.md` | Proposed |
 
 ## Schedule note
 

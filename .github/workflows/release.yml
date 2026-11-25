@@ -1,0 +1,82 @@
+name: Release (draft)
+
+# Runs only for version tags (for example v2.0.0) pushed by the maintainer, or manually.
+# It rebuilds and re-verifies everything with the Windows build workflow, then creates a DRAFT
+# pre-release with the verified artifacts. Publishing the draft is a manual step on GitHub.
+# The "release" environment should be configured with required reviewers so that even the draft
+# needs the maintainer's approval (Settings > Environments > release).
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to build a draft release for (for example v2.0.0)"
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check-version:
+    name: Tag matches application version
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ inputs.tag || github.ref }}
+      - id: version
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          version=$(python3 -c "import re;print(re.search(r'__version__: Final = \"([^\"]+)\"', open('src/smartdrive/__init__.py').read()).group(1))")
+          echo "Tag: $TAG, application version: $version"
+          if [ "$TAG" != "v$version" ]; then
+            echo "::error::Tag $TAG does not match application version $version"
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: check-version
+    uses: ./.github/workflows/windows-build.yml
+
+  draft-release:
+    name: Create draft pre-release
+    needs: [check-version, build]
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ needs.check-version.outputs.tag }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: smartdrive-windows-release-candidate
+          path: release
+      - name: Verify checksums of downloaded artifacts
+        working-directory: release
+        run: sha256sum -c SHA256SUMS.txt
+      - name: Create draft pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.check-version.outputs.tag }}
+        run: |
+          gh release create "$TAG" release/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --draft \
+            --prerelease \
+            --verify-tag \
+            --title "SmartDrive Guardian AI ${TAG#v} — Intelligent Vehicle Diagnostics" \
+            --notes-file RELEASE_NOTES.md

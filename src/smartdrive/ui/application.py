@@ -29,7 +29,9 @@ from smartdrive.services.trip_service import TripService
 from smartdrive.services.vehicle_service import VehicleService
 from smartdrive.ui.context import AppState, Notifier, UiContext
 from smartdrive.ui.diagnostics_controller import DiagnosticsController
+from smartdrive.ui.dialogs.welcome import show_welcome
 from smartdrive.ui.gc_guard import MainThreadGarbageCollector
+from smartdrive.ui.icons import app_icon
 from smartdrive.ui.main_window import MainWindow
 from smartdrive.ui.monitoring_controller import MonitoringController
 from smartdrive.ui.notification_controller import NotificationController
@@ -60,6 +62,7 @@ def ensure_qapplication(argv: Sequence[str] | None = None) -> QApplication:
     app.setApplicationVersion(__version__)
     app.setOrganizationName(APP_AUTHOR)
     app.setDesktopFileName(APP_ID)
+    app.setWindowIcon(app_icon())
     font = QFont()
     font.setFamilies(FONT_FAMILIES)
     font.setPointSizeF(10)
@@ -227,6 +230,9 @@ def run(
         return 1
     gui = GuiApplication(app_context)
     gui.window.show()
+    if not app_context.settings.general.welcome_seen:
+        # Non-blocking, so start-up (and the timed smoke test) never waits for it.
+        show_welcome(gui.ui, gui.window)
     if quit_after_ms is not None:
         QTimer.singleShot(quit_after_ms, qt_app.quit)
     try:

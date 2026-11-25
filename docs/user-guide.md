@@ -4,7 +4,14 @@ SmartDrive Guardian AI is an **experimental** diagnostic and maintenance assista
 certified vehicle safety system, an autonomous driving system or a replacement for a qualified
 mechanic. A clean result never means the vehicle is safe to drive.
 
-Launch it with `smartdrive gui` (or `smartdrive-gui`, which opens without a console window).
+Install it with the Windows installer or the portable ZIP ([installation.md](installation.md)) and
+start **SmartDrive Guardian AI** from the Start Menu. From a source checkout, run `smartdrive gui`
+(or `smartdrive-gui`, which opens without a console window).
+
+On the first start a short **welcome guide** explains simulation and live modes, what the AI
+findings can and cannot tell you, and where your data is kept. Reopen it from **About → Show
+welcome guide**. Problems: [troubleshooting.md](troubleshooting.md). Data and privacy:
+[PRIVACY.md](../PRIVACY.md).
 
 ## Getting started
 

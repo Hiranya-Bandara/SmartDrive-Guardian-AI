@@ -6,6 +6,12 @@ support is **unverified**. Automated tests use a mock adapter and do not count a
 
 **Overall status: PENDING — no physical adapter or vehicle has been tested.**
 
+Owner observation (Windows, source build, after Phase 4 — not a checklist result): PySerial
+listed nine Bluetooth serial ports; none was confirmed to be an OBD-II adapter. A connection
+attempt to COM9 ended in a handled serial timeout. This shows the timeout handling works; it does
+not show compatibility with any adapter or vehicle. Version 2.0.0 does not depend on this
+checklist for its software release; live mode stays labelled experimental until it is done.
+
 ## Safety rules for testing
 
 - Test with the vehicle **parked**, on level ground, parking brake on, in a ventilated area

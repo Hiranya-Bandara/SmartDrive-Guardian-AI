@@ -51,3 +51,16 @@ chore: update pinned dependencies
 
 Add the dependency to `pyproject.toml` in the phase that first uses it, then run
 `.\scripts\lock-dependencies.ps1` and commit both requirements files.
+
+## Releases
+
+Releases are prepared on a `feature/*` branch, merged into `development`, verified as a release
+candidate (the **Windows build** workflow and the manual checks in
+`docs/release-verification.md`), then merged into `main` with the owner's approval. Only the
+owner creates the version tag (`v2.0.0`); the **Release (draft)** workflow then builds and
+verifies everything again and creates a draft pre-release, which the owner publishes by hand.
+Never force-push, rewrite published history or publish from a feature branch. The full gate list
+is in `docs/release-checklist.md`.
+
+Pull requests that touch vehicle communication must keep `tests/unit/test_hardware_safety.py`
+passing and must not add requests to the allowlist that write, clear, control or flash anything.

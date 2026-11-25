@@ -4,33 +4,51 @@
 
 | Version | Supported |
 |---|---|
-| 2.0.x (in development) | Yes |
+| 2.0.x | Yes (security fixes) |
+| Earlier 2.0 development builds | No — upgrade to the latest 2.0.x |
 | 1.x | No (separate, retired codebase) |
 
 ## Reporting a vulnerability
 
-Please do **not** open a public issue. Use GitHub's private vulnerability reporting
-(**Security → Report a vulnerability**) on the repository. Include the version, the steps to
-reproduce and the potential impact. You can expect an acknowledgement within 7 days.
+Please do **not** open a public issue. Use GitHub's private vulnerability reporting on the
+repository (**Security → Report a vulnerability**,
+<https://github.com/Hiranya-Bandara/SmartDrive-Guardian-AI/security/advisories/new>). If that is
+not available, open an issue that asks the maintainer to contact you, without any details of the
+problem. Include the version, the steps to reproduce and the potential impact. This is a
+one-person project: expect an acknowledgement within 7 days and no guaranteed fix time.
 
-## Security and privacy design
+Reports about vehicle safety (anything that could send a non-read-only request to a vehicle)
+are treated as the highest priority.
 
-- **Offline-first.** The application makes no network requests and collects no telemetry
-  about its users.
-- **Local data only.** The database, settings, logs and backups live in per-user OS folders,
-  never in the installation folder or the repository.
-- **Personal identifiers are optional.** VIN and registration number can be left blank or
-  removed later. They are masked in log files by default.
-- **Safe database access.** All queries go through SQLAlchemy with bound parameters, and
-  foreign keys and constraints are enforced.
-- **Restore validation.** A file is checked for the SQLite header, passes an integrity check and
-  has a known schema revision before it can replace the live database. A safety backup is always
-  taken first.
-- **Export paths.** User-chosen export paths are resolved and validated: only allowed file
-  types, in an existing folder, and never a directory.
-- **Model files** (from Phase 3). Only bundled models whose SHA-256 hashes are recorded in the
-  model registry will be loaded. Untrusted pickle/joblib files will never be deserialised.
-- **Vehicle safety.** OBD-II access will be strictly read-only: no ECU writes, no actuator
-  commands and no automatic clearing of trouble codes.
-- **Dependencies** are pinned and audited with `pip-audit` in CI, and Dependabot proposes updates.
-- **Secrets.** There are no credentials in the codebase. `.env` and key files are git-ignored.
+## Verifying downloads
+
+Release artifacts are **not code-signed**. Compare the SHA-256 checksum of each download with
+`SHA256SUMS.txt` on the GitHub release page:
+
+```powershell
+Get-FileHash .\SmartDrive-Guardian-AI-Setup-v2.0.0.exe -Algorithm SHA256
+```
+
+A matching checksum shows the file is the one published; it does not prove who published it in
+the way a code signature would. See [docs/installation.md](docs/installation.md).
+
+## Security and privacy design (summary)
+
+- **Offline.** The application contains no network code and collects no usage data.
+- **Read-only vehicle access.** A closed allowlist of 65 requests, enforced in the OBD client and
+  again on the raw bytes at the serial boundary. No clearing of trouble codes, no ECU writes,
+  actuator control, flashing, security access or user-typed commands. Never connects on its own.
+- **Local data only**, in per-user folders, never in the installation folder.
+- **Identifiers** (VIN, registration) are optional, masked in logs and left out of reports by
+  default.
+- **Bundled models only**, loaded after a SHA-256 check against the manifest. This detects
+  corruption, not a deliberate replacement of both files (see the review).
+- **Database**: bound parameters, enforced foreign keys, validated restores with a safety backup.
+- **Exports**: user-chosen locations, atomic writes, CSV formula-injection protection.
+- **Installer**: per-user, no administrator rights, no services, drivers or startup entries;
+  user data is preserved on upgrade and uninstall.
+- **Supply chain**: pinned dependencies audited with pip-audit in CI, Dependabot updates, GitHub
+  Actions pinned to commit SHAs with least-privilege tokens, CycloneDX SBOM per release.
+
+The full threat model, findings and residual risks are in
+[docs/security-review.md](docs/security-review.md).

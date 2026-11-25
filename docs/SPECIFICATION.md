@@ -12,7 +12,7 @@ Act as a senior software architect, Python developer, machine learning engineer,
 
 Design and develop a complete, professional, production-style desktop application named **SmartDrive Guardian AI 2.0**.
 
-**Tagline:** Intelligent Vehicle Diagnostics & Predictive Maintenance.
+**Tagline:** Intelligent Diagnostics. Smarter Maintenance. (Until Phase 4: "Intelligent Vehicle Diagnostics & Predictive Maintenance".)
 
 The application must provide intelligent vehicle monitoring, real-time telemetry visualization, machine learning-based diagnostics, anomaly detection, predictive maintenance assistance, vehicle management, trip analytics and optional real-world vehicle connectivity.
 
@@ -1461,3 +1461,7 @@ docs/architecture.md (decision log).
 | 2026-11-25 | Phase 4 §15 | Maintenance reminder windows are set per schedule (days/km before due). Example intervals are labelled as examples and never presented as manufacturer schedules. |
 | 2026-11-25 | Phase 4 §24 navigation | Sidebar grouped as Monitor / Vehicle / Tools / System; Phase 2/3 shortcuts Ctrl+1…7 unchanged; new pages on Ctrl+8, Ctrl+9, Ctrl+0 and Ctrl+Shift+T/M/R. |
 | 2026-11-25 | Phase 4 §27 database | Migration 0003 extends existing tables and adds six. Migrations run with SQLite foreign keys off and a `foreign_key_check`, and the database is backed up automatically before an upgrade. |
+| 2026-11-25 | §2, §28 (Phase 5) | Tagline changed to "Intelligent Diagnostics. Smarter Maintenance." as requested in the Phase 5 brief. |
+| 2026-11-25 | §28 (Phase 5) | Windows distribution is a PyInstaller one-folder build plus Inno Setup installer; no one-file executable (start-up time, antivirus behaviour, LGPL replaceability). Release artifacts are unsigned; SHA-256 checksums, SBOM and notices are published instead. |
+| 2026-11-25 | §27 (Phase 5) | Release workflow creates a draft pre-release only; publication and tagging remain manual owner actions. |
+| 2026-11-25 | §23 (Phase 5) | Read-only allowlist additionally enforced on raw bytes at the transport boundary. |

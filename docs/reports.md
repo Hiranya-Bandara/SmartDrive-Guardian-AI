@@ -65,7 +65,7 @@ Format:
 
 Registration number, VIN and the vehicle's garage notes are excluded unless "Include …" is
 ticked for the report (defaults in **Settings → Trips, maintenance and reports**). PDF
-metadata contains no user, computer or path information. See [privacy.md](privacy.md).
+metadata contains no user, computer or path information. See [PRIVACY.md](../PRIVACY.md).
 
 ## Limitations
 

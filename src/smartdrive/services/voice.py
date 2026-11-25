@@ -19,6 +19,9 @@ from typing import Any, Final, Protocol
 logger = logging.getLogger(__name__)
 
 QUEUE_LIMIT: Final = 8
+# A plain flag (not an inline sys.platform check) so both branches are type-checked everywhere
+# and the COM handling can be tested off Windows with a stand-in comtypes module.
+_IS_WINDOWS: Final = sys.platform == "win32"
 MAX_TEXT_LENGTH: Final = 200
 
 
@@ -76,16 +79,14 @@ class Pyttsx3Backend:
     """Created and used on the voice worker thread only."""
 
     def __init__(self) -> None:
-        if sys.platform == "win32":
-            try:
-                import comtypes
+        self._com_initialised = _com_initialise()
+        try:
+            import pyttsx3
 
-                comtypes.CoInitialize()  # type: ignore[no-untyped-call]
-            except Exception:  # pragma: no cover - Windows only
-                logger.warning("COM initialisation for speech failed", exc_info=True)
-        import pyttsx3
-
-        self._engine: Any = pyttsx3.init()
+            self._engine: Any = pyttsx3.init()
+        except Exception:
+            self._release_com()
+            raise
 
     @property
     def available(self) -> bool:
@@ -112,6 +113,37 @@ class Pyttsx3Backend:
             self._engine.stop()
         except Exception:  # pragma: no cover - best effort during shutdown
             logger.debug("Speech engine stop failed", exc_info=True)
+        self._engine = None
+        self._release_com()
+
+    def _release_com(self) -> None:
+        if self._com_initialised:
+            self._com_initialised = False
+            _com_uninitialise()
+
+
+def _com_initialise() -> bool:
+    """Initialise COM on the calling (voice worker) thread. Windows only; balanced by close()."""
+    if not _IS_WINDOWS:
+        return False
+    try:
+        import comtypes
+
+        # Typed on Windows (comtypes installed); absent elsewhere, hence unused-ignore.
+        comtypes.CoInitialize()  # type: ignore[no-untyped-call,unused-ignore]
+    except Exception:
+        logger.warning("COM initialisation for speech failed", exc_info=True)
+        return False
+    return True
+
+
+def _com_uninitialise() -> None:
+    try:
+        import comtypes
+
+        comtypes.CoUninitialize()  # type: ignore[no-untyped-call,unused-ignore]
+    except Exception:
+        logger.debug("COM uninitialisation failed", exc_info=True)
 
 
 def create_backend() -> SpeechBackend:
