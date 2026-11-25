@@ -18,6 +18,19 @@ def _top_level_menus() -> set[QMenu]:
     return {w for w in QApplication.topLevelWidgets() if isinstance(w, QMenu)}
 
 
+def create_plot_widget() -> pg.PlotWidget:
+    """A PlotWidget whose context menus are owned by the widget.
+
+    PyQtGraph creates its menus without a parent; adopting them ensures they are destroyed with
+    the chart instead of living for the rest of the process.
+    """
+    existing = _top_level_menus()
+    plot = pg.PlotWidget()
+    for menu in _top_level_menus() - existing:
+        menu.setParent(plot, menu.windowFlags())
+    return plot
+
+
 class ChartContainer(Card):
     """A titled card holding one plot. NaN values break the line, so gaps stay visible."""
 
@@ -33,12 +46,7 @@ class ChartContainer(Card):
         super().__init__(title, parent)
         self._palette = DARK
         self._curve_colours: dict[str, str] = {}
-        existing_menus = _top_level_menus()
-        self.plot = pg.PlotWidget()
-        # PyQtGraph creates its context menus without a parent; adopt them so they are
-        # destroyed with the chart instead of living for the rest of the process.
-        for menu in _top_level_menus() - existing_menus:
-            menu.setParent(self.plot, menu.windowFlags())
+        self.plot = create_plot_widget()
         self.plot.setMinimumHeight(height)
         self.plot.setMenuEnabled(False)
         self.plot.hideButtons()

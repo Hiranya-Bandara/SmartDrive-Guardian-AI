@@ -6,16 +6,24 @@ from PySide6.QtCore import Qt, QTimer, Signal
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
+from smartdrive.ai.model_registry import CLASSIFIER_NAME
 from smartdrive.config.constants import DataSource, Severity, UnitSystem
 from smartdrive.core.sensors import SENSOR_BY_KEY
 from smartdrive.core.units import MISSING_TEXT
 from smartdrive.models.alert import Alert
+from smartdrive.models.diagnostic import SEVERITY_RANK, DiagnosticStatus
 from smartdrive.models.vehicle import Vehicle
 from smartdrive.services.data_source import TelemetryFrame
 from smartdrive.ui.context import UiContext
 from smartdrive.ui.dialogs.vehicle_dialog import enum_label
 from smartdrive.ui.icons import pixmap
 from smartdrive.ui.monitoring_controller import MonitoringState
+from smartdrive.ui.pages.ai_diagnostics import (
+    RUN_STATUS_TEXT,
+    STATUS_DISPLAY,
+    format_time,
+    model_status_pill,
+)
 from smartdrive.ui.pages.base import Page
 from smartdrive.ui.themes.palette import ThemePalette
 from smartdrive.ui.top_bar import CONNECTION_TEXT, format_age, mode_status
@@ -23,6 +31,7 @@ from smartdrive.ui.widgets.base import IconPushButton, label
 from smartdrive.ui.widgets.cards import Card, MetricCard
 from smartdrive.ui.widgets.charts import ChartContainer
 from smartdrive.ui.widgets.gauges import CircularGauge, GaugeBand, LinearGauge
+from smartdrive.ui.widgets.health_score import HealthScoreWidget
 from smartdrive.ui.widgets.monitoring_controls import MonitoringControls
 from smartdrive.ui.widgets.notifications import Banner
 from smartdrive.ui.widgets.states import StatefulStack
@@ -140,8 +149,8 @@ class AlertsCard(Card):
         if not alerts:
             self.stack.show_empty(
                 "No alerts recorded",
-                "Automatic alerting arrives with the diagnostic engine. The absence of alerts "
-                "does not mean the vehicle is safe to drive.",
+                "Warning and critical diagnostic findings for the active vehicle appear here. "
+                "The absence of alerts does not mean the vehicle is safe to drive.",
             )
             return
         for alert in alerts:
@@ -154,6 +163,101 @@ class AlertsCard(Card):
             holder.setLayout(row)
             self._rows.insertWidget(self._rows.count() - 1, holder)
         self.stack.show_content()
+
+
+class DiagnosticsSummary(Card):
+    """Compact view of the latest hybrid assessment, with an explicit state when there is none."""
+
+    open_details = Signal()
+
+    def __init__(self, ctx: UiContext) -> None:
+        super().__init__("AI diagnostics (experimental)")
+        self.ctx = ctx
+        row = QHBoxLayout()
+        row.setSpacing(18)
+        self.health = HealthScoreWidget(compact=True)
+        row.addWidget(self.health, 0, Qt.AlignmentFlag.AlignTop)
+        facts = QVBoxLayout()
+        facts.setSpacing(6)
+        self.status_pill = StatusIndicator(prefix="Diagnostic status: ")
+        self.models_pill = StatusIndicator()
+        pills = QHBoxLayout()
+        pills.addWidget(self.status_pill)
+        pills.addWidget(self.models_pill)
+        pills.addStretch(1)
+        facts.addLayout(pills)
+        self.warnings_label = label("", wrap=True)
+        self.anomaly_label = label("", "muted", wrap=True)
+        self.inference_label = label("", "muted")
+        facts.addWidget(self.warnings_label)
+        facts.addWidget(self.anomaly_label)
+        facts.addWidget(self.inference_label)
+        row.addLayout(facts, 2)
+        findings = QVBoxLayout()
+        findings.addWidget(label("Current findings", "card-title"))
+        self.findings_label = label("", wrap=True)
+        findings.addWidget(self.findings_label)
+        findings.addStretch(1)
+        self.details_button = IconPushButton("Open AI Diagnostics", "cpu", variant="ghost")
+        self.details_button.clicked.connect(self.open_details)
+        findings.addWidget(self.details_button, 0, Qt.AlignmentFlag.AlignRight)
+        row.addLayout(findings, 3)
+        self.body.addLayout(row)
+        ctx.diagnostics.assessment_changed.connect(lambda _a: self.refresh_view())
+        ctx.diagnostics.models_changed.connect(self.refresh_view)
+        ctx.monitoring.state_changed.connect(lambda _s: self.refresh_view())
+        self.refresh_view()
+
+    def refresh_view(self) -> None:
+        ctx = self.ctx
+        latest = ctx.diagnostics.latest
+        self.health.set_health(latest.health if latest else None)
+        classifier_text, classifier_level = model_status_pill(ctx, CLASSIFIER_NAME, "Models")
+        self.models_pill.set_status(classifier_text, classifier_level)
+        self.inference_label.setText(
+            f"Last inference: {format_time(ctx.diagnostics.last_inference_at)}"
+        )
+        if latest is None:
+            idle = (
+                "Monitoring stopped"
+                if not ctx.monitoring.is_active
+                else "Loading models"
+                if ctx.diagnostics.models_loading
+                else "Collecting telemetry"
+            )
+            self.status_pill.set_status(idle, StatusLevel.OFFLINE)
+            self.warnings_label.setText("Active warnings: —")
+            self.anomaly_label.setText("Anomaly detection: —")
+            self.findings_label.setText("No assessment yet.")
+            return
+        self.status_pill.set_status(*STATUS_DISPLAY[latest.status])
+        self.warnings_label.setText(f"Active warnings: {latest.warning_count}")
+        anomaly = latest.anomaly
+        if anomaly.score is None:
+            self.anomaly_label.setText(f"Anomaly detection: {RUN_STATUS_TEXT[anomaly.status]}")
+        else:
+            state = (
+                "persistent unusual pattern"
+                if anomaly.persistent
+                else ("unusual reading" if anomaly.is_anomalous else "within normal range")
+            )
+            self.anomaly_label.setText(f"Anomaly detection: {state} (score {anomaly.score:.3f})")
+        if latest.findings:
+            ordered = sorted(latest.findings, key=lambda f: SEVERITY_RANK[f.severity], reverse=True)
+            self.findings_label.setText(
+                "\n".join(f"{f.severity.value.title()} — {f.title}" for f in ordered[:4])
+            )
+        elif latest.status is DiagnosticStatus.INSUFFICIENT_DATA:
+            self.findings_label.setText(f"Insufficient data: {latest.quality.reason}")
+        elif latest.status is DiagnosticStatus.STALE:
+            self.findings_label.setText("Telemetry is stale; no current assessment.")
+        else:
+            self.findings_label.setText(
+                "No abnormality detected. This does not mean the vehicle is safe to drive."
+            )
+
+    def apply_palette(self, palette: ThemePalette) -> None:
+        self.details_button.apply_palette(palette)
 
 
 class DashboardPage(Page):
@@ -237,6 +341,10 @@ class DashboardPage(Page):
         cluster.body.addLayout(grid)
         self.content.addWidget(cluster)
 
+        self.diagnostics_card = DiagnosticsSummary(ctx)
+        self.diagnostics_card.open_details.connect(lambda: self.navigate.emit("diagnostics"))
+        self.content.addWidget(self.diagnostics_card)
+
         bottom = QHBoxLayout()
         bottom.setSpacing(16)
         self.speed_chart = ChartContainer(
@@ -260,6 +368,7 @@ class DashboardPage(Page):
         monitoring.connection_changed.connect(self._refresh_status)
         ctx.state.active_vehicle_changed.connect(lambda _v: self._refresh_vehicle())
         ctx.state.settings_changed.connect(lambda _s: self._apply_units())
+        ctx.diagnostics.alerts_raised.connect(lambda _a: self._refresh_alerts())
         self._timer = QTimer(self)
         self._timer.setInterval(REFRESH_MS)
         self._timer.timeout.connect(self._refresh_live)
@@ -281,6 +390,10 @@ class DashboardPage(Page):
     def _refresh_vehicle(self) -> None:
         vehicle = self.ctx.state.active_vehicle
         self.vehicle_card.show_vehicle(vehicle, self.ctx.theme.palette)
+        self._refresh_alerts()
+
+    def _refresh_alerts(self) -> None:
+        vehicle = self.ctx.state.active_vehicle
         alerts = self.ctx.telemetry.recent_alerts(vehicle_id=vehicle.id if vehicle else None)
         self.alerts_card.show_alerts(alerts)
 

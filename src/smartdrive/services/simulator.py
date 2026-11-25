@@ -65,6 +65,8 @@ class SimulationConfig:
     noise_scale: float = 1.0
     ambient_c: float = 30.0
     fault_development_s: float | None = None
+    custom_definition: ScenarioDefinition | None = None
+    initial_coolant_c: float | None = None
 
     def __post_init__(self) -> None:
         if not 0.0 <= self.noise_scale <= 5.0:
@@ -73,10 +75,17 @@ class SimulationConfig:
             raise ValueError("ambient_c must be between -30 and 50 °C")
         if self.fault_development_s is not None and self.fault_development_s < 0:
             raise ValueError("fault_development_s cannot be negative")
+        if self.initial_coolant_c is not None and not (
+            self.ambient_c - 5 <= self.initial_coolant_c <= 110
+        ):
+            raise ValueError("initial_coolant_c must be between ambient - 5 °C and 110 °C")
+        if (self.scenario is ScenarioId.GENERATED) != (self.custom_definition is not None):
+            raise ValueError("custom_definition is required for, and only for, generated sessions")
 
     @property
     def definition(self) -> ScenarioDefinition:
-        return SCENARIOS[self.scenario]
+        """Catalogue scenario, or the custom definition used for dataset generation."""
+        return self.custom_definition or SCENARIOS[self.scenario]
 
 
 @dataclass(frozen=True, slots=True)
@@ -207,9 +216,14 @@ class VehicleSimulator:
         self._fault_rng = random.Random(f"{seed}:faults")
         init_rng = random.Random(f"{seed}:initial")
         ambient = self._config.ambient_c
+        coolant = ambient + 40.0 + init_rng.uniform(0, 10)
+        oil = ambient + 35.0
+        if self._config.initial_coolant_c is not None:
+            coolant = self._config.initial_coolant_c
+            oil = coolant - 5.0
         self._state = _VehicleState(
-            coolant_temp_c=ambient + 40.0 + init_rng.uniform(0, 10),
-            oil_temp_c=ambient + 35.0,
+            coolant_temp_c=coolant,
+            oil_temp_c=oil,
             intake_air_temp_c=ambient + 2.0,
             fuel_level_pct=init_rng.uniform(55, 85),
         )

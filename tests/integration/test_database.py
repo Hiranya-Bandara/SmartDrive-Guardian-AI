@@ -22,6 +22,7 @@ EXPECTED_TABLES = {
     "alembic_version",
     "alerts",
     "app_settings",
+    "diagnostic_assessments",
     "diagnostic_results",
     "diagnostic_trouble_codes",
     "driving_sessions",

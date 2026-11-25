@@ -38,6 +38,7 @@ from smartdrive.config.constants import (
     TransmissionType,
 )
 from smartdrive.database.types import UtcDateTime, utc_now
+from smartdrive.models.diagnostic import DiagnosticStatus
 
 NAMING_CONVENTION = {
     "ix": "ix_%(column_0_label)s",
@@ -153,6 +154,42 @@ class TelemetryReadingRecord(Base):
     extra: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
 
 
+class DiagnosticAssessmentRecord(Base):
+    """One hybrid-engine analysis: health-score history, model outputs and data quality."""
+
+    __tablename__ = "diagnostic_assessments"
+    __table_args__ = (
+        CheckConstraint(
+            "health_score IS NULL OR (health_score >= 0 AND health_score <= 100)",
+            name="health_score_range",
+        ),
+        CheckConstraint(
+            "data_completeness >= 0 AND data_completeness <= 1", name="completeness_range"
+        ),
+        Index("ix_diagnostic_assessments_vehicle_created", "vehicle_id", "created_at"),
+        Index("ix_diagnostic_assessments_session", "session_id"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    vehicle_id: Mapped[int] = mapped_column(ForeignKey("vehicles.id", ondelete="CASCADE"))
+    session_id: Mapped[int | None] = mapped_column(
+        ForeignKey("driving_sessions.id", ondelete="SET NULL")
+    )
+    created_at: Mapped[datetime] = mapped_column(UtcDateTime(), default=utc_now)
+    data_source: Mapped[DataSource] = mapped_column(_enum(DataSource, "assessment_data_source"))
+    status: Mapped[DiagnosticStatus] = mapped_column(_enum(DiagnosticStatus, "diagnostic_status"))
+    severity: Mapped[Severity] = mapped_column(_enum(Severity, "assessment_severity"))
+    health_score: Mapped[int | None] = mapped_column(Integer)
+    data_completeness: Mapped[float] = mapped_column(Float)
+    classifier_status: Mapped[str] = mapped_column(String(32))
+    anomaly_status: Mapped[str] = mapped_column(String(32))
+    anomaly_score: Mapped[float | None] = mapped_column(Float)
+    is_anomalous: Mapped[bool] = mapped_column(Boolean, default=False)
+    probabilities: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    model_versions: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    inference_ms: Mapped[float] = mapped_column(Float, default=0.0)
+
+
 class DiagnosticResultRecord(Base):
     __tablename__ = "diagnostic_results"
     __table_args__ = (
@@ -167,7 +204,12 @@ class DiagnosticResultRecord(Base):
     session_id: Mapped[int | None] = mapped_column(
         ForeignKey("driving_sessions.id", ondelete="SET NULL")
     )
+    assessment_id: Mapped[int | None] = mapped_column(
+        ForeignKey("diagnostic_assessments.id", ondelete="SET NULL"), index=True
+    )
     created_at: Mapped[datetime] = mapped_column(UtcDateTime(), default=utc_now)
+    data_source: Mapped[DataSource | None] = mapped_column(_enum(DataSource, "finding_data_source"))
+    finding_key: Mapped[str | None] = mapped_column(String(80))
     source: Mapped[DiagnosticSource] = mapped_column(_enum(DiagnosticSource, "diagnostic_source"))
     category: Mapped[FaultCategory] = mapped_column(_enum(FaultCategory, "fault_category"))
     severity: Mapped[Severity] = mapped_column(_enum(Severity, "diagnostic_severity"))
@@ -219,6 +261,9 @@ class AlertRecord(Base):
     title: Mapped[str] = mapped_column(String(160))
     message: Mapped[str] = mapped_column(Text, default="")
     data_source: Mapped[DataSource | None] = mapped_column(_enum(DataSource, "alert_data_source"))
+    source: Mapped[DiagnosticSource | None] = mapped_column(
+        _enum(DiagnosticSource, "alert_diagnostic_source")
+    )
     dedup_key: Mapped[str] = mapped_column(String(160))
     occurrence_count: Mapped[int] = mapped_column(Integer, default=1)
     acknowledged_at: Mapped[datetime | None] = mapped_column(UtcDateTime())

@@ -6,6 +6,66 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+### Added — Phase 3: Advanced AI Engine
+
+- **Dataset pipeline** (`ai/dataset.py`): reproducible synthetic dataset `sdg-ds-1.1.0` (324
+  sessions, 33,194 windows). It covers varied driving patterns, noise, ambient and starting
+  temperatures, dropouts, unsupported sensors and connection loss, with gradual,
+  partial-severity, intermittent and simultaneous faults, and labels from ground truth.
+  Splits are by whole session, with leakage checks, validation, a fingerprint, metadata and a
+  dataset card.
+- **Features** (`ai/features.py`): 96 features from a 60-second window resampled to 1-second
+  bins (independent of the refresh rate), with completeness indicators. Missing values stay
+  missing.
+- **Random Forest** multi-label fault classifier: model selection and precision-constrained
+  thresholds on validation, abstention on insufficient, stale or out-of-distribution data, and
+  "not assessed" for lubrication when oil pressure is unavailable.
+- **Isolation Forest** anomaly detector trained on normal driving, with three sensitivity levels
+  and persistence.
+- **Rule engine** (`core/rule_engine.py`): seven transparent rules with configurable
+  thresholds, persistence, hysteresis, missing/stale handling and vehicle context.
+- **Hybrid diagnostic engine** with a documented disagreement policy (rules are never
+  overridden; model findings are at most warning; anomaly-only findings are information),
+  insufficient-data and stale states, cautious recommendations and an experimental health score
+  with itemised deductions.
+- **Explainable AI:** exact tree-path contributions per prediction, plus global permutation
+  importance.
+- **Trusted model registry:** SHA-256 manifest, scikit-learn version and feature-schema checks,
+  and reported unavailable, integrity-failed and incompatible states.
+- **Evaluation and reporting:** `scripts/train_models.py` produces metrics.json,
+  classification_report.json, confusion matrices, feature importance, calibration and
+  anomaly-score figures, a model card, a dataset card and an evaluation report. The report
+  includes the rule-baseline comparison, recall by driving pattern and a check of the built-in
+  scenarios through the full engine.
+- **Database migration 0002:** `diagnostic_assessments` (prediction and health history),
+  links from findings to assessments, and diagnostic source and data source on findings and
+  alerts. Existing records are preserved.
+- **Diagnostic persistence and alerts:** throttled history, per-vehicle deduplication,
+  cooldown and escalation.
+- **GUI:**
+  - Background `InferenceWorker` and `DiagnosticsController` (no overlapping jobs, stale
+    results discarded).
+  - New **AI Diagnostics** page (overview, findings, recommendations, model output, anomaly
+    status, explanation and importance charts, health trend, filterable history).
+  - An AI summary card on the dashboard, alert toasts, and AI settings in Settings.
+- **Documentation:** `docs/ml/README.md`, `docs/user-guide.md`, and database upgrade and
+  recovery procedures. Phase 3 adds 84 tests (327 in total), which use a tiny dataset and small forests.
+
+### Changed — Phase 3
+
+- Simulator: faults support a maximum severity and an intermittent on/off cycle; configs accept
+  a custom scenario definition and an optional initial coolant temperature. Defaults are
+  unchanged, so existing scenarios behave exactly as before.
+- Dependencies: scikit-learn 1.9 and joblib (runtime); matplotlib in the new `training` extra.
+- AI Diagnostics moved from "Coming later" into the main navigation (Ctrl+5); Settings is now
+  Ctrl+6 and About Ctrl+7.
+
+### Fixed — Phase 3
+
+- The first trained models (dataset 1.0.0) reported cooling faults on healthy idling in
+  44–60 % of analyses. Dataset 1.1.0 and a new built-in-scenario check in every training run
+  address this (now 0 alarms in 40 healthy drives).
+
 ### Added — Phase 2: Professional Desktop Application
 
 - PySide6 desktop application (`smartdrive gui`, `smartdrive-gui`), with a lifecycle manager,

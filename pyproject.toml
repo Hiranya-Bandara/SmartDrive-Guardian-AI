@@ -31,10 +31,19 @@ dependencies = [
     "PySide6-Essentials>=6.8,<6.13",
     "pyqtgraph>=0.13.7,<0.15",
     "numpy>=2.0,<3",
+    # The shipped model artifacts only load with the scikit-learn minor version that trained
+    # them (enforced by the model registry); retrain with scripts/train_models.py when bumping.
+    "scikit-learn>=1.9,<1.10",
+    "joblib>=1.4,<2",
 ]
 
 [project.optional-dependencies]
+# Only needed to regenerate the dataset, models and evaluation figures.
+training = [
+    "matplotlib>=3.9,<4",
+]
 dev = [
+    "smartdrive-guardian-ai[training]",
     "pytest>=8.3",
     "pytest-cov>=6.0",
     "pytest-qt>=4.4",
@@ -62,6 +71,8 @@ smartdrive = [
     "database/migrations/script.py.mako",
     "database/migrations/versions/*.py",
     "ui/themes/*.qss",
+    "ai/artifacts/manifest.json",
+    "ai/artifacts/*.joblib",
 ]
 
 [tool.ruff]
@@ -78,6 +89,7 @@ ignore = ["G004", "RUF001", "RUF002"]
 "tests/**" = ["S101", "S311", "S603", "PLR2004"]
 # Deterministic seeded PRNG is required for reproducible simulation, not for security.
 "src/smartdrive/services/simulator.py" = ["S311"]
+"src/smartdrive/ai/dataset.py" = ["S311"]
 "src/smartdrive/ui/icons.py" = ["E501"]
 "src/smartdrive/database/migrations/versions/*.py" = ["E501"]
 
@@ -93,7 +105,7 @@ plugins = ["pydantic.mypy"]
 warn_unreachable = true
 
 [[tool.mypy.overrides]]
-module = ["pyqtgraph", "pyqtgraph.*"]
+module = ["pyqtgraph", "pyqtgraph.*", "sklearn", "sklearn.*", "joblib", "joblib.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

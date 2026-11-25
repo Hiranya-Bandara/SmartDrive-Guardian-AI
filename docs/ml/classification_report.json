@@ -1,0 +1,34 @@
+{
+  "cooling": {
+    "precision": 0.9635,
+    "recall": 0.5421,
+    "f1": 0.6938,
+    "support": 487
+  },
+  "lubrication": {
+    "precision": 0.7261,
+    "recall": 0.9698,
+    "f1": 0.8304,
+    "support": 298
+  },
+  "fuel": {
+    "precision": 0.9224,
+    "recall": 0.847,
+    "f1": 0.8831,
+    "support": 477
+  },
+  "electrical": {
+    "precision": 0.9354,
+    "recall": 1.0,
+    "f1": 0.9666,
+    "support": 304
+  },
+  "sensor": {
+    "precision": 0.8768,
+    "recall": 0.9879,
+    "f1": 0.929,
+    "support": 497
+  },
+  "macro avg f1": 0.8606,
+  "micro avg f1": 0.8635
+}

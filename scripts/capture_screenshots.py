@@ -11,13 +11,15 @@ from __future__ import annotations
 
 import argparse
 import tempfile
+from collections.abc import Callable
 from pathlib import Path
 
 from PySide6.QtCore import QEventLoop, QTimer
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QApplication, QScrollArea, QWidget
 
 from smartdrive.app import bootstrap, shutdown
 from smartdrive.config.constants import FuelType, ThemePreference, TransmissionType
+from smartdrive.models.diagnostic import ModelRunStatus
 from smartdrive.models.vehicle import VehicleProfile
 from smartdrive.services.scenarios import ScenarioId
 from smartdrive.services.simulator import SimulationConfig
@@ -60,12 +62,35 @@ def capture(output: Path, width: int, height: int) -> list[Path]:
             SimulationConfig(scenario=ScenarioId.OVERHEATING, seed=7, fault_development_s=40)
         )
         ui.monitoring.set_speed_factor(10.0)
+        # Poll fast enough that the 60 s analysis window fills within a few seconds of wall time.
+        ctx.settings.monitoring.refresh_interval_ms = 100
+        ctx.settings.diagnostics.inference_interval_s = 1.0
+        ui.diagnostics.apply_settings()
+        _wait_until(lambda: not ui.diagnostics.models_loading, 20_000, "model loading")
         ui.monitoring.start(record=True, vehicle_id=vehicle.id)
         wait(9000)
-        for key in ("dashboard", "monitoring", "simulation"):
+        _wait_until(
+            lambda: (
+                ui.diagnostics.latest is not None
+                and ui.diagnostics.latest.classifier.status is ModelRunStatus.OK
+                and bool(ui.diagnostics.latest.explanations)
+            ),
+            60_000,
+            "a classifier explanation",
+        )
+        for key in ("dashboard", "monitoring", "simulation", "diagnostics"):
             window.show_page(key)
             wait(700)
             written.append(_grab(window, output / f"{key}.png"))
+        diagnostics_page = window.pages["diagnostics"]
+        scroll = diagnostics_page.findChild(QScrollArea)
+        anchor = diagnostics_page.contribution_chart  # type: ignore[attr-defined]
+        if scroll is not None:
+            scroll.verticalScrollBar().setValue(
+                anchor.mapTo(scroll.widget(), anchor.rect().topLeft()).y() - 380
+            )
+            wait(400)
+            written.append(_grab(window, output / "diagnostics-explanations.png"))
         window.pages["monitoring"].set_selected(  # type: ignore[attr-defined]
             [
                 "coolant_temp_c",
@@ -99,6 +124,15 @@ def capture(output: Path, width: int, height: int) -> list[Path]:
         shutdown(ctx)
     QApplication.processEvents()
     return written
+
+
+def _wait_until(condition: Callable[[], bool], timeout_ms: int, what: str) -> None:
+    waited = 0
+    while not condition():
+        if waited >= timeout_ms:
+            raise SystemExit(f"Timed out waiting for {what}; screenshots would be misleading.")
+        wait(200)
+        waited += 200
 
 
 def _grab(window: QWidget, path: Path) -> Path:

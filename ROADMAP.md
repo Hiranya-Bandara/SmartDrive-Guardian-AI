@@ -4,8 +4,8 @@ This file is the authoritative progress tracker. A task is ticked only after the
 functionality has been verified (tests executed, behaviour observed). The full requirements are in
 [docs/SPECIFICATION.md](docs/SPECIFICATION.md).
 
-**Progress: 14 / 38 tasks complete** · Current phase: **Phase 2 complete (verified headless) —
-awaiting owner's Windows run** · Next phase: Phase 3
+**Progress: 21 / 38 tasks complete** · Current phase: **Phase 3 complete (verified in the
+sandbox) — awaiting owner's Windows run** · Next phase: Phase 4
 
 Verification sources: *sandbox* = executed in the isolated Linux build environment (GUI
 headless via Qt `offscreen`); *owner* = reported by the repository owner from their Windows machine.
@@ -42,8 +42,8 @@ Legend: `[x]` verified · `[ ]` not started or not yet verified · ⏳ waiting o
 ## Phase 2 — Professional Desktop Application (target: days 6–11)
 
 All eight tasks were verified in the *sandbox* (243 tests in total, 93% coverage; GUI exercised
-headless with pytest-qt; screenshots in `docs/screenshots`). A Windows run by the owner is still
-pending.
+headless with pytest-qt; screenshots in `docs/screenshots`) and by the *owner* on Windows
+(all 243 tests passed, ruff and mypy clean).
 
 - [x] Implement PySide6 application shell. `smartdrive gui` / `smartdrive-gui`, lifecycle
   manager, high-DPI policy, clean startup and shutdown, CLI preserved.
@@ -64,13 +64,36 @@ pending.
 
 ## Phase 3 — Advanced AI Engine (target: days 12–18)
 
-- [ ] Prepare and validate datasets.
-- [ ] Train Random Forest classifier.
-- [ ] Implement Isolation Forest anomaly detection.
-- [ ] Implement rule-based diagnostic engine.
-- [ ] Implement experimental vehicle health score.
-- [ ] Implement explainable AI.
-- [ ] Evaluate model predictions and false alarms.
+All seven tasks were verified in the *sandbox*. The models were trained and evaluated with
+`scripts/train_models.py`; retraining reproduced bit-identical model files. A Windows run by
+the owner is still pending. **All data is synthetic; nothing here is real-world validation.**
+
+- [x] Prepare and validate datasets. Dataset `sdg-ds-1.1.0`: 324 independent simulated
+  sessions, 33,194 labelled windows. Sessions vary seed, driving pattern, length, noise,
+  ambient and starting temperature, dropouts, unsupported sensors and connection loss, with
+  gradual, intermittent, partial-severity and simultaneous faults. Splits are by whole session,
+  there are leakage checks, and the dataset has metadata, fingerprint and dataset card.
+- [x] Train Random Forest classifier. Multi-label (5 categories); model selection and
+  precision-constrained thresholds on validation; trusted, versioned artefact; abstention on
+  insufficient, stale or out-of-distribution data. Test macro-F1 0.861 (synthetic).
+- [x] Implement Isolation Forest anomaly detection. Trained on normal windows; three
+  sensitivity thresholds; persistence; test ROC AUC 0.729. Anomaly-only findings are
+  information, never alerts.
+- [x] Implement rule-based diagnostic engine. Seven transparent rules with configurable
+  thresholds, persistence, hysteresis, missing/stale handling, simultaneous findings and
+  vehicle context. Works without models.
+- [x] Implement experimental vehicle health score. 0–100 with itemised deductions, an
+  unavailable state, history and trend; labelled experimental everywhere.
+- [x] Implement explainable AI. Exact tree-path contributions per prediction (additivity
+  verified by tests), supporting and opposing evidence, and permutation importance, shown as
+  charts. SHAP was not used, for documented packaging reasons.
+- [x] Evaluate model predictions and false alarms. Per-category P/R/F1, FPR/FNR, confusion
+  matrices, calibration, robustness, recall by driving pattern, rule-baseline comparison,
+  anomaly metrics and a built-in scenario check through the full engine (0 alarms in 40 healthy
+  drives; 35 of 35 fault drives detected). See `docs/ml/evaluation_report.md`.
+
+Also delivered: the AI Diagnostics page, dashboard integration, background inference worker,
+migration 0002 (diagnostic history), alert deduplication and cooldown, and model management.
 
 ## Phase 4 — Vehicle Integration (target: days 19–25)
 
@@ -80,7 +103,8 @@ pending.
 - [ ] Implement trip recording and replay.
 - [ ] Implement maintenance centre.
 - [ ] Implement PDF and CSV reports.
-- [ ] Implement desktop and voice notifications.
+- [ ] Implement desktop and voice notifications. (Phase 3 delivered in-app alert toasts and
+  persisted, deduplicated diagnostic alerts; the full Alert Centre is Phase 4.)
 
 ## Phase 5 — Professional Release (target: days 26–30)
 

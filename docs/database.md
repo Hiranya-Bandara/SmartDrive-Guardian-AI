@@ -1,7 +1,7 @@
 # Database design
 
 SQLite, accessed through SQLAlchemy 2 (typed ORM) and versioned with Alembic. Current schema
-revision: **0001 (initial schema)**.
+revision: **0002 (diagnostic assessments)**. Revision 0001 is the initial schema.
 
 ## Location
 
@@ -25,9 +25,10 @@ error. SQLAlchemy errors are re-raised as `DatabaseError`.
 | `vehicles` | Garage profiles | year ≥ 1886, mileage ≥ 0, engine capacity > 0 or NULL, unique VIN (nullable) |
 | `driving_sessions` | One recording/simulation/replay run | FK vehicle (CASCADE), single `data_source`, end ≥ start, self-FK `replay_of_session_id` (SET NULL) |
 | `telemetry_readings` | Time-series samples | FK session (CASCADE), index (session_id, timestamp), all sensors nullable, JSON `extra` |
-| `diagnostic_results` | Rule/ML/anomaly findings | FK vehicle (CASCADE), FK session (SET NULL), confidence in [0, 1] or NULL |
+| `diagnostic_assessments` | One stored hybrid analysis (prediction history, health-score history) | FK vehicle (CASCADE), FK session (SET NULL), indexes on vehicle/time and session, data source, status, severity, health score, completeness, model run states, anomaly score, model output per category (JSON), model versions (JSON), inference time |
+| `diagnostic_results` | Individual findings (rule, model, anomaly), including anomaly events | FK vehicle (CASCADE), FK session (SET NULL), FK assessment (SET NULL), `finding_key`, data source, confidence in [0, 1] or NULL, explanation and evidence (JSON), model version |
 | `diagnostic_trouble_codes` | DTCs read from the vehicle | unique (vehicle, code, status), code length 5 |
-| `alerts` | Alert centre entries | dedup key index, occurrence_count ≥ 1, acknowledgement timestamp |
+| `alerts` | Diagnostic alerts (deduplicated) | dedup key index, occurrence_count ≥ 1, acknowledgement timestamp, diagnostic `source` |
 | `maintenance_schedules` | Recurring tasks | at least one of interval_km / interval_days, both positive |
 | `maintenance_records` | Service history and planned work | FK schedule (SET NULL, so history survives deleting a schedule), cost ≥ 0 |
 | `app_settings` | Database-scoped key/value state | key primary key |
@@ -50,3 +51,29 @@ with them by cascade. Open sessions are never purged.
 - `smartdrive db restore <file>` checks that the file is a SQLite database, passes
   `PRAGMA integrity_check` and has a schema revision this version knows. It then writes a safety
   backup of the current database, copies the backup in and migrates it to the current revision.
+
+## Upgrading an existing database
+
+Migrations run automatically when the application or the CLI starts. Upgrading from Phase 2
+(revision 0001) to 0002 **adds** the `diagnostic_assessments` table and new nullable columns. It
+changes and deletes no existing rows: vehicles, sessions, telemetry and earlier alerts are kept
+as they are (covered by `tests/integration/test_diagnostic_persistence.py`).
+
+Recommended procedure before upgrading an important database (Windows PowerShell):
+
+```powershell
+smartdrive db backup                 # verified copy in the backups folder
+smartdrive info                      # shows "Schema revision: 0002 (latest 0002)" after upgrade
+smartdrive db check                  # integrity check
+```
+
+### Recovery
+
+- **Upgrade failed.** The application reports "The database could not be upgraded" and does not
+  start. Restore the backup taken above with `smartdrive db restore <file>`. It is validated,
+  a safety copy of the current file is taken first, and it is then migrated forward.
+- **Going back to a Phase 2 build** requires a database at revision 0001. Restoring a pre-upgrade
+  backup is the safe route. A developer can also run `alembic downgrade 0001` (see the developer
+  guide), which drops the diagnostic history.
+- **Backups from a newer version** are refused rather than opened with an older schema.
+

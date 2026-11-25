@@ -14,11 +14,15 @@ from PySide6.QtGui import QFont, QGuiApplication
 from PySide6.QtWidgets import QApplication, QMessageBox
 
 from smartdrive import APP_NAME, __version__
+from smartdrive.ai.model_registry import ModelRegistry
 from smartdrive.app import ApplicationContext, bootstrap, shutdown
 from smartdrive.config.constants import APP_AUTHOR, APP_ID
+from smartdrive.models.vehicle import Vehicle
+from smartdrive.services.diagnostic_service import DiagnosticService
 from smartdrive.services.telemetry_service import TelemetryService
 from smartdrive.services.vehicle_service import VehicleService
 from smartdrive.ui.context import AppState, Notifier, UiContext
+from smartdrive.ui.diagnostics_controller import DiagnosticsController
 from smartdrive.ui.main_window import MainWindow
 from smartdrive.ui.monitoring_controller import MonitoringController
 from smartdrive.ui.themes.theme_manager import ThemeManager
@@ -53,7 +57,13 @@ def ensure_qapplication(argv: Sequence[str] | None = None) -> QApplication:
 class GuiApplication:
     """Owns the GUI object graph for one application context."""
 
-    def __init__(self, app_context: ApplicationContext, *, install_excepthook: bool = True) -> None:
+    def __init__(
+        self,
+        app_context: ApplicationContext,
+        *,
+        install_excepthook: bool = True,
+        registry: ModelRegistry | None = None,
+    ) -> None:
         self.app_context = app_context
         vehicles = VehicleService(
             app_context.database, app_context.paths.data_dir / "vehicle_images"
@@ -68,6 +78,16 @@ class GuiApplication:
         theme.apply()
         state = AppState(app_context, vehicles)
         monitoring = MonitoringController(app_context.settings, telemetry)
+        diagnostics = DiagnosticsController(
+            app_context.settings, app_context.database, monitoring, registry=registry
+        )
+        diagnostics.set_vehicle(state.active_vehicle)
+        state.active_vehicle_changed.connect(
+            lambda vehicle: diagnostics.set_vehicle(
+                vehicle if isinstance(vehicle, Vehicle) else None
+            )
+        )
+        state.settings_changed.connect(lambda _s: diagnostics.apply_settings())
         self.ui = UiContext(
             app=app_context,
             state=state,
@@ -76,6 +96,8 @@ class GuiApplication:
             vehicles=vehicles,
             telemetry=telemetry,
             notifier=Notifier(),
+            diagnostics=diagnostics,
+            diagnostic_history=DiagnosticService(app_context.database),
         )
         self.window = MainWindow(self.ui)
         self._closed = False
@@ -91,6 +113,7 @@ class GuiApplication:
         if self._hook_installed:
             sys.excepthook = self._previous_hook
         self.ui.monitoring.shutdown()
+        self.ui.diagnostics.shutdown()
         self.ui.theme.dispose()
         self.window.close()
         self.window.deleteLater()
