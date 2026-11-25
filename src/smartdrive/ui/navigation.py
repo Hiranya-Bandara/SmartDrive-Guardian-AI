@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
+    QScrollArea,
     QToolButton,
     QVBoxLayout,
     QWidget,
@@ -29,7 +30,10 @@ class NavItem:
     key: str
     title: str
     icon_name: str
-    available_in: str | None = None  # e.g. "Phase 3" for entries not built yet
+    available_in: str | None = None  # e.g. "Phase 5" for entries not built yet
+    group: str = ""
+    """Sidebar section heading; consecutive items with the same group share one heading."""
+    shortcut: str = ""
 
     @property
     def enabled(self) -> bool:
@@ -48,7 +52,12 @@ class NavButton(QToolButton):
         self.setIconSize(QSize(20, 20))
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setFocusPolicy(Qt.FocusPolicy.TabFocus)
-        tooltip = item.title if item.enabled else f"{item.title} — available in {item.available_in}"
+        if not item.enabled:
+            tooltip = f"{item.title} — available in {item.available_in}"
+        elif item.shortcut:
+            tooltip = f"{item.title} ({item.shortcut})"
+        else:
+            tooltip = item.title
         self.setToolTip(tooltip)
         self.setAccessibleName(tooltip)
 
@@ -108,15 +117,35 @@ class Sidebar(QFrame):
         self.group = QButtonGroup(self)
         self.group.setExclusive(True)
         self.buttons: dict[str, NavButton] = {}
+        self.section_labels: list[tuple[QLabel, str]] = []
+        # The page list scrolls so every entry stays reachable at small window heights.
+        nav = QWidget()
+        nav.setObjectName("SidebarNav")
+        nav_layout = QVBoxLayout(nav)
+        nav_layout.setContentsMargins(0, 0, 0, 0)
+        nav_layout.setSpacing(4)
+        current_group: str | None = None
         for item in pages:
-            layout.addWidget(self._make_button(item))
-        self.upcoming_label = label("COMING LATER")
-        self.upcoming_label.setObjectName("SidebarSection")
-        layout.addSpacing(10)
-        layout.addWidget(self.upcoming_label)
+            if item.group and item.group != current_group:
+                nav_layout.addSpacing(8)
+                nav_layout.addWidget(self._section(item.group))
+            current_group = item.group
+            nav_layout.addWidget(self._make_button(item))
+        self.upcoming_label = self._section("COMING LATER")
+        self.upcoming_label.setVisible(bool(upcoming))
+        if upcoming:
+            nav_layout.addSpacing(10)
+            nav_layout.addWidget(self.upcoming_label)
         for item in upcoming:
-            layout.addWidget(self._make_button(item))
-        layout.addStretch(1)
+            nav_layout.addWidget(self._make_button(item))
+        nav_layout.addStretch(1)
+        self.nav_scroll = QScrollArea()
+        self.nav_scroll.setObjectName("SidebarScroll")
+        self.nav_scroll.setWidget(nav)
+        self.nav_scroll.setWidgetResizable(True)
+        self.nav_scroll.setFrameShape(QFrame.Shape.NoFrame)
+        self.nav_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        layout.addWidget(self.nav_scroll, 1)
 
         self.toggle_button = QToolButton()
         self.toggle_button.setProperty("role", "nav")
@@ -135,6 +164,12 @@ class Sidebar(QFrame):
     @property
     def collapsed(self) -> bool:
         return self._collapsed
+
+    def _section(self, title: str) -> QLabel:
+        heading = label(title.upper())
+        heading.setObjectName("SidebarSection")
+        self.section_labels.append((heading, title.upper()))
+        return heading
 
     def _make_button(self, item: NavItem) -> NavButton:
         button = NavButton(item)
@@ -164,7 +199,8 @@ class Sidebar(QFrame):
         for button in self.buttons.values():
             button.set_collapsed(self._collapsed)
         self.brand_text.setVisible(not self._collapsed)
-        self.upcoming_label.setText("···" if self._collapsed else "COMING LATER")
+        for heading, text in self.section_labels:
+            heading.setText("···" if self._collapsed else text)
         self.toggle_button.setToolTip(
             "Expand sidebar (Ctrl+B)" if self._collapsed else "Collapse sidebar (Ctrl+B)"
         )

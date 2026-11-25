@@ -40,7 +40,9 @@ def test_main_window_initialises_every_page(gui: GuiApplication) -> None:
     assert window.isVisible()
 
 
-def test_future_features_are_visible_but_disabled(gui: GuiApplication) -> None:
+def test_every_planned_page_is_built_and_none_are_placeholders(gui: GuiApplication) -> None:
+    assert UPCOMING == ()
+    assert not gui.window.sidebar.upcoming_label.isVisibleTo(gui.window)
     for item in UPCOMING:
         button = gui.window.sidebar.buttons[item.key]
         assert not button.isEnabled()
@@ -59,8 +61,23 @@ def test_sidebar_navigation(gui: GuiApplication, qtbot: QtBot) -> None:
 
 def test_keyboard_shortcuts_are_registered_for_every_page(gui: GuiApplication) -> None:
     sequences = {s.key().toString() for s in gui.window.findChildren(QShortcut)}
-    expected = {f"Ctrl+{i}" for i in range(1, len(PAGES) + 1)} | {"Ctrl+B", "Ctrl+M", "Ctrl+P"}
+    expected = {item.shortcut for item in PAGES} | {"Ctrl+B", "Ctrl+M", "Ctrl+P"}
+    assert all(item.shortcut for item in PAGES)
+    assert len({item.shortcut for item in PAGES}) == len(PAGES)
     assert expected <= sequences
+    # Phase 2/3 shortcuts keep their meaning.
+    by_key = {item.key: item.shortcut for item in PAGES}
+    assert [by_key[k] for k in ("dashboard", "monitoring", "garage", "simulation")] == [
+        "Ctrl+1",
+        "Ctrl+2",
+        "Ctrl+3",
+        "Ctrl+4",
+    ]
+    assert (by_key["diagnostics"], by_key["settings"], by_key["about"]) == (
+        "Ctrl+5",
+        "Ctrl+6",
+        "Ctrl+7",
+    )
     by_sequence = {s.key().toString(): s for s in gui.window.findChildren(QShortcut)}
     by_sequence["Ctrl+3"].activated.emit()
     assert gui.window.current_key == "garage"

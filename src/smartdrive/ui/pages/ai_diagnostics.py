@@ -412,14 +412,14 @@ class AiDiagnosticsPage(Page):
         diagnostics = ctx.diagnostics
         diagnostics.assessment_changed.connect(self._on_assessment)
         diagnostics.models_changed.connect(self.refresh_view)
-        diagnostics.error_occurred.connect(lambda _e: self.refresh_view())
-        ctx.monitoring.state_changed.connect(lambda _s: self.refresh_view())
-        ctx.state.active_vehicle_changed.connect(lambda _v: self._mark_history())
-        ctx.state.settings_changed.connect(lambda _s: self.refresh_view())
-        self.explanation_combo.currentIndexChanged.connect(lambda _i: self._render_explanation())
+        diagnostics.error_occurred.connect(self.refresh_view)
+        ctx.monitoring.state_changed.connect(self.refresh_view)
+        ctx.state.active_vehicle_changed.connect(self._mark_history)
+        ctx.state.settings_changed.connect(self.refresh_view)
+        self.explanation_combo.currentIndexChanged.connect(self._on_explanation_selected)
         for combo in (self.severity_filter, self.source_filter, self.mode_filter):
-            combo.currentIndexChanged.connect(lambda _i: self.reload_history())
-        self.search_edit.textChanged.connect(lambda _t: self.reload_history())
+            combo.currentIndexChanged.connect(self._on_history_filter)
+        self.search_edit.textChanged.connect(self._on_history_filter)
         self.refresh_button.clicked.connect(self.reload_history)
         self.history_table.itemSelectionChanged.connect(self._show_history_details)
         self._history_timer = QTimer(self)
@@ -444,7 +444,7 @@ class AiDiagnosticsPage(Page):
         if self.isVisible():
             self.refresh_view()
 
-    def _mark_history(self) -> None:
+    def _mark_history(self, *_args: object) -> None:
         self._history_dirty = True
         self.refresh_view()
 
@@ -454,7 +454,7 @@ class AiDiagnosticsPage(Page):
 
     # -- rendering ----------------------------------------------------------------------------
 
-    def refresh_view(self) -> None:
+    def refresh_view(self, *_args: object) -> None:
         latest = self.ctx.diagnostics.latest
         self._render_overview(latest)
         self._render_findings(latest)
@@ -649,6 +649,12 @@ class AiDiagnosticsPage(Page):
         self.explanation_combo.setEnabled(bool(categories))
         self.explanation_combo.blockSignals(False)
         self._render_explanation()
+
+    def _on_explanation_selected(self, _index: int) -> None:
+        self._render_explanation()
+
+    def _on_history_filter(self, *_: object) -> None:
+        self.reload_history()
 
     def _render_explanation(self) -> None:
         latest = self.ctx.diagnostics.latest

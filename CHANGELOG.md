@@ -6,6 +6,65 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+### Added — Phase 4: Vehicle Integration
+
+- **Read-only OBD-II** (`obd/`): in-house ELM327 client over PySerial; a closed allowlist of 65
+  exact requests (adapter set-up, mode 01 current data, mode 02 freeze frame, modes 03/07/0A
+  codes) through which every byte passes; SAE J1979 decoding for 19 parameters; CAN
+  multi-frame reassembly; supported-PID discovery; baud-rate probing; serial and Bluetooth
+  Classic (COM port) transports; a byte-level mock adapter with five behaviours, always
+  labelled simulated.
+- **Connection management**: separate adapter and ECU states, ECU retry, measured link quality,
+  typed errors with user messages, bounded exponential-back-off reconnection, cancellable reads,
+  connection history; Vehicle Connection page with port discovery, parameters table, diagnostics
+  log, setup guidance and vehicle-specific rule thresholds with their source.
+- **Trouble codes**: stored, pending and permanent codes, MIL, freeze frame, scan history with
+  first/most recent detection; local reference of paraphrased generic SAE J2012 descriptions with
+  source; manufacturer-specific codes never interpreted; Diagnostic Codes page with filters,
+  details, related findings and CSV export. No clear-codes function exists.
+- **Telemetry modes**: live frames from the adapter and trip replay join the simulator in the
+  one monitoring pipeline, with a source selector and per-mode labels and banners.
+- **Trips**: names, recording status (completed/interrupted), summaries computed in the
+  background (time-aware estimated distance with coverage), timeline events (findings,
+  escalations, connection lost/restored, interruption), Trip History page with filters,
+  charts, export, safe deletion and replay (0.5–4×, pause, seek; never persisted).
+- **Maintenance centre**: records with costs per currency, user-defined date/mileage schedules,
+  reminder states, dated odometer readings, monthly/yearly/category costs, example intervals
+  labelled as examples, AI-related observations; Maintenance page and dialogs.
+- **Reports**: seven PDF report types (ReportLab), eight CSV datasets, privacy options, export
+  history, Reports page with background generation; sample reports from simulated data in
+  `docs/samples/` (`scripts/generate_sample_reports.py`).
+- **Notifications**: notification records with deduplication, cooldown, escalation and
+  retention; Alert Centre (notifications and diagnostic alerts, read/acknowledged/condition
+  states); optional desktop notifications (system tray), sounds and offline voice (pyttsx3) on
+  a dedicated thread with a bounded, deduplicated queue; maintenance reminders.
+- **Dashboard** summary of connection, trouble codes, recent trips, maintenance and unread
+  notifications; grouped sidebar with new shortcuts; Phase 4 settings.
+- **Database revision 0003** (six tables, new columns) with an automatic pre-upgrade backup.
+- **Background job runner** (one bounded thread) for trip summaries, replay loading, exports,
+  maintenance checks and retention.
+- Documentation: `docs/hardware.md`, `docs/hardware-verification-checklist.md`,
+  `docs/reports.md`, `docs/privacy.md`; updated architecture, database, user and developer
+  guides, specification amendments and ML documentation (live-data behaviour).
+
+### Fixed — found during Phase 4 development
+
+- **Data loss in migrations**: SQLite table rebuilds ran with foreign keys on and would have
+  cascade-deleted child rows (all telemetry readings when upgrading to 0003). Migrations now run
+  with foreign keys off and must pass `PRAGMA foreign_key_check`. Not released; migration 0002
+  was not affected.
+- **Deadlock with worker threads**: Python's cyclic garbage collector could free a Qt object on a
+  worker thread and deadlock with the GUI thread. Collection now runs only on the GUI thread.
+- Remaining lambda signal connections in the dashboard and AI Diagnostics page replaced by
+  bound methods (matches the owner's local Phase 3 lifecycle fix).
+- Trip timelines dropped an escalation from warning to critical of the same condition.
+
+### Changed
+
+- Navigation: all pages are built; the "Coming later" section is gone.
+- Diagnostic alerts are announced through the notification system (stored, deduplicated) instead
+  of direct toasts.
+
 ### Added — Phase 3: Advanced AI Engine
 
 - **Dataset pipeline** (`ai/dataset.py`): reproducible synthetic dataset `sdg-ds-1.1.0` (324

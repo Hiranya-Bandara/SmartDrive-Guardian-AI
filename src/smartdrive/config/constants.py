@@ -86,6 +86,80 @@ class MaintenanceStatus(StrEnum):
     CANCELLED = "cancelled"
 
 
+class NotificationSeverity(StrEnum):
+    """Application notification level. Deliberately separate from diagnostic ``Severity``."""
+
+    INFORMATION = "information"
+    SUCCESS = "success"
+    WARNING = "warning"
+    CRITICAL = "critical"
+
+
+class NotificationCategory(StrEnum):
+    DIAGNOSTIC = "diagnostic"
+    CONNECTION = "connection"
+    TELEMETRY = "telemetry"
+    MODEL = "model"
+    MAINTENANCE = "maintenance"
+    TRIP = "trip"
+    REPORT = "report"
+    APPLICATION = "application"
+
+
+class SessionStatus(StrEnum):
+    RECORDING = "recording"
+    COMPLETED = "completed"
+    INTERRUPTED = "interrupted"
+
+
+class TripEventType(StrEnum):
+    FINDING = "finding"
+    ANOMALY = "anomaly"
+    TROUBLE_CODES = "trouble_codes"
+    CONNECTION_LOST = "connection_lost"
+    CONNECTION_RESTORED = "connection_restored"
+    RECORDING_INTERRUPTED = "recording_interrupted"
+
+
+class MaintenanceCategory(StrEnum):
+    ENGINE_OIL = "engine_oil"
+    OIL_FILTER = "oil_filter"
+    AIR_FILTER = "air_filter"
+    CABIN_AIR_FILTER = "cabin_air_filter"
+    BRAKE_INSPECTION = "brake_inspection"
+    BRAKE_FLUID = "brake_fluid"
+    COOLANT = "coolant"
+    BATTERY = "battery"
+    TYRE_INSPECTION = "tyre_inspection"
+    TYRE_ROTATION = "tyre_rotation"
+    TRANSMISSION = "transmission"
+    SPARK_PLUGS = "spark_plugs"
+    GENERAL_INSPECTION = "general_inspection"
+    CUSTOM = "custom"
+
+    @property
+    def label(self) -> str:
+        return _MAINTENANCE_LABELS[self]
+
+
+_MAINTENANCE_LABELS: Final = {
+    MaintenanceCategory.ENGINE_OIL: "Engine oil replacement",
+    MaintenanceCategory.OIL_FILTER: "Oil filter replacement",
+    MaintenanceCategory.AIR_FILTER: "Air filter replacement",
+    MaintenanceCategory.CABIN_AIR_FILTER: "Cabin air filter replacement",
+    MaintenanceCategory.BRAKE_INSPECTION: "Brake inspection",
+    MaintenanceCategory.BRAKE_FLUID: "Brake fluid service",
+    MaintenanceCategory.COOLANT: "Coolant service",
+    MaintenanceCategory.BATTERY: "Battery inspection",
+    MaintenanceCategory.TYRE_INSPECTION: "Tyre inspection",
+    MaintenanceCategory.TYRE_ROTATION: "Tyre rotation",
+    MaintenanceCategory.TRANSMISSION: "Transmission service",
+    MaintenanceCategory.SPARK_PLUGS: "Spark plug replacement",
+    MaintenanceCategory.GENERAL_INSPECTION: "General inspection",
+    MaintenanceCategory.CUSTOM: "Custom maintenance activity",
+}
+
+
 class ThemePreference(StrEnum):
     DARK = "dark"
     LIGHT = "light"

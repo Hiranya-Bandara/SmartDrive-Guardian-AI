@@ -15,6 +15,7 @@ from typing import Final
 from PySide6.QtCore import QObject, QThread, QTimer, Signal
 
 from smartdrive.ai.model_registry import LoadedModels, LoadStatus, ModelRegistry
+from smartdrive.config.constants import DataSource
 from smartdrive.config.settings import AppSettings
 from smartdrive.core.rule_engine import VehicleContext
 from smartdrive.core.telemetry_window import WINDOW_SECONDS
@@ -22,6 +23,7 @@ from smartdrive.database.connection import Database
 from smartdrive.models.diagnostic import DiagnosticAssessment
 from smartdrive.models.vehicle import Vehicle
 from smartdrive.services.diagnostic_service import DiagnosticService
+from smartdrive.services.threshold_service import merge as merge_thresholds
 from smartdrive.ui.monitoring_controller import MonitoringController, MonitoringState
 from smartdrive.ui.workers.inference_worker import (
     InferenceRequest,
@@ -86,6 +88,8 @@ class DiagnosticsController(QObject):
         self._timer.timeout.connect(self.tick)
         self.apply_settings()
         monitoring.state_changed.connect(self._on_monitoring_state)
+        monitoring.stream_reset.connect(self._restart_stream)
+        self.vehicle_thresholds: dict[str, float] = {}
 
     # -- state --------------------------------------------------------------------------------
 
@@ -109,9 +113,12 @@ class DiagnosticsController(QObject):
 
     # -- configuration ------------------------------------------------------------------------
 
-    def apply_settings(self) -> None:
+    def apply_settings(self, *_args: object) -> None:
         self._timer.setInterval(round(self._settings.diagnostics.inference_interval_s * 1000))
         self._update_timer()
+
+    def on_active_vehicle_changed(self, vehicle: object) -> None:
+        self.set_vehicle(vehicle if isinstance(vehicle, Vehicle) else None)
 
     def set_vehicle(self, vehicle: Vehicle | None) -> None:
         previous = self._vehicle.id if self._vehicle else None
@@ -138,6 +145,12 @@ class DiagnosticsController(QObject):
             return False
         times, series = monitoring.buffer.snapshot(WINDOW_SECONDS)
         vehicle = self._vehicle
+        settings = self._settings.diagnostics.model_copy(deep=True)
+        if self.vehicle_thresholds:
+            try:
+                settings.thresholds = merge_thresholds(settings.thresholds, self.vehicle_thresholds)
+            except ValueError:
+                logger.warning("Ignoring invalid vehicle-specific thresholds")
         request = InferenceRequest(
             generation=self._generation,
             times=times,
@@ -149,12 +162,23 @@ class DiagnosticsController(QObject):
             vehicle_id=vehicle.id if vehicle else None,
             session_id=monitoring.session_id,
             vehicle=VehicleContext(vehicle.fuel_type) if vehicle else None,
-            settings=self._settings.diagnostics.model_copy(deep=True),
+            settings=settings,
             alert_cooldown_s=float(self._settings.alerts.cooldown_seconds),
+            persist=monitoring.data_source is not DataSource.REPLAY,
+            ml_block_reason=self.ml_block_reason(monitoring.data_source),
+            unavailable_sensors=monitoring.unavailable_sensors,
         )
         self._busy = True
         self._request_analysis.emit(request)
         return True
+
+    def ml_block_reason(self, data_source: DataSource | None) -> str | None:
+        if data_source is DataSource.LIVE and not self._settings.diagnostics.live_ml_enabled:
+            return (
+                "Experimental machine-learning inference is turned off for live vehicle data "
+                "(Settings → AI diagnostics). The models were trained only on simulated data."
+            )
+        return None
 
     def shutdown(self) -> None:
         if self._closed:
@@ -206,7 +230,7 @@ class DiagnosticsController(QObject):
             self._restart_stream()
         self._update_timer()
 
-    def _restart_stream(self) -> None:
+    def _restart_stream(self, *_args: object) -> None:
         self._generation += 1
         self.latest = None
         self.live_trend.clear()

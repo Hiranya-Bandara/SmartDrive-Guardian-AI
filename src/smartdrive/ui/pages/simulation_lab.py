@@ -272,7 +272,7 @@ class SimulationLabPage(Page):
         self.target_slider.valueChanged.connect(self._on_driver_changed)
         ctx.monitoring.simulation_changed.connect(self.sync_from_controller)
         ctx.monitoring.frame_received.connect(self._on_frame)
-        ctx.monitoring.state_changed.connect(lambda _s: self._render())
+        ctx.monitoring.state_changed.connect(self._render)
         self._timer = QTimer(self)
         self._timer.setInterval(REFRESH_MS)
         self._timer.timeout.connect(self._refresh)
@@ -361,7 +361,7 @@ class SimulationLabPage(Page):
             self._dirty = False
             self._render()
 
-    def _render(self) -> None:
+    def _render(self, *_args: object) -> None:
         monitoring = self.ctx.monitoring
         frame = monitoring.last_frame if monitoring.is_active else None
         config = monitoring.simulation_config

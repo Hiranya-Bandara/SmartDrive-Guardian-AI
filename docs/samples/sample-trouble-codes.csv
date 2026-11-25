@@ -1,0 +1,5 @@
+﻿vehicle_id,code,status,description,description_source,first_seen_utc,last_seen_utc,detection_count,active
+1,P0171,stored,System too lean (bank 1),SmartDrive local reference — paraphrased generic (SAE J2012) definitions; verify with the vehicle's service information,2026-11-20T08:40:00Z,2026-11-20T08:40:00Z,1,true
+1,P0301,permanent,Cylinder 1 misfire detected,SmartDrive local reference — paraphrased generic (SAE J2012) definitions; verify with the vehicle's service information,2026-11-20T08:40:00Z,2026-11-20T08:40:00Z,1,true
+1,P0301,stored,Cylinder 1 misfire detected,SmartDrive local reference — paraphrased generic (SAE J2012) definitions; verify with the vehicle's service information,2026-11-20T08:40:00Z,2026-11-20T08:40:00Z,1,true
+1,P0420,pending,Catalyst system efficiency below threshold (bank 1),SmartDrive local reference — paraphrased generic (SAE J2012) definitions; verify with the vehicle's service information,2026-11-20T08:40:00Z,2026-11-20T08:40:00Z,1,true

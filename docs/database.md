@@ -1,7 +1,8 @@
 # Database design
 
 SQLite, accessed through SQLAlchemy 2 (typed ORM) and versioned with Alembic. Current schema
-revision: **0002 (diagnostic assessments)**. Revision 0001 is the initial schema.
+revision: **0003 (vehicle integration)**. Revision 0001 is the initial schema and 0002 added
+diagnostic history.
 
 ## Location
 
@@ -33,7 +34,20 @@ error. SQLAlchemy errors are re-raised as `DatabaseError`.
 | `maintenance_records` | Service history and planned work | FK schedule (SET NULL, so history survives deleting a schedule), cost ≥ 0 |
 | `app_settings` | Database-scoped key/value state | key primary key |
 | `model_metadata` | Registry of trusted ML models | unique (name, version), 64-character SHA-256 |
-| `export_history` | Generated reports | FK vehicle (SET NULL) |
+| `export_history` | Generated reports and exports: report ID, status (success/failed), message, file path and size | FK vehicle (SET NULL) |
+| `obd_connections` *(0003)* | One adapter connection: port, method, mock flag, adapter version, ECU connected, protocol, supported PIDs, missing sensors, samples, end reason | FK vehicle (SET NULL), index (vehicle, started) |
+| `dtc_scans` *(0003)* | One trouble-code scan: data source, mock flag, protocol, MIL, counts per status (permanent NULL when unsupported), codes, freeze frame, notes | FK vehicle (CASCADE), FK connection and session (SET NULL), index (vehicle, scanned) |
+| `trip_summaries` *(0003)* | Statistics computed when a trip ends: completeness, speed/rpm/coolant figures, estimated distance and its coverage, event counts, model versions | PK = FK session (CASCADE) |
+| `trip_events` *(0003)* | Trip timeline: findings, anomalies, codes, connection lost/restored, interruptions | FK session (CASCADE), index (session, time) |
+| `notifications` *(0003)* | Application notifications: severity (information/success/warning/critical, separate from diagnostic severity), category, dedup key, occurrences, read and acknowledged times | FK vehicle (CASCADE), FK alert (SET NULL), indexes on time and dedup key |
+| `vehicle_thresholds` *(0003)* | User-entered rule thresholds for one vehicle, with their source | PK = FK vehicle (CASCADE) |
+
+Revision 0003 also adds: `driving_sessions.name` and `status` (recording / completed /
+interrupted); `alerts.read_at`, `resolved_at` and `evidence`; `diagnostic_trouble_codes`
+`last_scan_id`, `detection_count`, `is_active` and `description_source`;
+`maintenance_records.category`, `next_due_date`, `next_due_km`;
+`maintenance_schedules.category`, `reminder_days_before`, `reminder_km_before`,
+`interval_source` (user / example), `notes`; `vehicles.mileage_updated_at`.
 
 The naming convention for constraints is `pk_`, `fk_`, `uq_`, `ck_`, `ix_` followed by the table
 and column. Stable names keep future batch migrations on SQLite predictable.
@@ -54,16 +68,30 @@ with them by cascade. Open sessions are never purged.
 
 ## Upgrading an existing database
 
-Migrations run automatically when the application or the CLI starts. Upgrading from Phase 2
-(revision 0001) to 0002 **adds** the `diagnostic_assessments` table and new nullable columns. It
-changes and deletes no existing rows: vehicles, sessions, telemetry and earlier alerts are kept
-as they are (covered by `tests/integration/test_diagnostic_persistence.py`).
+Migrations run automatically when the application or the CLI starts.
+
+- **Automatic safety backup.** If the database is at an older revision, it is first copied to
+  `backups/smartdrive-pre-upgrade-<revision>-<UTC timestamp>.db` (these copies are not removed
+  by backup rotation).
+- **0001 → 0002** adds the `diagnostic_assessments` table and nullable columns.
+- **0002 → 0003** adds the Phase 4 tables and columns listed above. Existing trips get status
+  *completed* (or *recording* if they never ended); existing maintenance rows get a category.
+  No rows are deleted or changed otherwise (covered by
+  `tests/integration/test_vehicle_integration_db.py`, including telemetry readings and trouble
+  codes).
+- **Foreign keys during migrations.** SQLite rebuilds a table to change it (copy, drop,
+  rename). With foreign keys on, dropping the original would delete every child row through
+  `ON DELETE CASCADE` — for example all telemetry when `driving_sessions` is rebuilt. Migrations
+  therefore run with `PRAGMA foreign_keys=OFF`, must pass `PRAGMA foreign_key_check` before
+  they are committed, and foreign keys are switched back on afterwards. (This defect was found
+  and fixed during Phase 4 development, before any release; migration 0002, which Phase 3
+  users have already run, rebuilds only tables that nothing references and was not affected.)
 
 Recommended procedure before upgrading an important database (Windows PowerShell):
 
 ```powershell
 smartdrive db backup                 # verified copy in the backups folder
-smartdrive info                      # shows "Schema revision: 0002 (latest 0002)" after upgrade
+smartdrive info                      # shows "Schema revision: 0003 (latest 0003)" after upgrade
 smartdrive db check                  # integrity check
 ```
 
@@ -72,8 +100,11 @@ smartdrive db check                  # integrity check
 - **Upgrade failed.** The application reports "The database could not be upgraded" and does not
   start. Restore the backup taken above with `smartdrive db restore <file>`. It is validated,
   a safety copy of the current file is taken first, and it is then migrated forward.
-- **Going back to a Phase 2 build** requires a database at revision 0001. Restoring a pre-upgrade
-  backup is the safe route. A developer can also run `alembic downgrade 0001` (see the developer
-  guide), which drops the diagnostic history.
+- **Going back to a Phase 3 build** requires a database at revision 0002. Restore the automatic
+  `smartdrive-pre-upgrade-0002-…` backup (safe route). A developer can also downgrade (see the
+  developer guide); that drops the Phase 4 tables and columns (trip summaries and events, scans,
+  notifications, connection history, vehicle thresholds) but keeps vehicles, trips, telemetry
+  and codes.
+- **Going back to a Phase 2 build** requires revision 0001, similarly.
 - **Backups from a newer version** are refused rather than opened with an older schema.
 

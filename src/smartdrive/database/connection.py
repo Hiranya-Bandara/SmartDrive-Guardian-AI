@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import sqlite3
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import closing, contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
@@ -107,23 +107,44 @@ class Database:
             return MigrationContext.configure(connection).get_current_revision()
 
     def upgrade(self, revision: str = "head") -> None:
-        config = self._alembic_config()
-        try:
-            with self._engine.begin() as connection:
-                config.attributes["connection"] = connection
-                command.upgrade(config, revision)
-        except (CommandError, SQLAlchemyError) as exc:
-            raise MigrationError(f"Migration to {revision} failed: {exc}") from exc
+        self._migrate(command.upgrade, revision, "Migration")
         logger.info("Database schema is current", extra={"revision": self.current_revision()})
 
     def downgrade(self, revision: str) -> None:
+        self._migrate(command.downgrade, revision, "Downgrade")
+
+    def _migrate(self, action: Callable[[Config, str], None], revision: str, name: str) -> None:
+        """Run Alembic with foreign-key enforcement off, as SQLite requires for table rebuilds.
+
+        On SQLite, batch mode rebuilds a table by copying it, dropping the original and renaming
+        the copy. With foreign keys on, dropping the original would delete every child row
+        through ``ON DELETE CASCADE`` (for example all telemetry of every trip). Enforcement is
+        switched off for the migration and back on afterwards, and ``PRAGMA foreign_key_check``
+        must report no violations before the migration is committed.
+        """
         config = self._alembic_config()
         try:
-            with self._engine.begin() as connection:
-                config.attributes["connection"] = connection
-                command.downgrade(config, revision)
+            with self._engine.connect() as connection:
+                # Must run outside a transaction to take effect.
+                connection.exec_driver_sql("PRAGMA foreign_keys=OFF")
+                connection.commit()
+                try:
+                    with connection.begin():
+                        config.attributes["connection"] = connection
+                        action(config, revision)
+                        violations = connection.exec_driver_sql(
+                            "PRAGMA foreign_key_check"
+                        ).fetchall()
+                        if violations:
+                            raise MigrationError(
+                                f"{name} to {revision} would leave {len(violations)} broken "
+                                f"references (first: {violations[0]})"
+                            )
+                finally:
+                    connection.exec_driver_sql("PRAGMA foreign_keys=ON")
+                    connection.commit()
         except (CommandError, SQLAlchemyError) as exc:
-            raise MigrationError(f"Downgrade to {revision} failed: {exc}") from exc
+            raise MigrationError(f"{name} to {revision} failed: {exc}") from exc
 
     # -- maintenance --------------------------------------------------------------------------
 

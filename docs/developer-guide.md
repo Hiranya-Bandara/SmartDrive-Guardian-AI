@@ -109,7 +109,11 @@ alembic revision --autogenerate -m "add trip notes"
 ```
 
 Review the generated file. Replace `smartdrive.database.types.UtcDateTime()` with `sa.DateTime()`
-and run `python -m pytest tests/integration/test_migrations.py`.
+and run `python -m pytest tests/integration/test_migrations.py tests/integration/test_vehicle_integration_db.py`.
+Test an upgrade against a database that contains child rows (telemetry under trips, codes under
+vehicles): a batch rebuild that drops rows is only caught that way. The application runs
+migrations with foreign keys off and checks `PRAGMA foreign_key_check` before committing; the
+Alembic CLI engine does not enable foreign keys at all.
 
 ## Updating dependencies
 
